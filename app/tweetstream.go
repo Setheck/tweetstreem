@@ -1,12 +1,17 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
-	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"runtime"
+
+	"github.com/c-bata/go-prompt"
+
+	"golang.org/x/crypto/ssh/terminal"
 
 	"github.com/gomodule/oauth1/oauth"
 	"github.com/spf13/viper"
@@ -29,10 +34,15 @@ var (
 	AppSecret = ""
 )
 
+var NilCompleter = func(document prompt.Document) []prompt.Suggest {
+	return nil
+}
+
 type TweetStream struct {
 	TokenCredentials *oauth.Credentials
 
 	oauthClient oauth.Client
+	term        *terminal.Terminal
 }
 
 func NewTweetStream() *TweetStream {
@@ -45,6 +55,7 @@ func NewTweetStream() *TweetStream {
 				Token:  AppToken,
 				Secret: AppSecret},
 		},
+		term: terminal.NewTerminal(os.Stdin, ">"),
 	}
 }
 
@@ -77,16 +88,17 @@ func (t *TweetStream) Authorize() error {
 	u := t.oauthClient.AuthorizationURL(tempCred, nil)
 	OpenBrowser(u)
 
-	var code string
-	fmt.Printf("Enter Pin:")
-	fmt.Scanln(&code)
+	//var code string
+	//fmt.Printf("Enter Pin:")
+	code := prompt.Input("Enter Pin: ", NilCompleter)
+	//fmt.Scanln(&code)
 
 	tokenCred, _, err := t.oauthClient.RequestToken(nil, tempCred, code)
 	if err != nil {
 		return err
 	}
 	t.TokenCredentials = tokenCred
-	fmt.Println("Creds:", tokenCred)
+	//fmt.Println("Creds:", tokenCred)
 	return nil
 }
 
@@ -97,8 +109,17 @@ func (t *TweetStream) GetHomeTimeline() {
 		log.Fatal(err)
 	}
 	defer resp.Body.Close()
-	if _, err := io.Copy(os.Stdout, resp.Body); err != nil {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
 		log.Fatal(err)
+	}
+	var timeLine []*Tweet
+	if err := json.Unmarshal(body, &timeLine); err != nil {
+		log.Fatal(err)
+	}
+	for i := len(timeLine) - 1; i >= 0; i-- {
+		tw := timeLine[i]
+		fmt.Printf("%s\n%s\n%s\n\n", tw.UsrString(), tw.StatusString(), tw.String())
 	}
 }
 
