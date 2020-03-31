@@ -48,6 +48,7 @@ type ReTweetedStatus struct {
 
 type Coordinates struct {
 }
+
 type Place struct {
 }
 
@@ -101,7 +102,7 @@ func (t *Tweet) UsrString() string {
 }
 
 func (t *Tweet) StatusString() string {
-	return fmt.Sprintf("rt:%d <3:%d", t.ReTweetCount, t.FavoriteCount)
+	return fmt.Sprintf("rt:%d ♥:%d", t.ReTweetCount, t.FavoriteCount)
 }
 
 func (t *Tweet) String() string {

@@ -10,9 +10,6 @@ import (
 	"runtime"
 
 	"github.com/c-bata/go-prompt"
-
-	"golang.org/x/crypto/ssh/terminal"
-
 	"github.com/gomodule/oauth1/oauth"
 	"github.com/spf13/viper"
 )
@@ -42,7 +39,6 @@ type TweetStream struct {
 	TokenCredentials *oauth.Credentials
 
 	oauthClient oauth.Client
-	term        *terminal.Terminal
 }
 
 func NewTweetStream() *TweetStream {
@@ -55,7 +51,6 @@ func NewTweetStream() *TweetStream {
 				Token:  AppToken,
 				Secret: AppSecret},
 		},
-		term: terminal.NewTerminal(os.Stdin, ">"),
 	}
 }
 
