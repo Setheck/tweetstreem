@@ -1,15 +1,205 @@
 package app
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"sync"
 	"time"
+
+	"github.com/c-bata/go-prompt"
+	"github.com/gomodule/oauth1/oauth"
 )
 
-type Twitter struct {
+var (
+	TwitterCredentialRequestURI = "https://api.twitter.com/oauth/request_token"
+	TwitterTokenRequestURI      = "https://api.twitter.com/oauth/access_token"
+	TwitterAuthorizeURI         = "https://api.twitter.com/oauth/authorize"
+
+	HomeTimelineURI = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+
+	AppToken  = ""
+	AppSecret = ""
+)
+
+var NilCompleter = func(document prompt.Document) []prompt.Suggest {
+	return nil
 }
 
-func (t *Twitter) HomeTimeline() {
+type TwitterConfiguration struct {
+	PollTime   time.Duration `json:"pollTime"`
+	UserToken  string        `json:"userToken"`
+	UserSecret string        `json:"userSecret"`
+}
 
+func (t *TwitterConfiguration) validate() {
+	if t.PollTime < time.Minute*2 {
+		t.PollTime = time.Minute * 2
+	}
+}
+
+type Twitter struct {
+	configuration *TwitterConfiguration
+	Credentials   *oauth.Credentials
+
+	lastTweet   *Tweet
+	wg          sync.WaitGroup
+	ctx         context.Context
+	done        context.CancelFunc
+	oauthClient oauth.Client
+	lock        sync.Mutex
+}
+
+func NewTwitter(conf *TwitterConfiguration) *Twitter {
+	if conf != nil {
+		conf.validate()
+	}
+	ctx, done := context.WithCancel(context.Background())
+	return &Twitter{
+		configuration: conf,
+		ctx:           ctx,
+		done:          done,
+		oauthClient: oauth.Client{
+			TemporaryCredentialRequestURI: TwitterCredentialRequestURI,
+			TokenRequestURI:               TwitterTokenRequestURI,
+			ResourceOwnerAuthorizationURI: TwitterAuthorizeURI,
+			Credentials:                   oauth.Credentials{Token: AppToken, Secret: AppSecret},
+		},
+	}
+}
+
+func (t *Twitter) Init() error {
+	// TODO: validate instead of check for empty
+	if t.configuration.UserToken == "" || t.configuration.UserSecret == "" {
+		return t.Authorize()
+	}
+	return nil
+}
+
+func (t *Twitter) Configuration() TwitterConfiguration {
+	return *t.configuration
+}
+
+func (t *Twitter) Authorize() error {
+	tempCred, err := t.oauthClient.RequestTemporaryCredentials(nil, "oob", nil)
+	if err != nil {
+		return err
+	}
+
+	u := t.oauthClient.AuthorizationURL(tempCred, nil)
+	OpenBrowser(u)
+
+	code := prompt.Input("Enter Pin: ", NilCompleter)
+
+	credentials, _, err := t.oauthClient.RequestToken(nil, tempCred, code)
+	if err != nil {
+		return err
+	}
+
+	t.configuration.UserToken = credentials.Token
+	t.configuration.UserSecret = credentials.Secret
+	return nil
+}
+
+type GetConf struct {
+	count   int
+	sinceId string
+}
+
+func (g *GetConf) ToQueryString() string {
+	query := "?"
+	if g.count > 0 {
+		query += fmt.Sprintf("count=%d&", g.count)
+	}
+	if len(g.sinceId) > 0 {
+		query += fmt.Sprintf("since_id=%s&", g.sinceId)
+	}
+	return query
+}
+
+type TwError struct {
+	Errors []struct {
+		Code    int
+		Message string
+	}
+}
+
+func (twe TwError) String() string {
+	outstr := ""
+	for _, e := range twe.Errors {
+		outstr += fmt.Sprintf("%d - %s ", e.Code, e.Message)
+	}
+	return outstr
+}
+
+func (t *Twitter) HomeTimeline(conf GetConf) ([]*Tweet, error) {
+	rawTweets, err := t.oaGet(HomeTimelineURI)
+	if err != nil {
+		return nil, err
+	}
+
+	var twErr TwError
+	_ = json.Unmarshal(rawTweets, &twErr) // We dont' really care if this fails
+	if len(twErr.Errors) > 0 {
+		return nil, fmt.Errorf(twErr.String())
+	}
+	var timeLine []*Tweet
+	if err := json.Unmarshal(rawTweets, &timeLine); err != nil {
+		return nil, err
+	}
+	if len(timeLine) > 0 {
+		t.lock.Lock()
+		t.lastTweet = timeLine[0]
+		t.lock.Unlock()
+	}
+	return timeLine, nil
+}
+
+func (t *Twitter) oaGet(u string) ([]byte, error) {
+	cred := &oauth.Credentials{Token: t.configuration.UserToken, Secret: t.configuration.UserSecret}
+	resp, err := t.oauthClient.Get(nil, cred, u, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	return ioutil.ReadAll(resp.Body)
+}
+
+func (t *Twitter) StartPoller() chan []*Tweet {
+	tweetCh := make(chan []*Tweet, 0)
+	go func() {
+		t.wg.Add(1)
+		defer t.wg.Done()
+		for {
+			select {
+			case <-t.ctx.Done():
+				return
+			case <-time.After(t.configuration.PollTime):
+				cfg := GetConf{}
+				if t.lastTweet != nil {
+					t.lock.Lock()
+					cfg.sinceId = t.lastTweet.IDStr
+					t.lock.Unlock()
+				}
+				tweets, err := t.HomeTimeline(cfg)
+				if err != nil {
+					fmt.Println("Poll Failure:", err)
+				} else {
+					// get new tweets
+					tweetCh <- tweets
+				}
+			}
+		}
+	}()
+
+	return tweetCh
+}
+
+func (t *Twitter) Shutdown() error {
+	t.done()
+	t.wg.Wait()
+	return nil
 }
 
 type Entities struct {
