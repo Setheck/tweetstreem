@@ -1,8 +1,8 @@
-.tweetstream
-tweetstream.tar.gz
+.tweetstreem
+tweetstreem.tar.gz
 .idea
-tweetstream
+tweetstreem
 config.json
-.tweetstream.json
+.tweetstreem.json
 setup.sh
 deploy/

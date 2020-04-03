@@ -1,4 +1,4 @@
-module github.com/Setheck/tweetstream
+module github.com/Setheck/tweetstreem
 
 go 1.14
 

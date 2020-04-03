@@ -17,11 +17,14 @@ var (
 	Version = "0.0.1"
 	Commit  = "dev"
 	Built   = "0"
+
+	ConfigFile   = ".tweetstreem"
+	ConfigFormat = "json"
 )
 
 func init() {
-	viper.SetConfigName(".tweetstream")
-	viper.SetConfigType("json")
+	viper.SetConfigName(ConfigFile)
+	viper.SetConfigType(ConfigFormat)
 	viper.AddConfigPath("$HOME/")
 	viper.AddConfigPath(".")
 }
@@ -163,7 +166,8 @@ func (t *TweetStream) saveConfig() {
 		log.Println(err)
 		return
 	}
-	if err := viper.WriteConfigAs(filepath.Join(hd, ".tweetstream.json")); err != nil {
+	fileName := fmt.Sprint(ConfigFile, ".", ConfigFormat)
+	if err := viper.WriteConfigAs(filepath.Join(hd, fileName)); err != nil {
 		log.Println(err)
 	}
 }

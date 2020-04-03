@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Setheck/tweetstream/app"
+	"github.com/Setheck/tweetstreem/app"
 )
 
 func main() {

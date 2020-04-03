@@ -1,8 +1,8 @@
 VERSION:=$(shell git describe --tags)
 COMMIT:=$(shell git rev-parse HEAD)
 BUILT:=$(shell date +%FT%T%z)
-BASE_PKG:=github.com/Setheck/tweetstream
-IMAGE:=setheck/tweetstream
+BASE_PKG:=github.com/Setheck/tweetstreem
+IMAGE:=setheck/tweetstreem
 
 LDFLAGS=-ldflags "-w -s \
 	-X ${BASE_PKG}/app.Version=${VERSION} \
