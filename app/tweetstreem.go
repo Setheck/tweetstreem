@@ -45,7 +45,8 @@ func NewTweetStreem() *TweetStreem {
 	}
 }
 
-func (t *TweetStreem) Run() error {
+// Run is the main entry point, returns result code
+func (t *TweetStreem) Run() int {
 	t.loadConfig()
 	fmt.Printf(`
 ~~~~~~~~~~~~~~~~
@@ -56,7 +57,8 @@ polling every: %s
 `, t.PollTime.Truncate(time.Second).String())
 
 	if err := t.InitTwitter(); err != nil {
-		return err
+		fmt.Println("Error:", err)
+		return 1
 	}
 	go t.echoOnPoll()
 	go t.watchTerminal()
@@ -64,7 +66,7 @@ polling every: %s
 	<-t.ctx.Done()
 	t.saveConfig()
 	fmt.Println("\n'till next time o/ ")
-	return nil
+	return 0
 }
 
 func (t *TweetStreem) InitTwitter() error {
