@@ -9,7 +9,7 @@ import (
 
 func main() {
 	code := 0
-	if err := app.NewTweetStream().Run(); err != nil {
+	if err := app.NewTweetStreem().Run(); err != nil {
 		fmt.Println("Error:", err)
 		code = 1
 	}

@@ -29,23 +29,23 @@ func init() {
 	viper.AddConfigPath(".")
 }
 
-type TweetStream struct {
+type TweetStreem struct {
 	*TwitterConfiguration `json:"twitterConfiguration"`
 	twitter               *Twitter
 	ctx                   context.Context
 	cancel                context.CancelFunc
 }
 
-func NewTweetStream() *TweetStream {
+func NewTweetStreem() *TweetStreem {
 	ctx, cancel := context.WithCancel(context.Background())
-	return &TweetStream{
+	return &TweetStreem{
 		TwitterConfiguration: &TwitterConfiguration{},
 		ctx:                  ctx,
 		cancel:               cancel,
 	}
 }
 
-func (t *TweetStream) Run() error {
+func (t *TweetStreem) Run() error {
 	t.loadConfig()
 	fmt.Printf(`
 ~~~~~~~~~~~~~~~~
@@ -54,22 +54,25 @@ func (t *TweetStream) Run() error {
 ~~~~~~~~~~~~~~~~
 polling every: %s
 `, t.PollTime.Truncate(time.Second).String())
-	t.twitter = NewTwitter(t.TwitterConfiguration)
-	err := t.twitter.Init()
-	if err != nil {
+
+	if err := t.InitTwitter(); err != nil {
 		return err
 	}
-
 	go t.echoOnPoll()
 	go t.watchTerminal()
 	go t.signalWatcher()
 	<-t.ctx.Done()
-	err = t.stop()
+	t.saveConfig()
 	fmt.Println("\n'till next time o/ ")
-	return err
+	return nil
 }
 
-func (t *TweetStream) signalWatcher() {
+func (t *TweetStreem) InitTwitter() error {
+	t.twitter = NewTwitter(t.TwitterConfiguration)
+	return t.twitter.Init()
+}
+
+func (t *TweetStreem) signalWatcher() {
 	select {
 	case <-t.ctx.Done():
 	case <-Signal():
@@ -77,21 +80,27 @@ func (t *TweetStream) signalWatcher() {
 	}
 }
 
-func (t *TweetStream) echoOnPoll() {
+func (t *TweetStreem) echoOnPoll() {
 	for tweets := range t.twitter.startPoller() {
 		t.EchoTweets(tweets)
 	}
 }
 
-func (t *TweetStream) handleInput() chan string {
+func (t *TweetStreem) handleInput() chan string {
 	inputCh := make(chan string, 0)
 	go func(ch chan string) {
 		in := bufio.NewScanner(os.Stdin)
 		for {
-			if in.Scan() {
-				input := in.Text()
-				if len(input) > 0 {
-					inputCh <- input
+			select {
+			case <-t.ctx.Done():
+				close(inputCh)
+				return
+			default:
+				if in.Scan() {
+					input := in.Text()
+					if len(input) > 0 {
+						inputCh <- input
+					}
 				}
 			}
 		}
@@ -99,13 +108,15 @@ func (t *TweetStream) handleInput() chan string {
 	return inputCh
 }
 
-func (t *TweetStream) watchTerminal() {
+func (t *TweetStreem) watchTerminal() {
 	inCh := t.handleInput()
 
 	for {
 		fmt.Print("> ")
 		var err error
 		select {
+		case <-t.ctx.Done():
+			return
 		case input := <-inCh:
 			switch strings.ToLower(input) {
 			case "h":
@@ -125,7 +136,7 @@ func (t *TweetStream) watchTerminal() {
 	}
 }
 
-func (t *TweetStream) Home() error {
+func (t *TweetStreem) Home() error {
 	tweets, err := t.twitter.HomeTimeline(GetConf{})
 	if err != nil {
 		return err
@@ -134,19 +145,14 @@ func (t *TweetStream) Home() error {
 	return nil
 }
 
-func (t *TweetStream) EchoTweets(tweets []*Tweet) {
+func (t *TweetStreem) EchoTweets(tweets []*Tweet) {
 	for i := len(tweets) - 1; i >= 0; i-- {
 		tweet := tweets[i]
 		fmt.Printf("%s\n%s\n%s\n\n", tweet.UsrString(), tweet.StatusString(), tweet.String())
 	}
 }
 
-func (t *TweetStream) stop() error {
-	t.saveConfig()
-	return nil
-}
-
-func (t *TweetStream) loadConfig() {
+func (t *TweetStreem) loadConfig() {
 	err := viper.ReadInConfig()
 	if err != nil {
 		fmt.Println("Failed to read config file:", err)
@@ -159,7 +165,7 @@ func (t *TweetStream) loadConfig() {
 	}
 }
 
-func (t *TweetStream) saveConfig() {
+func (t *TweetStreem) saveConfig() {
 	viper.Set("config", t)
 	hd, err := os.UserHomeDir()
 	if err != nil {
