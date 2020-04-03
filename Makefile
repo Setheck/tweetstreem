@@ -35,7 +35,7 @@ tag:
 	git tag "${MAJOR}.${MINOR}.${PATCH}"
 	git push origin --tags
 
-deploy: clean dbuild
+ddeploy: clean dbuild
 	docker tag ${IMAGE}:latest ${IMAGE}:${VERSION}
 	docker push ${IMAGE}:latest
 	docker push ${IMAGE}:${VERSION}
