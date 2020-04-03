@@ -15,7 +15,8 @@ test:
 	go test ./... -cover
 
 build: test
-	if [[ -z "${APP_KEY}" ]]; then @echo "App Key Not Set"; fi
+	@if [[ -z "${APP_TOKEN}" ]]; then echo "APP_TOKEN Not Set"; exit 1; fi
+	@if [[ -z "${APP_SECRET}" ]]; then echo "APP_SECRET Not Set"; exit 1; fi
 	go build ${LDFLAGS} .
 
 dbuild:
