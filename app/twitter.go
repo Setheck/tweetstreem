@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"html"
 	"io/ioutil"
 	"net/url"
 	"os"
@@ -118,9 +119,9 @@ func (t *Twitter) Authorize() error {
 }
 
 type GetConf struct {
-	count     int
-	sinceId   string
-	tweetMode string
+	count           int
+	sinceId         string
+	includeEntities bool
 }
 
 func (g *GetConf) ToForm() url.Values {
@@ -132,8 +133,8 @@ func (g *GetConf) ToForm() url.Values {
 	if len(g.sinceId) > 0 {
 		form.Set("since_id", g.sinceId)
 	}
-	if len(g.tweetMode) > 0 {
-		form.Set("tweet_mode", g.tweetMode)
+	if g.includeEntities {
+		form.Set("include_entities", "true")
 	}
 	return form
 }
@@ -203,7 +204,7 @@ func (t *Twitter) startPoller() chan []*Tweet {
 				if t.debug {
 					fmt.Println("Poll happened")
 				}
-				cfg := GetConf{tweetMode: "extended"}
+				cfg := GetConf{includeEntities: true}
 				if t.lastTweet != nil {
 					t.lock.Lock()
 					cfg.sinceId = t.lastTweet.IDStr
@@ -345,5 +346,5 @@ func ExtractAnchorText(anchor string) string {
 }
 
 func (t *Tweet) String() string {
-	return t.Text
+	return html.UnescapeString(t.Text)
 }
