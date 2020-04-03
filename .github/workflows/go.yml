@@ -40,6 +40,6 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
-        name: tweetstreem-`date +%s`
+        name: tweetstreem-$GITHUB_RUN_ID
         path: tweetstreem.tar.gz
 
