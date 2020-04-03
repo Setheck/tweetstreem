@@ -22,8 +22,21 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
-    - name: Build
+    - name: Build Linux
       env:
         APP_TOKEN: ${{ secrets.AppToken }}
         APP_SECRET: ${{ secrets.AppSecret }}
       run: make build
+
+    - name: Build Mac
+        env:
+          APP_TOKEN: ${{ secrets.AppToken }}
+          APP_SECRET: ${{ secrets.AppSecret }}
+        run: make buildmac
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: tweetstreem-`date +%s`
+        path: tweetstreem.tar.gz
+
