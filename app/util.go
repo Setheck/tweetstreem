@@ -3,8 +3,11 @@ package app
 import (
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
+	"os/signal"
 	"runtime"
+	"syscall"
 )
 
 func OpenBrowser(url string) {
@@ -23,4 +26,10 @@ func OpenBrowser(url string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func Signal() <-chan os.Signal {
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt, syscall.SIGINT)
+	return ch
 }

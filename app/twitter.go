@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/url"
+	"strconv"
 	"sync"
 	"time"
 
@@ -49,6 +51,7 @@ type Twitter struct {
 	done        context.CancelFunc
 	oauthClient oauth.Client
 	lock        sync.Mutex
+	debug       bool
 }
 
 func NewTwitter(conf *TwitterConfiguration) *Twitter {
@@ -107,15 +110,16 @@ type GetConf struct {
 	sinceId string
 }
 
-func (g *GetConf) ToQueryString() string {
-	query := "?"
+func (g *GetConf) ToForm() url.Values {
+	form := url.Values{}
 	if g.count > 0 {
-		query += fmt.Sprintf("count=%d&", g.count)
+		cnt := strconv.Itoa(g.count)
+		form.Set("count", cnt)
 	}
 	if len(g.sinceId) > 0 {
-		query += fmt.Sprintf("since_id=%s&", g.sinceId)
+		form.Set("since_id", g.sinceId)
 	}
-	return query
+	return form
 }
 
 type TwError struct {
@@ -134,7 +138,7 @@ func (twe TwError) String() string {
 }
 
 func (t *Twitter) HomeTimeline(conf GetConf) ([]*Tweet, error) {
-	rawTweets, err := t.oaGet(HomeTimelineURI)
+	rawTweets, err := t.oaGet(HomeTimelineURI, conf)
 	if err != nil {
 		return nil, err
 	}
@@ -156,9 +160,9 @@ func (t *Twitter) HomeTimeline(conf GetConf) ([]*Tweet, error) {
 	return timeLine, nil
 }
 
-func (t *Twitter) oaGet(u string) ([]byte, error) {
+func (t *Twitter) oaGet(u string, conf GetConf) ([]byte, error) {
 	cred := &oauth.Credentials{Token: t.configuration.UserToken, Secret: t.configuration.UserSecret}
-	resp, err := t.oauthClient.Get(nil, cred, u, nil)
+	resp, err := t.oauthClient.Get(nil, cred, u, conf.ToForm())
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +170,10 @@ func (t *Twitter) oaGet(u string) ([]byte, error) {
 	return ioutil.ReadAll(resp.Body)
 }
 
-func (t *Twitter) StartPoller() chan []*Tweet {
+func (t *Twitter) startPoller() chan []*Tweet {
+	if t.debug {
+		fmt.Println("Poller Started")
+	}
 	tweetCh := make(chan []*Tweet, 0)
 	go func() {
 		t.wg.Add(1)
@@ -174,8 +181,12 @@ func (t *Twitter) StartPoller() chan []*Tweet {
 		for {
 			select {
 			case <-t.ctx.Done():
+				close(tweetCh)
 				return
 			case <-time.After(t.configuration.PollTime):
+				if t.debug {
+					fmt.Println("Poll happened")
+				}
 				cfg := GetConf{}
 				if t.lastTweet != nil {
 					t.lock.Lock()

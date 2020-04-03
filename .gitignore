@@ -1,2 +1,6 @@
 .tweetstream
 .idea
+tweetstream
+config.json
+.tweetstream.json
+setup.sh

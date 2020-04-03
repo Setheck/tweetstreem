@@ -1,18 +1,17 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"os"
 
 	"github.com/Setheck/tweetstream/app"
 )
 
 func main() {
-	tw := app.NewTweetStream()
-	if err := tw.Init(); err != nil {
-		log.Fatal(err)
+	code := 0
+	if err := app.NewTweetStream().Run(); err != nil {
+		fmt.Println("Error:", err)
+		code = 1
 	}
-	tw.WatchTerminal()
-	if err := tw.Stop(); err != nil {
-		log.Fatal(err)
-	}
+	os.Exit(code)
 }
