@@ -111,7 +111,7 @@ func (t *TweetStream) watchTerminal() {
 			case "h":
 				fallthrough
 			case "help":
-				fmt.Println("Options:\n home - view your default timeline.\n exit - exit tweetstream.\n help (h) - this help menu :D")
+				fmt.Println("Options:\n home - view your default timeline.\n exit - exit tweetstreem.\n help (h) - this help menu :D")
 			case "exit":
 				t.cancel()
 				return
