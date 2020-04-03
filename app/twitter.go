@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/url"
+	"os"
+	"regexp"
 	"strconv"
 	"sync"
 	"time"
@@ -24,6 +26,16 @@ var (
 	AppToken  = ""
 	AppSecret = ""
 )
+
+func init() {
+	// Since the plan is to stamp the AppToken and AppSecret on deploy,
+	// this allows us to pull it out of the ENV for dev/testing.
+	if AppToken == "" || AppSecret == "" {
+		AppToken = os.Getenv("APP_TOKEN")
+		AppSecret = os.Getenv("APP_SECRET")
+		fmt.Println("loaded AppToken and AppSecret from environment")
+	}
+}
 
 var NilCompleter = func(document prompt.Document) []prompt.Suggest {
 	return nil
@@ -106,8 +118,9 @@ func (t *Twitter) Authorize() error {
 }
 
 type GetConf struct {
-	count   int
-	sinceId string
+	count     int
+	sinceId   string
+	tweetMode string
 }
 
 func (g *GetConf) ToForm() url.Values {
@@ -118,6 +131,9 @@ func (g *GetConf) ToForm() url.Values {
 	}
 	if len(g.sinceId) > 0 {
 		form.Set("since_id", g.sinceId)
+	}
+	if len(g.tweetMode) > 0 {
+		form.Set("tweet_mode", g.tweetMode)
 	}
 	return form
 }
@@ -187,7 +203,7 @@ func (t *Twitter) startPoller() chan []*Tweet {
 				if t.debug {
 					fmt.Println("Poll happened")
 				}
-				cfg := GetConf{}
+				cfg := GetConf{tweetMode: "extended"}
 				if t.lastTweet != nil {
 					t.lock.Lock()
 					cfg.sinceId = t.lastTweet.IDStr
@@ -297,13 +313,35 @@ func (t *Tweet) UsrString() string {
 	tstr := t.CreatedAt
 	tm, err := time.Parse("Mon Jan 2 15:04:05 -0700 2006", t.CreatedAt)
 	if err == nil {
-		tstr = time.Since(tm).Truncate(time.Minute).String()
+		since := time.Since(tm)
+		if since < time.Hour*24 {
+			tstr = since.Truncate(time.Second).String()
+		} else {
+			tstr = tm.Format("01/02/2006 15:04:05")
+		}
 	}
-	return fmt.Sprintf("%s @%s %s", t.User.Name, t.User.ScreenName, tstr)
+
+	str := fmt.Sprint(Cyan, t.User.Name, Reset, " ")
+	str += fmt.Sprintf("%s@%s%s ", Green, t.User.ScreenName, Reset)
+	str += fmt.Sprint(Purple, tstr, " ago", Reset)
+	return str
 }
 
 func (t *Tweet) StatusString() string {
-	return fmt.Sprintf("rt:%d ♥:%d", t.ReTweetCount, t.FavoriteCount)
+	agent := ExtractAnchorText(t.Source)
+	return fmt.Sprint(
+		Cyan, "rt:", t.ReTweetCount, Reset, " ",
+		Red, "♥:", t.FavoriteCount, Reset,
+		" via ", Blue, agent, Reset)
+}
+
+func ExtractAnchorText(anchor string) string {
+	anchorTextFind := regexp.MustCompile(`>(.+)<`)
+	found := anchorTextFind.FindStringSubmatch(anchor)
+	if len(found) > 0 {
+		return found[1]
+	}
+	return ""
 }
 
 func (t *Tweet) String() string {
