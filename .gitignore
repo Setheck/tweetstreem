@@ -6,3 +6,4 @@ config.json
 .tweetstreem.json
 setup.sh
 deploy/
+env.conf

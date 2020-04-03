@@ -1,3 +1,6 @@
+#!make
+-include env.conf
+
 VERSION:=$(shell git describe --tags)
 COMMIT:=$(shell git rev-parse HEAD)
 BUILT:=$(shell date +%FT%T%z)
