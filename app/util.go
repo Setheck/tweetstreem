@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"regexp"
 	"runtime"
 	"syscall"
 )
@@ -32,4 +33,14 @@ func Signal() <-chan os.Signal {
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt, syscall.SIGINT)
 	return ch
+}
+
+var anchorTextFind = regexp.MustCompile(`>(.+)<`)
+
+func ExtractAnchorText(anchor string) string {
+	found := anchorTextFind.FindStringSubmatch(anchor)
+	if len(found) > 0 {
+		return found[1]
+	}
+	return ""
 }

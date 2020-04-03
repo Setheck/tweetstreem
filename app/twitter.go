@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"net/url"
 	"os"
-	"regexp"
 	"strconv"
 	"sync"
 	"time"
@@ -342,15 +341,6 @@ func (t *Tweet) StatusString() string {
 		Cyan, "rt:", t.ReTweetCount, Reset, " ",
 		Red, "♥:", t.FavoriteCount, Reset,
 		" via ", Blue, agent, Reset)
-}
-
-func ExtractAnchorText(anchor string) string {
-	anchorTextFind := regexp.MustCompile(`>(.+)<`)
-	found := anchorTextFind.FindStringSubmatch(anchor)
-	if len(found) > 0 {
-		return found[1]
-	}
-	return ""
 }
 
 func (t *Tweet) String() string {
