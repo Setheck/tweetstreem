@@ -29,10 +29,10 @@ jobs:
       run: make build
 
     - name: Build Mac
-        env:
-          APP_TOKEN: ${{ secrets.AppToken }}
-          APP_SECRET: ${{ secrets.AppSecret }}
-        run: make buildmac
+      env:
+        APP_TOKEN: ${{ secrets.AppToken }}
+        APP_SECRET: ${{ secrets.AppSecret }}
+      run: make buildmac
 
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
