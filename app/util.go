@@ -2,7 +2,6 @@ package app
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -11,8 +10,8 @@ import (
 	"syscall"
 )
 
-func OpenBrowser(url string) {
-	log.Println("opening url in browser:", url)
+func OpenBrowser(url string) error {
+	fmt.Println("opening url in browser:", url)
 	var err error
 	switch runtime.GOOS {
 	case "linux":
@@ -24,9 +23,7 @@ func OpenBrowser(url string) {
 	default:
 		err = fmt.Errorf("unsupported platform")
 	}
-	if err != nil {
-		log.Fatal(err)
-	}
+	return err
 }
 
 func Signal() <-chan os.Signal {

@@ -103,7 +103,9 @@ func (t *Twitter) Authorize() error {
 	}
 
 	u := t.oauthClient.AuthorizationURL(tempCred, nil)
-	OpenBrowser(u)
+	if err := OpenBrowser(u); err != nil {
+		fmt.Println(err)
+	}
 
 	code := prompt.Input("Enter Pin: ", NilCompleter)
 

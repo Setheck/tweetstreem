@@ -23,6 +23,7 @@ build: test
 	go build ${LDFLAGS} .
 
 dbuild:
+	exit 1  #no docker for now
 	# *Note, docker file calls `make build`
 	docker build . -t ${IMAGE}:latest
 	docker run --rm ${IMAGE}:latest -version
@@ -40,6 +41,6 @@ deploy: clean dbuild
 	docker push ${IMAGE}:${VERSION}
 
 clean:
-	rm -rf tweetstream
+	rm -rf tweetstreem
 
 .PHONY: test build dbuild clean tag

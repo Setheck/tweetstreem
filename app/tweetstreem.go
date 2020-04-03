@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/spf13/viper"
@@ -31,15 +32,25 @@ func init() {
 
 type TweetStreem struct {
 	*TwitterConfiguration `json:"twitterConfiguration"`
-	twitter               *Twitter
-	ctx                   context.Context
-	cancel                context.CancelFunc
+	TweetTemplate         string `json:"tweetTemplate"`
+
+	tweetTemplate *template.Template
+	twitter       *Twitter
+	ctx           context.Context
+	cancel        context.CancelFunc
 }
+
+const DefaultTweetTemplate = `{{ .User }}
+{{ .Status }}
+{{ .Text }}
+
+`
 
 func NewTweetStreem() *TweetStreem {
 	ctx, cancel := context.WithCancel(context.Background())
 	return &TweetStreem{
 		TwitterConfiguration: &TwitterConfiguration{},
+		TweetTemplate:        DefaultTweetTemplate,
 		ctx:                  ctx,
 		cancel:               cancel,
 	}
@@ -70,6 +81,11 @@ polling every: %s
 }
 
 func (t *TweetStreem) InitTwitter() error {
+	tpl, err := template.New("").Parse(t.TweetTemplate)
+	if err != nil {
+		return err
+	}
+	t.tweetTemplate = tpl
 	t.twitter = NewTwitter(t.TwitterConfiguration)
 	return t.twitter.Init()
 }
@@ -150,7 +166,16 @@ func (t *TweetStreem) Home() error {
 func (t *TweetStreem) EchoTweets(tweets []*Tweet) {
 	for i := len(tweets) - 1; i >= 0; i-- {
 		tweet := tweets[i]
-		fmt.Printf("%s\n%s\n%s\n\n", tweet.UsrString(), tweet.StatusString(), tweet.String())
+		_ = t.tweetTemplate.Execute(os.Stdout, struct {
+			User   string
+			Status string
+			Text   string
+		}{
+			User:   tweet.UsrString(),
+			Status: tweet.StatusString(),
+			Text:   tweet.String(),
+		})
+		//fmt.Printf("%s\n%s\n%s\n\n", tweet.UsrString(), tweet.StatusString(), tweet.String())
 	}
 }
 
