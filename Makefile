@@ -27,7 +27,7 @@ buildmac: test
 	@if [ -z "${APP_SECRET}" ]; then echo "APP_SECRET Not Set"; exit 1; fi
 	GOOS=darwin go build ${LDFLAGS} -o tweetstreem_mac
 
-package: build buildmac
+package:
 	mkdir -p deploy/
 	mv tweetstreem* deploy/
 	tar -czf tweetstreem.tar.gz deploy
