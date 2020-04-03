@@ -34,6 +34,9 @@ jobs:
         APP_SECRET: ${{ secrets.AppSecret }}
       run: make buildmac
 
+    - name: Package
+      run: make package
+
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
