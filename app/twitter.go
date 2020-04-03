@@ -122,6 +122,7 @@ type GetConf struct {
 	count           int
 	sinceId         string
 	includeEntities bool
+	tweetMode       string
 }
 
 func (g *GetConf) ToForm() url.Values {
@@ -136,6 +137,12 @@ func (g *GetConf) ToForm() url.Values {
 	if g.includeEntities {
 		form.Set("include_entities", "true")
 	}
+	mode := "extended" // Default to extended for full tweet text
+	if len(g.tweetMode) > 0 {
+		mode = g.tweetMode
+	}
+	form.Set("tweet_mode", mode)
+
 	return form
 }
 
@@ -278,6 +285,7 @@ type Tweet struct {
 	ID                   int64        `json:"id"`
 	IDStr                string       `json:"id_str"`
 	Text                 string       `json:"text"`
+	FullText             string       `json:"full_text"`
 	Source               string       `json:"source"`
 	Truncated            bool         `json:"truncated"`
 	InReplyToStatusId    *int64       `json:"in_reply_to_status_id"`
@@ -346,5 +354,8 @@ func ExtractAnchorText(anchor string) string {
 }
 
 func (t *Tweet) String() string {
+	if len(t.FullText) > 0 {
+		return html.UnescapeString(t.FullText)
+	}
 	return html.UnescapeString(t.Text)
 }
