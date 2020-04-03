@@ -27,8 +27,10 @@ buildmac: test
 	@if [ -z "${APP_SECRET}" ]; then echo "APP_SECRET Not Set"; exit 1; fi
 	GOOS=darwin go build ${LDFLAGS} -o tweetstreem_mac
 
-package:
-	tar -czf tweetstreem.tar.gz tweetstreem*
+package: build buildmac
+	mkdir -p deploy/
+	mv tweetstreem* deploy/
+	tar -czf tweetstreem.tar.gz deploy
 
 dbuild:
 	exit 1  #no docker for now
@@ -49,6 +51,6 @@ ddeploy: clean dbuild
 	docker push ${IMAGE}:${VERSION}
 
 clean:
-	rm -rf tweetstreem
+	rm -rf tweetstreem*
 
 .PHONY: test build dbuild clean tag
