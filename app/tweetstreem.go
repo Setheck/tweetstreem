@@ -33,6 +33,7 @@ func init() {
 type TweetStreem struct {
 	*TwitterConfiguration `json:"twitterConfiguration"`
 	TweetTemplate         string `json:"tweetTemplate"`
+	AutoHome              bool   `json:"autoHome"`
 
 	tweetTemplate *template.Template
 	twitter       *Twitter
@@ -74,6 +75,10 @@ polling every: %s
 	go t.echoOnPoll()
 	go t.watchTerminal()
 	go t.signalWatcher()
+
+	if t.AutoHome {
+		t.Home()
+	}
 	<-t.ctx.Done()
 	t.saveConfig()
 	fmt.Println("\n'till next time o/ ")
