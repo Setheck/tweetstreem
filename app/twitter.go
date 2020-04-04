@@ -57,13 +57,14 @@ type Twitter struct {
 	configuration *TwitterConfiguration
 	Credentials   *oauth.Credentials
 
-	lastTweet   *Tweet
-	wg          sync.WaitGroup
-	ctx         context.Context
-	done        context.CancelFunc
-	oauthClient oauth.Client
-	lock        sync.Mutex
-	debug       bool
+	pollerPaused bool
+	lastTweet    *Tweet
+	wg           sync.WaitGroup
+	ctx          context.Context
+	done         context.CancelFunc
+	oauthClient  oauth.Client
+	lock         sync.Mutex
+	debug        bool
 }
 
 func NewTwitter(conf *TwitterConfiguration) *Twitter {
@@ -195,6 +196,10 @@ func (t *Twitter) oaGet(u string, conf GetConf) ([]byte, error) {
 	return ioutil.ReadAll(resp.Body)
 }
 
+func (t *Twitter) TogglePollerPaused(b bool) {
+	t.pollerPaused = b
+}
+
 func (t *Twitter) startPoller() chan []*Tweet {
 	if t.debug {
 		fmt.Println("Poller Started")
@@ -211,6 +216,9 @@ func (t *Twitter) startPoller() chan []*Tweet {
 			case <-time.After(t.configuration.PollTime):
 				if t.debug {
 					fmt.Println("Poll happened")
+				}
+				if t.pollerPaused {
+					continue
 				}
 				cfg := GetConf{includeEntities: true}
 				if t.lastTweet != nil {

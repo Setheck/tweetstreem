@@ -23,6 +23,12 @@ var (
 	ConfigFormat = "json"
 )
 
+const Banner = `
+~~~~~~~~~~~~~~~~
+~~Tweet
+~~   Streem
+~~~~~~~~~~~~~~~~`
+
 func init() {
 	viper.SetConfigName(ConfigFile)
 	viper.SetConfigType(ConfigFormat)
@@ -59,13 +65,7 @@ func NewTweetStreem() *TweetStreem {
 // Run is the main entry point, returns result code
 func (t *TweetStreem) Run() int {
 	t.loadConfig()
-	fmt.Printf(`
-~~~~~~~~~~~~~~~~
-~~Tweet
-~~   Streem
-~~~~~~~~~~~~~~~~
-polling every: %s
-`, t.PollTime.Truncate(time.Second).String())
+	fmt.Printf("%s\npolling every: %s\n", Banner, t.PollTime.Truncate(time.Second).String())
 
 	if err := t.InitTwitter(); err != nil {
 		fmt.Println("Error:", err)
@@ -137,10 +137,19 @@ func (t *TweetStreem) watchTerminal() {
 			return
 		case input := <-inCh:
 			switch strings.ToLower(input) {
+			//case "c": // clear screen
+			case "p": // pause the streem
+				t.Pause()
+			case "r": // unpause the streem
+				t.Resume()
+			case "v": // show version
+				t.Version()
 			case "h":
 				fallthrough
 			case "help":
 				fmt.Println("Options:\n home - view your default timeline.\n exit - exit tweetstreem.\n help (h) - this help menu :D")
+			case "q":
+				fallthrough
 			case "exit":
 				t.cancel()
 				return
@@ -152,6 +161,23 @@ func (t *TweetStreem) watchTerminal() {
 			fmt.Println("Error:", err)
 		}
 	}
+}
+
+func (t *TweetStreem) Version() {
+	fmt.Println(Banner)
+	fmt.Println("version:", Version)
+	fmt.Println(" commit:", Commit)
+	fmt.Println("  built:", Built)
+}
+
+func (t *TweetStreem) Resume() {
+	fmt.Println("resuming streem.")
+	t.twitter.TogglePollerPaused(false)
+}
+
+func (t *TweetStreem) Pause() {
+	fmt.Println("pausing streem.")
+	t.twitter.TogglePollerPaused(true)
 }
 
 func (t *TweetStreem) Home() error {
