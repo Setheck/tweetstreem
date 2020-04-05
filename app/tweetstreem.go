@@ -57,7 +57,7 @@ type TweetStreem struct {
 }
 
 const DefaultTweetTemplate = `{{ .User }}
-{{ .Id }} {{ .Status }}
+id:{{ .Id }} {{ .Status }}
 {{ .Text }}
 
 `
