@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"html"
 	"io/ioutil"
+	"net/http"
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -21,7 +23,8 @@ var (
 	TwitterTokenRequestURI      = "https://api.twitter.com/oauth/access_token"
 	TwitterAuthorizeURI         = "https://api.twitter.com/oauth/authorize"
 
-	HomeTimelineURI = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+	HomeTimelineURI   = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+	StatusesUpdateURI = "https://api.twitter.com/1.1/statuses/update.json"
 
 	AppToken  = ""
 	AppSecret = ""
@@ -120,14 +123,14 @@ func (t *Twitter) Authorize() error {
 	return nil
 }
 
-type GetConf struct {
+type OaRequestConf struct {
 	count           int
 	sinceId         string
 	includeEntities bool
 	tweetMode       string
 }
 
-func (g *GetConf) ToForm() url.Values {
+func (g *OaRequestConf) ToForm() url.Values {
 	form := url.Values{}
 	if g.count > 0 {
 		cnt := strconv.Itoa(g.count)
@@ -163,16 +166,39 @@ func (twe TwError) String() string {
 	return outstr
 }
 
-func (t *Twitter) HomeTimeline(conf GetConf) ([]*Tweet, error) {
-	rawTweets, err := t.oaGet(HomeTimelineURI, conf)
+func (t *Twitter) UpdateStatus(status string, conf OaRequestConf) (*Tweet, error) {
+	status = url.QueryEscape(status)
+	data, err := t.oaRequest(http.MethodPost, StatusesUpdateURI+"?status="+status, conf)
+	if err != nil {
+		return nil, err
+	}
+	if err := t.UnmarshalError(data); err != nil {
+		return nil, err
+	}
+	tw := new(Tweet)
+	if err := json.Unmarshal(data, &tw); err != nil {
+		return nil, err
+	}
+	return tw, nil
+}
+
+func (t *Twitter) UnmarshalError(data []byte) error {
+	var twErr TwError
+	_ = json.Unmarshal(data, &twErr) // We dont' really care if this fails
+	if len(twErr.Errors) > 0 {
+		return fmt.Errorf(twErr.String())
+	}
+	return nil
+}
+
+func (t *Twitter) HomeTimeline(conf OaRequestConf) ([]*Tweet, error) {
+	rawTweets, err := t.oaRequest(http.MethodGet, HomeTimelineURI, conf)
 	if err != nil {
 		return nil, err
 	}
 
-	var twErr TwError
-	_ = json.Unmarshal(rawTweets, &twErr) // We dont' really care if this fails
-	if len(twErr.Errors) > 0 {
-		return nil, fmt.Errorf(twErr.String())
+	if err := t.UnmarshalError(rawTweets); err != nil {
+		return nil, err
 	}
 	var timeLine []*Tweet
 	if err := json.Unmarshal(rawTweets, &timeLine); err != nil {
@@ -186,14 +212,24 @@ func (t *Twitter) HomeTimeline(conf GetConf) ([]*Tweet, error) {
 	return timeLine, nil
 }
 
-func (t *Twitter) oaGet(u string, conf GetConf) ([]byte, error) {
+func (t *Twitter) oaRequest(method, u string, conf OaRequestConf) ([]byte, error) {
 	cred := &oauth.Credentials{Token: t.configuration.UserToken, Secret: t.configuration.UserSecret}
-	resp, err := t.oauthClient.Get(nil, cred, u, conf.ToForm())
+	var resp *http.Response
+	var err error
+	switch strings.ToUpper(method) {
+	case http.MethodPost:
+		resp, err = t.oauthClient.Post(nil, cred, u, conf.ToForm())
+	case http.MethodGet:
+		resp, err = t.oauthClient.Get(nil, cred, u, conf.ToForm())
+	}
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
-	return ioutil.ReadAll(resp.Body)
+	if resp != nil {
+		defer resp.Body.Close()
+		return ioutil.ReadAll(resp.Body)
+	}
+	return nil, fmt.Errorf("unsupported method")
 }
 
 func (t *Twitter) TogglePollerPaused(b bool) {
@@ -220,7 +256,7 @@ func (t *Twitter) startPoller() chan []*Tweet {
 				if t.pollerPaused {
 					continue
 				}
-				cfg := GetConf{includeEntities: true}
+				cfg := OaRequestConf{includeEntities: true}
 				if t.lastTweet != nil {
 					t.lock.Lock()
 					cfg.sinceId = t.lastTweet.IDStr
@@ -333,7 +369,7 @@ func (t *Tweet) UsrString() string {
 	if err == nil {
 		since := time.Since(tm)
 		if since < time.Hour*24 {
-			tstr = since.Truncate(time.Second).String()
+			tstr = since.Truncate(time.Second).String() + " ago"
 		} else {
 			tstr = tm.Format("01/02/2006 15:04:05")
 		}
@@ -341,7 +377,7 @@ func (t *Tweet) UsrString() string {
 
 	str := fmt.Sprint(Cyan, t.User.Name, Reset, " ")
 	str += fmt.Sprintf("%s@%s%s ", Green, t.User.ScreenName, Reset)
-	str += fmt.Sprint(Purple, tstr, " ago", Reset)
+	str += fmt.Sprint(Purple, tstr, Reset)
 	return str
 }
 

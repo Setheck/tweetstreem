@@ -7,7 +7,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"text/template"
 	"time"
 
@@ -21,6 +24,10 @@ var (
 
 	ConfigFile   = ".tweetstreem"
 	ConfigFormat = "json"
+)
+
+const (
+	TweetHistorySize = 100
 )
 
 const Banner = `
@@ -42,12 +49,15 @@ type TweetStreem struct {
 
 	tweetTemplate *template.Template
 	twitter       *Twitter
+	tweetHistory  map[int]*Tweet
+	histLock      sync.Mutex
+	lastTweetId   *int32
 	ctx           context.Context
 	cancel        context.CancelFunc
 }
 
 const DefaultTweetTemplate = `{{ .User }}
-{{ .Status }}
+{{ .Id }} {{ .Status }}
 {{ .Text }}
 
 `
@@ -57,9 +67,33 @@ func NewTweetStreem() *TweetStreem {
 	return &TweetStreem{
 		TwitterConfiguration: &TwitterConfiguration{},
 		TweetTemplate:        DefaultTweetTemplate,
+		tweetHistory:         make(map[int]*Tweet),
+		lastTweetId:          new(int32),
 		ctx:                  ctx,
 		cancel:               cancel,
 	}
+}
+
+func (t *TweetStreem) LogTweet(id int, tweet *Tweet) {
+	t.histLock.Lock()
+	defer t.histLock.Unlock()
+	if id > TweetHistorySize {
+		delete(t.tweetHistory, id-TweetHistorySize)
+	}
+	t.tweetHistory[id] = tweet
+}
+
+func (t *TweetStreem) GetHistoryTweet(id int) *Tweet {
+	t.histLock.Lock()
+	defer t.histLock.Unlock()
+	return t.tweetHistory[id]
+}
+
+func (t *TweetStreem) ClearHistory() {
+	t.histLock.Lock()
+	defer t.histLock.Unlock()
+	t.tweetHistory = make(map[int]*Tweet)
+	atomic.StoreInt32(t.lastTweetId, 0)
 }
 
 // Run is the main entry point, returns result code
@@ -136,7 +170,8 @@ func (t *TweetStreem) watchTerminal() {
 		case <-t.ctx.Done():
 			return
 		case input := <-inCh:
-			switch strings.ToLower(input) {
+			command, args := t.SplitCommand(input)
+			switch command {
 			//case "c": // clear screen
 			case "p": // pause the streem
 				t.Pause()
@@ -144,6 +179,13 @@ func (t *TweetStreem) watchTerminal() {
 				t.Resume()
 			case "v": // show version
 				t.Version()
+			case "open":
+				for _, a := range args {
+					if n, err := strconv.Atoi(a); err == nil {
+						t.Open(n)
+						break
+					}
+				}
 			case "h":
 				fallthrough
 			case "help":
@@ -161,6 +203,20 @@ func (t *TweetStreem) watchTerminal() {
 			fmt.Println("Error:", err)
 		}
 	}
+}
+
+// SplitCommand takes a string and resturns command and arguments
+func (t *TweetStreem) SplitCommand(str string) (string, []string) {
+	str = strings.ToLower(str)
+	str = strings.TrimSpace(str)
+	split := strings.Split(str, " ")
+	if len(split) > 1 {
+		return split[0], split[1:]
+	}
+	if len(split) > 0 {
+		return split[0], nil
+	}
+	return "", nil
 }
 
 func (t *TweetStreem) Version() {
@@ -181,22 +237,34 @@ func (t *TweetStreem) Pause() {
 }
 
 func (t *TweetStreem) Home() error {
-	tweets, err := t.twitter.HomeTimeline(GetConf{})
+	tweets, err := t.twitter.HomeTimeline(OaRequestConf{})
 	if err != nil {
 		return err
 	}
+	t.ClearHistory()
 	t.EchoTweets(tweets)
 	return nil
+}
+
+func (t *TweetStreem) Open(id int) {
+	if tw := t.GetHistoryTweet(id); tw != nil {
+		fmt.Println("TODO: Open Tweet", tw)
+		//OpenBrowser(tw.)
+	}
 }
 
 func (t *TweetStreem) EchoTweets(tweets []*Tweet) {
 	for i := len(tweets) - 1; i >= 0; i-- {
 		tweet := tweets[i]
+		atomic.AddInt32(t.lastTweetId, 1)
+		t.LogTweet(int(*t.lastTweetId), tweet)
 		_ = t.tweetTemplate.Execute(os.Stdout, struct {
+			Id     int
 			User   string
 			Status string
 			Text   string
 		}{
+			Id:     int(*t.lastTweetId),
 			User:   tweet.UsrString(),
 			Status: tweet.StatusString(),
 			Text:   tweet.String(),
