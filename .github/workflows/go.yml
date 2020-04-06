@@ -34,6 +34,12 @@ jobs:
         APP_SECRET: ${{ secrets.AppSecret }}
       run: make buildmac
 
+    - name: Build Linux/ARM
+      env:
+        APP_TOKEN: ${{ secrets.AppToken }}
+        APP_SECRET: ${{ secrets.AppSecret }}
+      run: make buildarm
+
     - name: Package
       run: make package
 

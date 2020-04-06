@@ -48,6 +48,7 @@ type TweetStreem struct {
 	TweetTemplate         string `json:"tweetTemplate"`
 	EnableApi             bool   `json:"enableApi"`
 	ApiPort               int    `json:"apiPort"`
+	AutoHome              bool   `json:"autoHome"`
 
 	api           *Api `json:"api"`
 	tweetTemplate *template.Template
@@ -115,6 +116,10 @@ func (t *TweetStreem) Run() int {
 	go t.echoOnPoll()
 	go t.watchTerminal()
 	go t.signalWatcher()
+
+	if t.AutoHome {
+		t.Home()
+	}
 	<-t.ctx.Done()
 	t.saveConfig()
 	fmt.Println("\n'till next time o/ ")

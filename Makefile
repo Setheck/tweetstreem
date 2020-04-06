@@ -27,6 +27,11 @@ buildmac: test
 	@if [ -z "${APP_SECRET}" ]; then echo "APP_SECRET Not Set"; exit 1; fi
 	GOOS=darwin go build ${LDFLAGS} -o tweetstreem_mac
 
+buildarm: test
+	@if [ -z "${APP_TOKEN}" ]; then echo "APP_TOKEN Not Set"; exit 1; fi
+	@if [ -z "${APP_SECRET}" ]; then echo "APP_SECRET Not Set"; exit 1; fi
+	GOOS=linux GOARCH=arm go build ${LDFLAGS} -o tweetstreem_arm
+
 package:
 	mkdir -p deploy/
 	mv tweetstreem* deploy/
