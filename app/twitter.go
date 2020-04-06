@@ -393,18 +393,21 @@ func (t *Tweet) UsrString() string {
 		}
 	}
 
-	str := fmt.Sprint(Cyan, t.User.Name, Reset, " ")
-	str += fmt.Sprintf("%s@%s%s ", Green, t.User.ScreenName, Reset)
-	str += fmt.Sprint(Purple, tstr, Reset)
+	str := fmt.Sprint(Colors.Colorize("cyan", t.User.Name), " ")
+	str += Colors.Colorize("green", "@"+t.User.ScreenName)
+	str += Colors.Colorize("purple", tstr)
 	return str
 }
 
 func (t *Tweet) StatusString() string {
-	agent := ExtractAnchorText(t.Source)
+	rt := fmt.Sprintf("rt:%d", t.ReTweetCount)
+	fav := fmt.Sprintf("♥:%d", t.FavoriteCount)
+	app := fmt.Sprintf("%s", ExtractAnchorText(t.Source))
+
 	return fmt.Sprint(
-		Cyan, "rt:", t.ReTweetCount, Reset, " ",
-		Red, "♥:", t.FavoriteCount, Reset,
-		" via ", Blue, agent, Reset)
+		Colors.Colorize("cyan", rt), " ",
+		Colors.Colorize("red", fav), " ",
+		"via ", Colors.Colorize("blue", app))
 }
 
 func (t *Tweet) String() string {

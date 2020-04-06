@@ -127,7 +127,10 @@ func (t *TweetStreem) Run() int {
 }
 
 func (t *TweetStreem) InitTwitter() error {
-	tpl, err := template.New("").Parse(t.TweetTemplate)
+	tpl, err := template.New("").Funcs(
+		map[string]interface{}{
+			"color": Colors.Colorize,
+		}).Parse(t.TweetTemplate)
 	if err != nil {
 		return err
 	}

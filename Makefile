@@ -17,20 +17,18 @@ LDFLAGS=-ldflags "-w -s \
 test:
 	go test ./... -cover
 
-build: test
-	@if [ -z "${APP_TOKEN}" ]; then echo "APP_TOKEN Not Set"; exit 1; fi
-	@if [ -z "${APP_SECRET}" ]; then echo "APP_SECRET Not Set"; exit 1; fi
+build: tokencheck test
 	go build ${LDFLAGS} -o tweetstreem
 
-buildmac: test
-	@if [ -z "${APP_TOKEN}" ]; then echo "APP_TOKEN Not Set"; exit 1; fi
-	@if [ -z "${APP_SECRET}" ]; then echo "APP_SECRET Not Set"; exit 1; fi
+buildmac: tokencheck test
 	GOOS=darwin go build ${LDFLAGS} -o tweetstreem_mac
 
-buildarm: test
+buildarm: tokencheck test
+	GOOS=linux GOARCH=arm go build ${LDFLAGS} -o tweetstreem_arm
+
+tokencheck:
 	@if [ -z "${APP_TOKEN}" ]; then echo "APP_TOKEN Not Set"; exit 1; fi
 	@if [ -z "${APP_SECRET}" ]; then echo "APP_SECRET Not Set"; exit 1; fi
-	GOOS=linux GOARCH=arm go build ${LDFLAGS} -o tweetstreem_arm
 
 package:
 	mkdir -p deploy/
@@ -58,4 +56,4 @@ ddeploy: clean dbuild
 clean:
 	rm -rf tweetstreem*
 
-.PHONY: test build dbuild clean tag
+.PHONY: test build dbuild clean tag tokencheck
