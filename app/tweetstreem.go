@@ -198,6 +198,17 @@ func (t *TweetStreem) watchTerminal() {
 						break
 					}
 				}
+			case "browse":
+				for _, a := range args {
+					if n, err := strconv.Atoi(a); err == nil {
+						if tw := t.GetHistoryTweet(n); tw != nil {
+							if err := OpenBrowser(tw.HtmlLink()); err != nil {
+								fmt.Println("Error:", err)
+							}
+							break
+						}
+					}
+				}
 			case "h":
 				fallthrough
 			case "help":

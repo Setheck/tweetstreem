@@ -27,6 +27,8 @@ var (
 	StatusesUpdateURI  = "https://api.twitter.com/1.1/statuses/update.json"
 	StatusesRetweetURI = "https://api.twitter.com/1.1/statuses/retweet"
 
+	TweetLinkUriTemplate = "https://twitter.com/%s/status/%s"
+
 	AppToken  = ""
 	AppSecret = ""
 )
@@ -373,6 +375,10 @@ type Tweet struct {
 
 	// TODO: Additional Attributes
 	// https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object
+}
+
+func (t *Tweet) HtmlLink() string {
+	return fmt.Sprintf(TweetLinkUriTemplate, t.User.ScreenName, t.IDStr)
 }
 
 func (t *Tweet) UsrString() string {
