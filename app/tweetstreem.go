@@ -46,7 +46,10 @@ func init() {
 type TweetStreem struct {
 	*TwitterConfiguration `json:"twitterConfiguration"`
 	TweetTemplate         string `json:"tweetTemplate"`
+	EnableApi             bool   `json:"enableApi"`
+	ApiPort               int    `json:"apiPort"`
 
+	api           *Api `json:"api"`
 	tweetTemplate *template.Template
 	twitter       *Twitter
 	tweetHistory  map[int]*Tweet
@@ -65,6 +68,7 @@ id:{{ .Id }} {{ .Status }}
 func NewTweetStreem() *TweetStreem {
 	ctx, cancel := context.WithCancel(context.Background())
 	return &TweetStreem{
+		ApiPort:              8080,
 		TwitterConfiguration: &TwitterConfiguration{},
 		TweetTemplate:        DefaultTweetTemplate,
 		tweetHistory:         make(map[int]*Tweet),
@@ -105,6 +109,9 @@ func (t *TweetStreem) Run() int {
 		fmt.Println("Error:", err)
 		return 1
 	}
+	if t.EnableApi {
+		t.InitApi()
+	}
 	go t.echoOnPoll()
 	go t.watchTerminal()
 	go t.signalWatcher()
@@ -122,6 +129,11 @@ func (t *TweetStreem) InitTwitter() error {
 	t.tweetTemplate = tpl
 	t.twitter = NewTwitter(t.TwitterConfiguration)
 	return t.twitter.Init()
+}
+
+func (t *TweetStreem) InitApi() {
+	t.api = NewApi(t.ctx, t.ApiPort) // pass in context so there is no need to call api.Stop()
+	t.api.Start()
 }
 
 func (t *TweetStreem) signalWatcher() {
@@ -250,6 +262,14 @@ func (t *TweetStreem) Open(id int) {
 	if tw := t.GetHistoryTweet(id); tw != nil {
 		fmt.Println("TODO: Open Tweet", tw)
 		//OpenBrowser(tw.)
+	}
+}
+
+func (t *TweetStreem) ReTweet(id int) {
+	if tw := t.GetHistoryTweet(id); tw != nil {
+		if err := t.twitter.ReTweet(tw, OaRequestConf{}); err != nil {
+			fmt.Println("Error:", err)
+		}
 	}
 }
 

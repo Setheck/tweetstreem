@@ -23,8 +23,9 @@ var (
 	TwitterTokenRequestURI      = "https://api.twitter.com/oauth/access_token"
 	TwitterAuthorizeURI         = "https://api.twitter.com/oauth/authorize"
 
-	HomeTimelineURI   = "https://api.twitter.com/1.1/statuses/home_timeline.json"
-	StatusesUpdateURI = "https://api.twitter.com/1.1/statuses/update.json"
+	HomeTimelineURI    = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+	StatusesUpdateURI  = "https://api.twitter.com/1.1/statuses/update.json"
+	StatusesRetweetURI = "https://api.twitter.com/1.1/statuses/retweet"
 
 	AppToken  = ""
 	AppSecret = ""
@@ -180,6 +181,17 @@ func (t *Twitter) UpdateStatus(status string, conf OaRequestConf) (*Tweet, error
 		return nil, err
 	}
 	return tw, nil
+}
+
+func (t *Twitter) ReTweet(tw *Tweet, conf OaRequestConf) error {
+	data, err := t.oaRequest(http.MethodPost, StatusesRetweetURI+"/"+tw.IDStr, conf)
+	if err != nil {
+		return err
+	}
+	if err := t.UnmarshalError(data); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (t *Twitter) UnmarshalError(data []byte) error {
