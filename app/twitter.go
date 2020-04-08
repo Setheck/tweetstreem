@@ -23,9 +23,12 @@ var (
 	TwitterTokenRequestURI      = "https://api.twitter.com/oauth/access_token"
 	TwitterAuthorizeURI         = "https://api.twitter.com/oauth/authorize"
 
-	HomeTimelineURI    = "https://api.twitter.com/1.1/statuses/home_timeline.json"
-	StatusesUpdateURI  = "https://api.twitter.com/1.1/statuses/update.json"
-	StatusesRetweetURI = "https://api.twitter.com/1.1/statuses/retweet"
+	HomeTimelineURI      = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+	StatusesUpdateURI    = "https://api.twitter.com/1.1/statuses/update.json"
+	StatusesRetweetURI   = "https://api.twitter.com/1.1/statuses/retweet"
+	StatusesUnRetweetURI = "https://api.twitter.com/1.1/statuses/unretweet"
+	FavoritesCreateURI   = "https://api.twitter.com/1.1/favorites/create.json"
+	FavoritesDestroyURI  = "https://api.twitter.com/1.1/favorites/destroy.json"
 
 	TweetLinkUriTemplate = "https://twitter.com/%s/status/%s"
 
@@ -127,6 +130,8 @@ func (t *Twitter) Authorize() error {
 }
 
 type OaRequestConf struct {
+	id              string
+	status          string
 	count           int
 	sinceId         string
 	includeEntities bool
@@ -135,6 +140,9 @@ type OaRequestConf struct {
 
 func (g *OaRequestConf) ToForm() url.Values {
 	form := url.Values{}
+	if len(g.id) > 0 {
+		form.Set("id", g.id)
+	}
 	if g.count > 0 {
 		cnt := strconv.Itoa(g.count)
 		form.Set("count", cnt)
@@ -170,8 +178,8 @@ func (twe TwError) String() string {
 }
 
 func (t *Twitter) UpdateStatus(status string, conf OaRequestConf) (*Tweet, error) {
-	status = url.QueryEscape(status)
-	data, err := t.oaRequest(http.MethodPost, StatusesUpdateURI+"?status="+status, conf)
+	conf.status = url.QueryEscape(status)
+	data, err := t.oaRequest(http.MethodPost, StatusesUpdateURI, conf)
 	if err != nil {
 		return nil, err
 	}
@@ -187,6 +195,41 @@ func (t *Twitter) UpdateStatus(status string, conf OaRequestConf) (*Tweet, error
 
 func (t *Twitter) ReTweet(tw *Tweet, conf OaRequestConf) error {
 	data, err := t.oaRequest(http.MethodPost, StatusesRetweetURI+"/"+tw.IDStr, conf)
+	if err != nil {
+		return err
+	}
+	if err := t.UnmarshalError(data); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (t *Twitter) UnReTweet(tw *Tweet, conf OaRequestConf) error {
+	data, err := t.oaRequest(http.MethodPost, StatusesUnRetweetURI+"/"+tw.IDStr, conf)
+	if err != nil {
+		return err
+	}
+	if err := t.UnmarshalError(data); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (t *Twitter) Like(tw *Tweet, conf OaRequestConf) error {
+	conf.id = tw.IDStr
+	data, err := t.oaRequest(http.MethodPost, FavoritesCreateURI, conf)
+	if err != nil {
+		return err
+	}
+	if err := t.UnmarshalError(data); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (t *Twitter) UnLike(tw *Tweet, conf OaRequestConf) error {
+	conf.id = tw.IDStr
+	data, err := t.oaRequest(http.MethodPost, FavoritesDestroyURI, conf)
 	if err != nil {
 		return err
 	}
@@ -226,15 +269,38 @@ func (t *Twitter) HomeTimeline(conf OaRequestConf) ([]*Tweet, error) {
 	return timeLine, nil
 }
 
+func (t *Twitter) UserTimeline(conf OaRequestConf) ([]*Tweet, error) {
+	rawTweets, err := t.oaRequest(http.MethodGet, HomeTimelineURI, conf)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := t.UnmarshalError(rawTweets); err != nil {
+		return nil, err
+	}
+	var timeLine []*Tweet
+	if err := json.Unmarshal(rawTweets, &timeLine); err != nil {
+		return nil, err
+	}
+	if len(timeLine) > 0 {
+		t.lock.Lock()
+		t.lastTweet = timeLine[0]
+		t.lock.Unlock()
+	}
+	return timeLine, nil
+}
+
 func (t *Twitter) oaRequest(method, u string, conf OaRequestConf) ([]byte, error) {
 	cred := &oauth.Credentials{Token: t.configuration.UserToken, Secret: t.configuration.UserSecret}
 	var resp *http.Response
 	var err error
+	formData := conf.ToForm()
+	formData.Set("User-Agent", "tweetstream-"+Version)
 	switch strings.ToUpper(method) {
 	case http.MethodPost:
-		resp, err = t.oauthClient.Post(nil, cred, u, conf.ToForm())
+		resp, err = t.oauthClient.Post(nil, cred, u, formData)
 	case http.MethodGet:
-		resp, err = t.oauthClient.Get(nil, cred, u, conf.ToForm())
+		resp, err = t.oauthClient.Get(nil, cred, u, formData)
 	}
 	if err != nil {
 		return nil, err
@@ -297,9 +363,11 @@ func (t *Twitter) Shutdown() error {
 }
 
 type Entities struct {
+	// TODO:
 }
 
 type Enrichment struct {
+	// TODO:
 }
 
 type User struct {
@@ -328,15 +396,19 @@ type User struct {
 }
 
 type ReTweetedStatus struct {
+	// TODO:
 }
 
 type Coordinates struct {
+	// TODO:
 }
 
 type Place struct {
+	// TODO:
 }
 
 type Rule struct {
+	// TODO:
 }
 
 type Tweet struct {
