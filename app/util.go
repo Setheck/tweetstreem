@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"regexp"
 	"runtime"
+	"strconv"
 	"syscall"
 )
 
@@ -40,4 +41,13 @@ func ExtractAnchorText(anchor string) string {
 		return found[1]
 	}
 	return ""
+}
+
+func FirstNumber(args ...string) (int, bool) {
+	for _, a := range args {
+		if n, err := strconv.Atoi(a); err == nil {
+			return n, true
+		}
+	}
+	return 0, false
 }

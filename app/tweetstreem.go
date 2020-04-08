@@ -7,7 +7,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -50,7 +49,7 @@ type TweetStreem struct {
 	ApiPort               int    `json:"apiPort"`
 	AutoHome              bool   `json:"autoHome"`
 
-	api           *Api `json:"api"`
+	api           *Api
 	tweetTemplate *template.Template
 	twitter       *Twitter
 	tweetHistory  map[int]*Tweet
@@ -60,9 +59,9 @@ type TweetStreem struct {
 	cancel        context.CancelFunc
 }
 
-const DefaultTweetTemplate = `{{ .User }}
-id:{{ .Id }} {{ .Status }}
-{{ .Text }}
+const DefaultTweetTemplate = `{{ .UserName | color "cyan" }} {{ .ScreenName | color "green" }} {{ .RelativeTweetTime | color "purple" }}
+id:{{ .Id }} {{ "rt:" | color "cyan" }}{{ .ReTweetCount | color "cyan" }} {{ "♥:"| color "red" }}{{ .FavoriteCount | color "red" }} via {{ .App | color "blue" }}
+{{ .TweetText }}
 
 `
 
@@ -200,22 +199,12 @@ func (t *TweetStreem) watchTerminal() {
 			case "v": // show version
 				t.Version()
 			case "open":
-				for _, a := range args {
-					if n, err := strconv.Atoi(a); err == nil {
-						t.Open(n)
-						break
-					}
+				if n, ok := FirstNumber(args...); ok {
+					t.Open(n)
 				}
 			case "browse":
-				for _, a := range args {
-					if n, err := strconv.Atoi(a); err == nil {
-						if tw := t.GetHistoryTweet(n); tw != nil {
-							if err := OpenBrowser(tw.HtmlLink()); err != nil {
-								fmt.Println("Error:", err)
-							}
-							break
-						}
-					}
+				if n, ok := FirstNumber(args...); ok {
+					t.Browse(n)
 				}
 			case "h":
 				fallthrough
@@ -277,6 +266,14 @@ func (t *TweetStreem) Home() error {
 	return nil
 }
 
+func (t *TweetStreem) Browse(id int) {
+	if tw := t.GetHistoryTweet(id); tw != nil {
+		if err := OpenBrowser(tw.HtmlLink()); err != nil {
+			fmt.Println("Error:", err)
+		}
+	}
+}
+
 func (t *TweetStreem) Open(id int) {
 	if tw := t.GetHistoryTweet(id); tw != nil {
 		fmt.Println("TODO: Open Tweet", tw)
@@ -297,18 +294,15 @@ func (t *TweetStreem) EchoTweets(tweets []*Tweet) {
 		tweet := tweets[i]
 		atomic.AddInt32(t.lastTweetId, 1)
 		t.LogTweet(int(*t.lastTweetId), tweet)
-		_ = t.tweetTemplate.Execute(os.Stdout, struct {
-			Id     int
-			User   string
-			Status string
-			Text   string
+		if err := t.tweetTemplate.Execute(os.Stdout, struct {
+			Id int
+			TweetTemplateOutput
 		}{
-			Id:     int(*t.lastTweetId),
-			User:   tweet.UsrString(),
-			Status: tweet.StatusString(),
-			Text:   tweet.String(),
-		})
-		//fmt.Printf("%s\n%s\n%s\n\n", tweet.UsrString(), tweet.StatusString(), tweet.String())
+			Id:                  int(*t.lastTweetId),
+			TweetTemplateOutput: tweet.TemplateOutput(),
+		}); err != nil {
+			fmt.Println("Error:", err)
+		}
 	}
 }
 

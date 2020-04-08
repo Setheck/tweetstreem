@@ -381,7 +381,29 @@ func (t *Tweet) HtmlLink() string {
 	return fmt.Sprintf(TweetLinkUriTemplate, t.User.ScreenName, t.IDStr)
 }
 
-func (t *Tweet) UsrString() string {
+type TweetTemplateOutput struct {
+	UserName          string
+	ScreenName        string
+	RelativeTweetTime string
+	ReTweetCount      string
+	FavoriteCount     string
+	App               string
+	TweetText         string
+}
+
+func (t *Tweet) TemplateOutput() TweetTemplateOutput {
+	return TweetTemplateOutput{
+		UserName:          t.User.Name,
+		ScreenName:        t.User.ScreenName,
+		RelativeTweetTime: t.RelativeTweetTime(),
+		ReTweetCount:      strconv.Itoa(t.ReTweetCount),
+		FavoriteCount:     strconv.Itoa(t.FavoriteCount),
+		App:               t.App(),
+		TweetText:         t.TweetText(),
+	}
+}
+
+func (t *Tweet) RelativeTweetTime() string {
 	tstr := t.CreatedAt
 	tm, err := time.Parse("Mon Jan 2 15:04:05 -0700 2006", t.CreatedAt)
 	if err == nil {
@@ -392,25 +414,14 @@ func (t *Tweet) UsrString() string {
 			tstr = tm.Format("01/02/2006 15:04:05")
 		}
 	}
-
-	str := fmt.Sprint(Colors.Colorize("cyan", t.User.Name), " ")
-	str += Colors.Colorize("green", "@"+t.User.ScreenName)
-	str += Colors.Colorize("purple", tstr)
-	return str
+	return tstr
 }
 
-func (t *Tweet) StatusString() string {
-	rt := fmt.Sprintf("rt:%d", t.ReTweetCount)
-	fav := fmt.Sprintf("♥:%d", t.FavoriteCount)
-	app := fmt.Sprintf("%s", ExtractAnchorText(t.Source))
-
-	return fmt.Sprint(
-		Colors.Colorize("cyan", rt), " ",
-		Colors.Colorize("red", fav), " ",
-		"via ", Colors.Colorize("blue", app))
+func (t *Tweet) App() string {
+	return fmt.Sprintf("%s", ExtractAnchorText(t.Source))
 }
 
-func (t *Tweet) String() string {
+func (t *Tweet) TweetText() string {
 	if len(t.FullText) > 0 {
 		return html.UnescapeString(t.FullText)
 	}
