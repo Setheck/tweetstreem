@@ -60,7 +60,7 @@ type TweetStreem struct {
 	cancel        context.CancelFunc
 }
 
-const DefaultTweetTemplate = `{{ .UserName | color "cyan" }} {{ .ScreenName | color "green" }} {{ .RelativeTweetTime | color "magenta" }}
+const DefaultTweetTemplate = `{{ .UserName | color "cyan" }} {{ "@" | color "green" }}{{ .ScreenName | color "green" }} {{ .RelativeTweetTime | color "magenta" }}
 id:{{ .Id }} {{ "rt:" | color "cyan" }}{{ .ReTweetCount | color "cyan" }} {{ "♥:" | color "red" }}{{ .FavoriteCount | color "red" }} via {{ .App | color "blue" }}
 {{ .TweetText }}
 
