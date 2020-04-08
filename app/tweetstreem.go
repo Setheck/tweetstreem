@@ -192,37 +192,68 @@ func (t *TweetStreem) watchTerminal() {
 			command, args := t.SplitCommand(input)
 			switch command {
 			//case "c": // clear screen
-			case "p": // pause the streem
+			case "p", "pause": // pause the streem
 				t.Pause()
-			case "r": // unpause the streem
+			case "r", "resume": // unpause the streem
 				t.Resume()
-			case "v": // show version
+			case "v", "version": // show version
 				t.Version()
-			case "open":
+			case "o", "open":
 				if n, ok := FirstNumber(args...); ok {
 					t.Open(n)
 				}
-			case "browse":
+			case "b", "browse":
 				if n, ok := FirstNumber(args...); ok {
 					t.Browse(n)
 				}
-			case "h":
-				fallthrough
-			case "help":
-				fmt.Println("Options:\n home - view your default timeline.\n exit - exit tweetstreem.\n help (h) - this help menu :D")
-			case "q":
-				fallthrough
-			case "exit":
-				t.cancel()
-				return
+			case "urt", "unretweet":
+				if n, ok := FirstNumber(args...); ok {
+					t.UnReTweet(n)
+				}
+			case "rt", "retweet":
+				if n, ok := FirstNumber(args...); ok {
+					t.ReTweet(n)
+				}
+			case "ul", "unlike":
+				if n, ok := FirstNumber(args...); ok {
+					t.UnLike(n)
+				}
+			case "li", "like":
+				if n, ok := FirstNumber(args...); ok {
+					t.Like(n)
+				}
 			case "home":
 				err = t.Home()
+			case "h", "help":
+				t.Help()
+			case "q", "quit", "exit":
+				t.cancel()
+				return
 			}
 		}
 		if err != nil {
 			fmt.Println("Error:", err)
 		}
 	}
+}
+
+func (t *TweetStreem) Help() {
+	fmt.Println("Options:\n" +
+		"p,pause - pause the stream\n" +
+		"r,resume - resume the stream\n" +
+		"v,version - print tweetstreem version\n" +
+		"Select a tweet by id, eg: 'open 2'\n" +
+		" o,open - open the link in the selected tweet\n" +
+		" b,browse - open the selected tweet in a browser\n" +
+		" rt,retweet - retweet the selected tweet\n" +
+		" urt,unretweet - uretweet the selected tweet\n" +
+		" li,like - like the selected tweet\n" +
+		" ul,unlike - unlike the selected tweet\n" +
+		"home - view your default timeline\n" +
+		"h help - this help menu\n" +
+		"q,quit,exit - exit tweetstreem.\n" +
+		"help (h) - this help menu :D")
+
 }
 
 // SplitCommand takes a string and resturns command and arguments
@@ -271,6 +302,8 @@ func (t *TweetStreem) Browse(id int) {
 		if err := OpenBrowser(tw.HtmlLink()); err != nil {
 			fmt.Println("Error:", err)
 		}
+	} else {
+		fmt.Println("unknown tweet - id:", id)
 	}
 }
 
@@ -278,6 +311,8 @@ func (t *TweetStreem) Open(id int) {
 	if tw := t.GetHistoryTweet(id); tw != nil {
 		fmt.Println("TODO: Open Tweet", tw)
 		//OpenBrowser(tw.)
+	} else {
+		fmt.Println("unknown tweet - id:", id)
 	}
 }
 
@@ -286,6 +321,38 @@ func (t *TweetStreem) ReTweet(id int) {
 		if err := t.twitter.ReTweet(tw, OaRequestConf{}); err != nil {
 			fmt.Println("Error:", err)
 		}
+	} else {
+		fmt.Println("unknown tweet - id:", id)
+	}
+}
+
+func (t *TweetStreem) UnReTweet(id int) {
+	if tw := t.GetHistoryTweet(id); tw != nil {
+		if err := t.twitter.UnReTweet(tw, OaRequestConf{}); err != nil {
+			fmt.Println("Error:", err)
+		}
+	} else {
+		fmt.Println("unknown tweet - id:", id)
+	}
+}
+
+func (t *TweetStreem) Like(id int) {
+	if tw := t.GetHistoryTweet(id); tw != nil {
+		if err := t.twitter.Like(tw, OaRequestConf{}); err != nil {
+			fmt.Println("Error:", err)
+		}
+	} else {
+		fmt.Println("unknown tweet - id:", id)
+	}
+}
+
+func (t *TweetStreem) UnLike(id int) {
+	if tw := t.GetHistoryTweet(id); tw != nil {
+		if err := t.twitter.UnLike(tw, OaRequestConf{}); err != nil {
+			fmt.Println("Error:", err)
+		}
+	} else {
+		fmt.Println("unknown tweet - id:", id)
 	}
 }
 
