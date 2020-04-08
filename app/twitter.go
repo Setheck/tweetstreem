@@ -398,7 +398,7 @@ func (t *Tweet) TemplateOutput() TweetTemplateOutput {
 		RelativeTweetTime: t.RelativeTweetTime(),
 		ReTweetCount:      strconv.Itoa(t.ReTweetCount),
 		FavoriteCount:     strconv.Itoa(t.FavoriteCount),
-		App:               t.App(),
+		App:               ExtractAnchorText(t.Source),
 		TweetText:         t.TweetText(),
 	}
 }
@@ -415,10 +415,6 @@ func (t *Tweet) RelativeTweetTime() string {
 		}
 	}
 	return tstr
-}
-
-func (t *Tweet) App() string {
-	return fmt.Sprintf("%s", ExtractAnchorText(t.Source))
 }
 
 func (t *Tweet) TweetText() string {
