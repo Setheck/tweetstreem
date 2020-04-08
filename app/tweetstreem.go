@@ -3,6 +3,7 @@ package app
 import (
 	"bufio"
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -222,6 +223,8 @@ func (t *TweetStreem) watchTerminal() {
 				if n, ok := FirstNumber(args...); ok {
 					t.Like(n)
 				}
+			case "config":
+				t.Config()
 			case "home":
 				err = t.Home()
 			case "h", "help":
@@ -239,6 +242,7 @@ func (t *TweetStreem) watchTerminal() {
 
 func (t *TweetStreem) Help() {
 	fmt.Println("Options:\n" +
+		"config - show the current configuration\n" +
 		"p,pause - pause the stream\n" +
 		"r,resume - resume the stream\n" +
 		"v,version - print tweetstreem version\n" +
@@ -253,6 +257,15 @@ func (t *TweetStreem) Help() {
 		"h help - this help menu\n" +
 		"q,quit,exit - exit tweetstreem.\n" +
 		"help (h) - this help menu :D")
+
+}
+
+func (t *TweetStreem) Config() {
+	if b, err := json.Marshal(t); err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println(string(b))
+	}
 
 }
 
