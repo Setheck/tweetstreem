@@ -140,13 +140,14 @@ func (t *Twitter) Authorize() error {
 }
 
 type OaRequestConf struct {
-	id              string
-	status          string
-	screenName      string
-	count           int
-	sinceId         string
-	includeEntities bool
-	tweetMode       string
+	id                string
+	status            string
+	screenName        string
+	count             int
+	sinceId           string
+	includeEntities   bool
+	tweetMode         string
+	InReplyToStatusId string
 }
 
 func (g *OaRequestConf) ToForm() url.Values {
@@ -156,6 +157,9 @@ func (g *OaRequestConf) ToForm() url.Values {
 	}
 	if len(g.status) > 0 {
 		form.Set("status", g.status)
+	}
+	if len(g.InReplyToStatusId) > 0 {
+		form.Set("in_reply_to_status_id", g.InReplyToStatusId)
 	}
 	if len(g.screenName) > 0 {
 		form.Set("screen_name", g.screenName)
@@ -412,16 +416,19 @@ type UserMention struct {
 }
 
 type Symbol struct {
-	// TODO:
+	// TODO
 }
 
 type Url struct {
-	// TODO
+	DisplayUrl  string `json:"display_url"`
+	ExpandedUrl string `json:"expanded_url"`
+	Indices     []int  `json:"indices"`
+	Url         string `json:"url"`
 }
 
 type Entities struct {
 	HashTags    []HashTag     `json:"hashtags"`
-	Url         []Url         `json:"urls"`
+	Urls        []Url         `json:"urls"`
 	UserMention []UserMention `json:"user_mentions"`
 	Symbol      []Symbol      `json:"symbols"`
 }
@@ -513,6 +520,14 @@ func (t *Tweet) HtmlLink() string {
 	return fmt.Sprintf(TweetLinkUriTemplate, t.User.ScreenName, t.IDStr)
 }
 
+func (t *Tweet) ExpandedUrls() []string {
+	ulist := make([]string, 0)
+	for _, u := range t.Entities.Urls {
+		ulist = append(ulist, u.ExpandedUrl)
+	}
+	return ulist
+}
+
 type TweetTemplateOutput struct {
 	UserName          string
 	ScreenName        string
@@ -562,9 +577,9 @@ func (t *Tweet) TweetText(config OutputConfig, highlight bool) string {
 		return fmt.Sprintf("RT %s: %s", screenName, text)
 	}
 	if len(t.FullText) > 0 {
-		text = html.UnescapeString(t.FullText)
+		text = t.FullText
 	} else {
-		text = html.UnescapeString(t.Text)
+		text = t.Text
 	}
 	if highlight {
 		var higlightEntryList HighlightEntryList
@@ -582,9 +597,9 @@ func (t *Tweet) TweetText(config OutputConfig, highlight bool) string {
 				endIdx:   end,
 				color:    config.MentionHighlightColor})
 		}
-		return highlightEntries(text, higlightEntryList)
+		text = highlightEntries(text, higlightEntryList)
 	}
-	return text
+	return html.UnescapeString(text)
 }
 
 type HighlightEntry struct {

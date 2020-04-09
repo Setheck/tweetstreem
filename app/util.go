@@ -43,6 +43,14 @@ func ExtractAnchorText(anchor string) string {
 	return ""
 }
 
+//func NumberString(args ...string) (int, string, bool) {
+//	n := 0
+//	str := ""
+//	for _, a := range args {
+//
+//	}
+//}
+
 func FirstNumber(args ...string) (int, bool) {
 	for _, a := range args {
 		if n, err := strconv.Atoi(a); err == nil {

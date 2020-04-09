@@ -212,6 +212,18 @@ func (t *TweetStreem) watchTerminal() {
 				if n, ok := FirstNumber(args...); ok {
 					t.Browse(n)
 				}
+			//case "t", "tweet":
+			// TODO
+			//case "reply":
+			// TODO
+			//case "cbreply": // TODO: confirmation
+			//	if n, ok := FirstNumber(args...); ok {
+			//		if msg, err := ClipboardHelper.ReadAll(); err != nil {
+			//			fmt.Println("Error:", err)
+			//		} else {
+			//			t.Reply(n, msg)
+			//		}
+			//	}
 			case "urt", "unretweet":
 				if n, ok := FirstNumber(args...); ok {
 					t.UnReTweet(n)
@@ -340,69 +352,112 @@ func (t *TweetStreem) UserTimeline(screenName string) error {
 }
 
 func (t *TweetStreem) Browse(id int) {
-	if tw := t.GetHistoryTweet(id); tw != nil {
-		if err := OpenBrowser(tw.HtmlLink()); err != nil {
-			fmt.Println("Error:", err)
-		}
-	} else {
+	tw := t.GetHistoryTweet(id)
+	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
+		return
+	}
+	if err := OpenBrowser(tw.HtmlLink()); err != nil {
+		fmt.Println("Error:", err)
 	}
 }
 
 func (t *TweetStreem) Open(id int) {
-	if tw := t.GetHistoryTweet(id); tw != nil {
-		fmt.Println("TODO: Open Tweet", tw)
-		//OpenBrowser(tw.)
-	} else {
+	tw := t.GetHistoryTweet(id)
+	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
+		return
+	}
+	ulist := tw.ExpandedUrls()
+	if len(ulist) > 0 { // TODO: select url
+		if err := OpenBrowser(ulist[0]); err != nil {
+			fmt.Println("Error:", err)
+		}
+	} else {
+		fmt.Println("tweet contains no links")
+	}
+}
+
+func (t *TweetStreem) Tweet(msg string) {
+	if len(msg) < 1 {
+		fmt.Println("Some text is required to tweet")
+		return
+	}
+	if tw, err := t.twitter.UpdateStatus(msg, OaRequestConf{}); err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Printf("tweet success! [%s]\n", tw.IDStr)
+	}
+}
+
+func (t *TweetStreem) Reply(id int, msg string) {
+	tw := t.GetHistoryTweet(id)
+	if tw == nil {
+		fmt.Println("unknown tweet - id:", id)
+		return
+	}
+	if !strings.Contains(msg, tw.User.ScreenName) {
+		fmt.Printf("reply must contain the original screen name [%s]\n", tw.User.ScreenName)
+		return
+	}
+	if tw, err := t.twitter.UpdateStatus(msg, OaRequestConf{
+		InReplyToStatusId: tw.IDStr,
+	}); err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Printf("tweet success! [%s]\n", tw.IDStr)
 	}
 }
 
 func (t *TweetStreem) ReTweet(id int) {
-	if tw := t.GetHistoryTweet(id); tw != nil {
-		if err := t.twitter.ReTweet(tw, OaRequestConf{}); err != nil {
-			fmt.Println("Error:", err)
-		} else {
-			fmt.Printf("tweet by @%s retweeted\n", tw.User.ScreenName)
-		}
-	} else {
+	tw := t.GetHistoryTweet(id)
+	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
+		return
+	}
+	if err := t.twitter.ReTweet(tw, OaRequestConf{}); err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Printf("tweet by @%s retweeted\n", tw.User.ScreenName)
 	}
 }
 
 func (t *TweetStreem) UnReTweet(id int) {
-	if tw := t.GetHistoryTweet(id); tw != nil {
-		if err := t.twitter.UnReTweet(tw, OaRequestConf{}); err != nil {
-			fmt.Println("Error:", err)
-		} else {
-			fmt.Printf("tweet by @%s unretweeted\n", tw.User.ScreenName)
-		}
-	} else {
+	tw := t.GetHistoryTweet(id)
+	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
+		return
+	}
+	if err := t.twitter.UnReTweet(tw, OaRequestConf{}); err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Printf("tweet by @%s unretweeted\n", tw.User.ScreenName)
 	}
 }
 
 func (t *TweetStreem) Like(id int) {
-	if tw := t.GetHistoryTweet(id); tw != nil {
-		if err := t.twitter.Like(tw, OaRequestConf{}); err != nil {
-			fmt.Println("Error:", err)
-		} else {
-			fmt.Printf("tweet by @%s liked\n", tw.User.ScreenName)
-		}
-	} else {
+	tw := t.GetHistoryTweet(id)
+	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
+		return
+	}
+	if err := t.twitter.Like(tw, OaRequestConf{}); err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Printf("tweet by @%s liked\n", tw.User.ScreenName)
 	}
 }
 
 func (t *TweetStreem) UnLike(id int) {
-	if tw := t.GetHistoryTweet(id); tw != nil {
-		if err := t.twitter.UnLike(tw, OaRequestConf{}); err != nil {
-			fmt.Println("Error:", err)
-		} else {
-			fmt.Printf("tweet by @%s unliked\n", tw.User.ScreenName)
-		}
-	} else {
+	tw := t.GetHistoryTweet(id)
+	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
+		return
+	}
+	if err := t.twitter.UnLike(tw, OaRequestConf{}); err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Printf("tweet by @%s unliked\n", tw.User.ScreenName)
 	}
 }
 
