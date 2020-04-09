@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -419,7 +420,7 @@ type Url struct {
 }
 
 type Entities struct {
-	HashTags    []HashTag     `json:"hash_tags"`
+	HashTags    []HashTag     `json:"hashtags"`
 	Url         []Url         `json:"urls"`
 	UserMention []UserMention `json:"user_mentions"`
 	Symbol      []Symbol      `json:"symbols"`
@@ -522,7 +523,12 @@ type TweetTemplateOutput struct {
 	TweetText         string
 }
 
-func (t *Tweet) TemplateOutput() TweetTemplateOutput {
+type OutputConfig struct {
+	MentionHighlightColor string
+	HashtagHighlightColor string
+}
+
+func (t *Tweet) TemplateOutput(config OutputConfig) TweetTemplateOutput {
 	return TweetTemplateOutput{
 		UserName:          t.User.Name,
 		ScreenName:        t.User.ScreenName,
@@ -530,7 +536,7 @@ func (t *Tweet) TemplateOutput() TweetTemplateOutput {
 		ReTweetCount:      strconv.Itoa(t.ReTweetCount),
 		FavoriteCount:     strconv.Itoa(t.FavoriteCount),
 		App:               ExtractAnchorText(t.Source),
-		TweetText:         t.TweetText(true),
+		TweetText:         t.TweetText(config, true),
 	}
 }
 
@@ -548,28 +554,69 @@ func (t *Tweet) RelativeTweetTime() string {
 	return tstr
 }
 
-func (t *Tweet) TweetText(highlight bool) string {
+func (t *Tweet) TweetText(config OutputConfig, highlight bool) string {
 	text := ""
+	if t.ReTweetedStatus != nil {
+		text = t.ReTweetedStatus.TweetText(config, highlight)
+		screenName := Colors.Colorize(config.MentionHighlightColor, "@"+t.ReTweetedStatus.User.ScreenName)
+		return fmt.Sprintf("RT %s: %s", screenName, text)
+	}
 	if len(t.FullText) > 0 {
 		text = html.UnescapeString(t.FullText)
 	} else {
 		text = html.UnescapeString(t.Text)
 	}
 	if highlight {
+		var higlightEntryList HighlightEntryList
 		for _, ht := range t.Entities.HashTags {
 			start, end := ht.Indices[0], ht.Indices[1]
-			tag := text[start:end]
-
-			text = text[:start] + Colors.Colorize("magenta", tag) + text[end:]
+			higlightEntryList = append(higlightEntryList, HighlightEntry{
+				startIdx: start,
+				endIdx:   end,
+				color:    config.HashtagHighlightColor})
 		}
 		for _, um := range t.Entities.UserMention {
 			start, end := um.Indices[0], um.Indices[1]
-			tag := text[start:end]
-
-			text = text[:start] + Colors.Colorize("blue", tag) + text[end:]
+			higlightEntryList = append(higlightEntryList, HighlightEntry{
+				startIdx: start,
+				endIdx:   end,
+				color:    config.MentionHighlightColor})
 		}
+		return highlightEntries(text, higlightEntryList)
 	}
 	return text
+}
+
+type HighlightEntry struct {
+	startIdx int
+	endIdx   int
+	color    string
+}
+
+type HighlightEntryList []HighlightEntry
+
+func (l HighlightEntryList) Len() int {
+	return len(l)
+}
+func (l HighlightEntryList) Swap(i, j int) {
+	l[i], l[j] = l[j], l[i]
+}
+func (l HighlightEntryList) Less(i, j int) bool {
+	return l[i].startIdx < l[j].startIdx
+}
+
+func highlightEntries(text string, hlist HighlightEntryList) string {
+	sort.Sort(hlist)
+	rtext := []rune(text)
+	resultText := ""
+	position := 0
+	for _, entry := range hlist {
+		resultText += string(rtext[position:entry.startIdx])
+		resultText += Colors.Colorize(entry.color, string(rtext[entry.startIdx:entry.endIdx]))
+		position = entry.endIdx
+	}
+	resultText += string(rtext[position:])
+	return resultText
 }
 
 type SleepTime struct {

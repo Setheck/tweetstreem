@@ -1,0 +1,4689 @@
+[
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 18:51:05 +0000 2020",
+    "display_text_range": [
+      0,
+      269
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [
+        {
+          "display_url": "epa.gov/newsreleases/e…",
+          "expanded_url": "https://www.epa.gov/newsreleases/epa-takes-corrective-action-standards-coal-refuse-power-plants",
+          "indices": [
+            246,
+            269
+          ],
+          "url": "https://t.co/O6c2BFTn7b"
+        }
+      ],
+      "user_mentions": []
+    },
+    "favorite_count": 3,
+    "favorited": false,
+    "full_text": "EPA is taking corrective action to provide stability in the Pennsylvania &amp; West Virginia economies by establishing an emissions standard for a new sub-category of six small coal-refuse power plants under the Mercury and Air Toxics Standards. https://t.co/O6c2BFTn7b",
+    "geo": null,
+    "id": 1248322560548311041,
+    "id_str": "1248322560548311041",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "possibly_sensitive_appealable": false,
+    "retweet_count": 1,
+    "retweeted": false,
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Thu May 01 16:07:59 +0000 2008",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Our mission is to protect human health and the environment.",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "epa.gov",
+              "expanded_url": "http://www.epa.gov",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/AvknKmkLit"
+            }
+          ]
+        }
+      },
+      "favourites_count": 118,
+      "follow_request_sent": false,
+      "followers_count": 611992,
+      "following": true,
+      "friends_count": 682,
+      "geo_enabled": true,
+      "has_extended_profile": false,
+      "id": 14615871,
+      "id_str": "14615871",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 8506,
+      "location": "USA",
+      "name": "U.S. EPA",
+      "notifications": false,
+      "profile_background_color": "768900",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme5/bg.gif",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme5/bg.gif",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/14615871/1583178921",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/632228259879628800/-gvVhzPn_normal.png",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/632228259879628800/-gvVhzPn_normal.png",
+      "profile_link_color": "426BBA",
+      "profile_sidebar_border_color": "FFFFFF",
+      "profile_sidebar_fill_color": "99CC33",
+      "profile_text_color": "3E4415",
+      "profile_use_background_image": false,
+      "protected": false,
+      "screen_name": "EPA",
+      "statuses_count": 16146,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/AvknKmkLit",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 18:43:10 +0000 2020",
+    "display_text_range": [
+      0,
+      52
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [
+        {
+          "display_url": "twitter.com/realtimers/sta…",
+          "expanded_url": "https://twitter.com/realtimers/status/1248308829814546432",
+          "indices": [
+            53,
+            76
+          ],
+          "url": "https://t.co/Fr5fQOkEEq"
+        }
+      ],
+      "user_mentions": []
+    },
+    "favorite_count": 154,
+    "favorited": false,
+    "full_text": "I’ll be on Real Time with Bill Maher tomorrow night! https://t.co/Fr5fQOkEEq",
+    "geo": null,
+    "id": 1248320568975294467,
+    "id_str": "1248320568975294467",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": true,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "possibly_sensitive_appealable": false,
+    "quoted_status": {
+      "contributors": null,
+      "coordinates": null,
+      "created_at": "Thu Apr 09 17:56:32 +0000 2020",
+      "display_text_range": [
+        0,
+        127
+      ],
+      "entities": {
+        "hashtags": [
+          {
+            "indices": [
+              88,
+              97
+            ],
+            "text": "RealTime"
+          }
+        ],
+        "media": [
+          {
+            "display_url": "pic.twitter.com/Uzk3d9p1k9",
+            "expanded_url": "https://twitter.com/RealTimers/status/1248308829814546432/photo/1",
+            "id": 1248307932996890625,
+            "id_str": "1248307932996890625",
+            "indices": [
+              128,
+              151
+            ],
+            "media_url": "http://pbs.twimg.com/media/EVLhc4SU8AEhyvn.jpg",
+            "media_url_https": "https://pbs.twimg.com/media/EVLhc4SU8AEhyvn.jpg",
+            "sizes": {
+              "large": {
+                "h": 512,
+                "resize": "fit",
+                "w": 1024
+              },
+              "medium": {
+                "h": 512,
+                "resize": "fit",
+                "w": 1024
+              },
+              "small": {
+                "h": 340,
+                "resize": "fit",
+                "w": 680
+              },
+              "thumb": {
+                "h": 150,
+                "resize": "crop",
+                "w": 150
+              }
+            },
+            "type": "photo",
+            "url": "https://t.co/Uzk3d9p1k9"
+          }
+        ],
+        "symbols": [],
+        "urls": [
+          {
+            "display_url": "bit.ly/April10Guests",
+            "expanded_url": "http://bit.ly/April10Guests",
+            "indices": [
+              104,
+              127
+            ],
+            "url": "https://t.co/kcB0zzDaru"
+          }
+        ],
+        "user_mentions": [
+          {
+            "id": 17220934,
+            "id_str": "17220934",
+            "indices": [
+              8,
+              15
+            ],
+            "name": "Al Gore",
+            "screen_name": "algore"
+          },
+          {
+            "id": 19834403,
+            "id_str": "19834403",
+            "indices": [
+              17,
+              26
+            ],
+            "name": "Mayor Bill de Blasio",
+            "screen_name": "NYCMayor"
+          },
+          {
+            "id": 476193064,
+            "id_str": "476193064",
+            "indices": [
+              27,
+              40
+            ],
+            "name": "Bill de Blasio",
+            "screen_name": "BilldeBlasio"
+          },
+          {
+            "id": 60783724,
+            "id_str": "60783724",
+            "indices": [
+              42,
+              53
+            ],
+            "name": "ian bremmer",
+            "screen_name": "ianbremmer"
+          },
+          {
+            "id": 8892822,
+            "id_str": "8892822",
+            "indices": [
+              56,
+              68
+            ],
+            "name": "Nikki Glaser",
+            "screen_name": "NikkiGlaser"
+          },
+          {
+            "id": 19697415,
+            "id_str": "19697415",
+            "indices": [
+              74,
+              84
+            ],
+            "name": "Bill Maher",
+            "screen_name": "billmaher"
+          },
+          {
+            "id": 15635604,
+            "id_str": "15635604",
+            "indices": [
+              98,
+              102
+            ],
+            "name": "HBO",
+            "screen_name": "HBO"
+          }
+        ]
+      },
+      "extended_entities": {
+        "media": [
+          {
+            "display_url": "pic.twitter.com/Uzk3d9p1k9",
+            "expanded_url": "https://twitter.com/RealTimers/status/1248308829814546432/photo/1",
+            "id": 1248307932996890625,
+            "id_str": "1248307932996890625",
+            "indices": [
+              128,
+              151
+            ],
+            "media_url": "http://pbs.twimg.com/media/EVLhc4SU8AEhyvn.jpg",
+            "media_url_https": "https://pbs.twimg.com/media/EVLhc4SU8AEhyvn.jpg",
+            "sizes": {
+              "large": {
+                "h": 512,
+                "resize": "fit",
+                "w": 1024
+              },
+              "medium": {
+                "h": 512,
+                "resize": "fit",
+                "w": 1024
+              },
+              "small": {
+                "h": 340,
+                "resize": "fit",
+                "w": 680
+              },
+              "thumb": {
+                "h": 150,
+                "resize": "crop",
+                "w": 150
+              }
+            },
+            "type": "photo",
+            "url": "https://t.co/Uzk3d9p1k9"
+          }
+        ]
+      },
+      "favorite_count": 403,
+      "favorited": false,
+      "full_text": "FRIDAY: @AlGore, @NYCMayor @BilldeBlasio, @IanBremmer + @NikkiGlaser join @BillMaher on #RealTime @HBO! https://t.co/kcB0zzDaru https://t.co/Uzk3d9p1k9",
+      "geo": null,
+      "id": 1248308829814546432,
+      "id_str": "1248308829814546432",
+      "in_reply_to_screen_name": null,
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "is_quote_status": false,
+      "lang": "en",
+      "place": null,
+      "possibly_sensitive": false,
+      "possibly_sensitive_appealable": false,
+      "retweet_count": 61,
+      "retweeted": false,
+      "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+      "truncated": false,
+      "user": {
+        "contributors_enabled": false,
+        "created_at": "Wed Jan 04 23:19:08 +0000 2012",
+        "default_profile": false,
+        "default_profile_image": false,
+        "description": "Watch Real Time with @BillMaher LIVE Fridays at 10PM on @HBO. The contents of this account don't reflect the opinions of HBO.",
+        "entities": {
+          "description": {
+            "urls": []
+          },
+          "url": {
+            "urls": [
+              {
+                "display_url": "hbo.com/real-time-with…",
+                "expanded_url": "http://www.hbo.com/real-time-with-bill-maher",
+                "indices": [
+                  0,
+                  23
+                ],
+                "url": "https://t.co/wVXfPGk8wO"
+              }
+            ]
+          }
+        },
+        "favourites_count": 7469,
+        "follow_request_sent": false,
+        "followers_count": 175206,
+        "following": false,
+        "friends_count": 1060,
+        "geo_enabled": true,
+        "has_extended_profile": false,
+        "id": 455288410,
+        "id_str": "455288410",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 1586,
+        "location": "Los Angeles, CA",
+        "name": "Real Time with Bill Maher",
+        "notifications": false,
+        "profile_background_color": "C0DEED",
+        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_tile": true,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/455288410/1580546929",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1223528614282448898/UUTxrqIF_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1223528614282448898/UUTxrqIF_normal.jpg",
+        "profile_link_color": "E81C4F",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "RealTimers",
+        "statuses_count": 11324,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": "https://t.co/wVXfPGk8wO",
+        "utc_offset": null,
+        "verified": true
+      }
+    },
+    "quoted_status_id": 1248308829814546432,
+    "quoted_status_id_str": "1248308829814546432",
+    "quoted_status_permalink": {
+      "display": "twitter.com/realtimers/sta…",
+      "expanded": "https://twitter.com/realtimers/status/1248308829814546432",
+      "url": "https://t.co/Fr5fQOkEEq"
+    },
+    "retweet_count": 5,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Sat Sep 15 07:29:51 +0000 2007",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "2020 BANG IT OUT TOUR! On sale now! promo code: BANGIN. Also, new Netflix special out now. Daily morning radio show @youupsxm on @siriusXM channel 95",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "nikkiglaser.com",
+              "expanded_url": "http://www.nikkiglaser.com",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/1kmATjzMWG"
+            }
+          ]
+        }
+      },
+      "favourites_count": 59472,
+      "follow_request_sent": false,
+      "followers_count": 412627,
+      "following": true,
+      "friends_count": 2201,
+      "geo_enabled": true,
+      "has_extended_profile": false,
+      "id": 8892822,
+      "id_str": "8892822",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 3084,
+      "location": "Los Angeles, CA",
+      "name": "Nikki Glaser",
+      "notifications": false,
+      "profile_background_color": "EDECE9",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme3/bg.gif",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme3/bg.gif",
+      "profile_background_tile": true,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/8892822/1570044109",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1024293196401004544/c4YwJM1v_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1024293196401004544/c4YwJM1v_normal.jpg",
+      "profile_link_color": "088253",
+      "profile_sidebar_border_color": "D3D2CF",
+      "profile_sidebar_fill_color": "E3E2DE",
+      "profile_text_color": "634047",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "NikkiGlaser",
+      "statuses_count": 30258,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/1kmATjzMWG",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 18:35:10 +0000 2020",
+    "display_text_range": [
+      0,
+      153
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [
+        {
+          "display_url": "esd.wa.gov",
+          "expanded_url": "http://esd.wa.gov",
+          "indices": [
+            130,
+            153
+          ],
+          "url": "https://t.co/Oobi14eR3o"
+        }
+      ],
+      "user_mentions": [
+        {
+          "id": 2693871577,
+          "id_str": "2693871577",
+          "indices": [
+            117,
+            128
+          ],
+          "name": "Washington State ESD",
+          "screen_name": "ESDwaWorks"
+        }
+      ]
+    },
+    "favorite_count": 4,
+    "favorited": false,
+    "full_text": "Make sure to keep up with the latest unemployment insurance info in Washington State. Sign up for action alerts from @ESDwaWorks: https://t.co/Oobi14eR3o",
+    "geo": null,
+    "id": 1248318555529121792,
+    "id_str": "1248318555529121792",
+    "in_reply_to_screen_name": "RepAdamSmith",
+    "in_reply_to_status_id": 1248318554497302530,
+    "in_reply_to_status_id_str": "1248318554497302530",
+    "in_reply_to_user_id": 58928690,
+    "in_reply_to_user_id_str": "58928690",
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "possibly_sensitive_appealable": false,
+    "retweet_count": 2,
+    "retweeted": false,
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Tue Jul 21 21:31:55 +0000 2009",
+      "default_profile": true,
+      "default_profile_image": false,
+      "description": "Proudly serving Washington State's 9th District. Chairman of the House Armed Services Committee @HASCDemocrats",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "adamsmith.house.gov",
+              "expanded_url": "http://adamsmith.house.gov",
+              "indices": [
+                0,
+                22
+              ],
+              "url": "http://t.co/bEAIcyoDki"
+            }
+          ]
+        }
+      },
+      "favourites_count": 416,
+      "follow_request_sent": false,
+      "followers_count": 38022,
+      "following": true,
+      "friends_count": 1956,
+      "geo_enabled": true,
+      "has_extended_profile": false,
+      "id": 58928690,
+      "id_str": "58928690",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 1413,
+      "location": "Washington's 9th District",
+      "name": "Rep. Adam Smith",
+      "notifications": false,
+      "profile_background_color": "C0DEED",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/58928690/1540239101",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1046859374055047169/OrFwOGl6_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1046859374055047169/OrFwOGl6_normal.jpg",
+      "profile_link_color": "1DA1F2",
+      "profile_sidebar_border_color": "C0DEED",
+      "profile_sidebar_fill_color": "DDEEF6",
+      "profile_text_color": "333333",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "RepAdamSmith",
+      "statuses_count": 4564,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "http://t.co/bEAIcyoDki",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 18:35:10 +0000 2020",
+    "display_text_range": [
+      0,
+      242
+    ],
+    "entities": {
+      "hashtags": [
+        {
+          "indices": [
+            132,
+            144
+          ],
+          "text": "coronavirus"
+        }
+      ],
+      "symbols": [],
+      "urls": [],
+      "user_mentions": []
+    },
+    "favorite_count": 3,
+    "favorited": false,
+    "full_text": "With over 17 million initial unemployment claims and 700K jobs lost in March, we continue to see the need for more action to combat #coronavirus every day. Congress took action to expand and enhance unemployment benefits, but we must do more.",
+    "geo": null,
+    "id": 1248318554497302530,
+    "id_str": "1248318554497302530",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "retweet_count": 2,
+    "retweeted": false,
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Tue Jul 21 21:31:55 +0000 2009",
+      "default_profile": true,
+      "default_profile_image": false,
+      "description": "Proudly serving Washington State's 9th District. Chairman of the House Armed Services Committee @HASCDemocrats",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "adamsmith.house.gov",
+              "expanded_url": "http://adamsmith.house.gov",
+              "indices": [
+                0,
+                22
+              ],
+              "url": "http://t.co/bEAIcyoDki"
+            }
+          ]
+        }
+      },
+      "favourites_count": 416,
+      "follow_request_sent": false,
+      "followers_count": 38022,
+      "following": true,
+      "friends_count": 1956,
+      "geo_enabled": true,
+      "has_extended_profile": false,
+      "id": 58928690,
+      "id_str": "58928690",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 1413,
+      "location": "Washington's 9th District",
+      "name": "Rep. Adam Smith",
+      "notifications": false,
+      "profile_background_color": "C0DEED",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/58928690/1540239101",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1046859374055047169/OrFwOGl6_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1046859374055047169/OrFwOGl6_normal.jpg",
+      "profile_link_color": "1DA1F2",
+      "profile_sidebar_border_color": "C0DEED",
+      "profile_sidebar_fill_color": "DDEEF6",
+      "profile_text_color": "333333",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "RepAdamSmith",
+      "statuses_count": 4564,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "http://t.co/bEAIcyoDki",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 18:26:07 +0000 2020",
+    "display_text_range": [
+      0,
+      125
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [],
+      "user_mentions": []
+    },
+    "favorite_count": 23,
+    "favorited": false,
+    "full_text": "Even though I've been sad about the recent decline in Apple products, I have to say they won me back again just with Sidecar.",
+    "geo": null,
+    "id": 1248316274276306944,
+    "id_str": "1248316274276306944",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Mon Dec 03 13:08:02 +0000 2007",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Engineer. I work at Google on Spanner. I keep things boring. This account is my personal opinions. Dogan-Dalgaard; she/her",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "github.com/rakyll",
+              "expanded_url": "https://github.com/rakyll",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/6xjNnn9GYm"
+            }
+          ]
+        }
+      },
+      "favourites_count": 70761,
+      "follow_request_sent": false,
+      "followers_count": 43438,
+      "following": true,
+      "friends_count": 903,
+      "geo_enabled": true,
+      "has_extended_profile": false,
+      "id": 10809412,
+      "id_str": "10809412",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 934,
+      "location": "San Francisco, CA",
+      "name": "Jaana Dogan",
+      "notifications": false,
+      "profile_background_color": "030000",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme14/bg.gif",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme14/bg.gif",
+      "profile_background_tile": true,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/10809412/1550552557",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1221680470112391168/dtKGaH1s_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1221680470112391168/dtKGaH1s_normal.jpg",
+      "profile_link_color": "000000",
+      "profile_sidebar_border_color": "000000",
+      "profile_sidebar_fill_color": "EFEFEF",
+      "profile_text_color": "333333",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "rakyll",
+      "statuses_count": 21641,
+      "time_zone": null,
+      "translator_type": "regular",
+      "url": "https://t.co/6xjNnn9GYm",
+      "utc_offset": null,
+      "verified": false
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 18:24:30 +0000 2020",
+    "display_text_range": [
+      0,
+      130
+    ],
+    "entities": {
+      "hashtags": [
+        {
+          "indices": [
+            97,
+            105
+          ],
+          "text": "COVID19"
+        }
+      ],
+      "media": [
+        {
+          "display_url": "pic.twitter.com/viw80Emzpy",
+          "expanded_url": "https://twitter.com/EPA/status/1248315869811351552/photo/1",
+          "id": 1248315824944738304,
+          "id_str": "1248315824944738304",
+          "indices": [
+            131,
+            154
+          ],
+          "media_url": "http://pbs.twimg.com/media/EVLooQFUcAAGbiA.jpg",
+          "media_url_https": "https://pbs.twimg.com/media/EVLooQFUcAAGbiA.jpg",
+          "sizes": {
+            "large": {
+              "h": 512,
+              "resize": "fit",
+              "w": 1024
+            },
+            "medium": {
+              "h": 512,
+              "resize": "fit",
+              "w": 1024
+            },
+            "small": {
+              "h": 340,
+              "resize": "fit",
+              "w": 680
+            },
+            "thumb": {
+              "h": 150,
+              "resize": "crop",
+              "w": 150
+            }
+          },
+          "type": "photo",
+          "url": "https://t.co/viw80Emzpy"
+        }
+      ],
+      "symbols": [],
+      "urls": [
+        {
+          "display_url": "epa.gov/pesticide-regi…",
+          "expanded_url": "https://www.epa.gov/pesticide-registration/list-n-disinfectants-use-against-sars-cov-2",
+          "indices": [
+            107,
+            130
+          ],
+          "url": "https://t.co/cFsOsFA5a1"
+        }
+      ],
+      "user_mentions": []
+    },
+    "extended_entities": {
+      "media": [
+        {
+          "display_url": "pic.twitter.com/viw80Emzpy",
+          "expanded_url": "https://twitter.com/EPA/status/1248315869811351552/photo/1",
+          "id": 1248315824944738304,
+          "id_str": "1248315824944738304",
+          "indices": [
+            131,
+            154
+          ],
+          "media_url": "http://pbs.twimg.com/media/EVLooQFUcAAGbiA.jpg",
+          "media_url_https": "https://pbs.twimg.com/media/EVLooQFUcAAGbiA.jpg",
+          "sizes": {
+            "large": {
+              "h": 512,
+              "resize": "fit",
+              "w": 1024
+            },
+            "medium": {
+              "h": 512,
+              "resize": "fit",
+              "w": 1024
+            },
+            "small": {
+              "h": 340,
+              "resize": "fit",
+              "w": 680
+            },
+            "thumb": {
+              "h": 150,
+              "resize": "crop",
+              "w": 150
+            }
+          },
+          "type": "photo",
+          "url": "https://t.co/viw80Emzpy"
+        }
+      ]
+    },
+    "favorite_count": 7,
+    "favorited": false,
+    "full_text": "All products on EPA’s List N meet our criteria for use against SARS-CoV-2, the virus that causes #COVID19. https://t.co/cFsOsFA5a1 https://t.co/viw80Emzpy",
+    "geo": null,
+    "id": 1248315869811351552,
+    "id_str": "1248315869811351552",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "possibly_sensitive_appealable": false,
+    "retweet_count": 7,
+    "retweeted": false,
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Thu May 01 16:07:59 +0000 2008",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Our mission is to protect human health and the environment.",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "epa.gov",
+              "expanded_url": "http://www.epa.gov",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/AvknKmkLit"
+            }
+          ]
+        }
+      },
+      "favourites_count": 118,
+      "follow_request_sent": false,
+      "followers_count": 611992,
+      "following": true,
+      "friends_count": 682,
+      "geo_enabled": true,
+      "has_extended_profile": false,
+      "id": 14615871,
+      "id_str": "14615871",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 8506,
+      "location": "USA",
+      "name": "U.S. EPA",
+      "notifications": false,
+      "profile_background_color": "768900",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme5/bg.gif",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme5/bg.gif",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/14615871/1583178921",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/632228259879628800/-gvVhzPn_normal.png",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/632228259879628800/-gvVhzPn_normal.png",
+      "profile_link_color": "426BBA",
+      "profile_sidebar_border_color": "FFFFFF",
+      "profile_sidebar_fill_color": "99CC33",
+      "profile_text_color": "3E4415",
+      "profile_use_background_image": false,
+      "protected": false,
+      "screen_name": "EPA",
+      "statuses_count": 16146,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/AvknKmkLit",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 18:15:12 +0000 2020",
+    "display_text_range": [
+      0,
+      120
+    ],
+    "entities": {
+      "hashtags": [
+        {
+          "indices": [
+            56,
+            74
+          ],
+          "text": "GordonGinoAndFred"
+        }
+      ],
+      "media": [
+        {
+          "display_url": "pic.twitter.com/Jntzo0Bdhn",
+          "expanded_url": "https://twitter.com/GordonRamsay/status/1248313529414742017/photo/1",
+          "id": 1248313519914668032,
+          "id_str": "1248313519914668032",
+          "indices": [
+            121,
+            144
+          ],
+          "media_url": "http://pbs.twimg.com/media/EVLmiFLU0AAeo6B.jpg",
+          "media_url_https": "https://pbs.twimg.com/media/EVLmiFLU0AAeo6B.jpg",
+          "sizes": {
+            "large": {
+              "h": 2048,
+              "resize": "fit",
+              "w": 1538
+            },
+            "medium": {
+              "h": 1200,
+              "resize": "fit",
+              "w": 901
+            },
+            "small": {
+              "h": 680,
+              "resize": "fit",
+              "w": 511
+            },
+            "thumb": {
+              "h": 150,
+              "resize": "crop",
+              "w": 150
+            }
+          },
+          "type": "photo",
+          "url": "https://t.co/Jntzo0Bdhn"
+        }
+      ],
+      "symbols": [],
+      "urls": [],
+      "user_mentions": [
+        {
+          "id": 86925202,
+          "id_str": "86925202",
+          "indices": [
+            36,
+            40
+          ],
+          "name": "ITV",
+          "screen_name": "ITV"
+        },
+        {
+          "id": 26765941,
+          "id_str": "26765941",
+          "indices": [
+            45,
+            52
+          ],
+          "name": "The ITV Hub",
+          "screen_name": "itvhub"
+        }
+      ]
+    },
+    "extended_entities": {
+      "media": [
+        {
+          "display_url": "pic.twitter.com/Jntzo0Bdhn",
+          "expanded_url": "https://twitter.com/GordonRamsay/status/1248313529414742017/photo/1",
+          "id": 1248313519914668032,
+          "id_str": "1248313519914668032",
+          "indices": [
+            121,
+            144
+          ],
+          "media_url": "http://pbs.twimg.com/media/EVLmiFLU0AAeo6B.jpg",
+          "media_url_https": "https://pbs.twimg.com/media/EVLmiFLU0AAeo6B.jpg",
+          "sizes": {
+            "large": {
+              "h": 2048,
+              "resize": "fit",
+              "w": 1538
+            },
+            "medium": {
+              "h": 1200,
+              "resize": "fit",
+              "w": 901
+            },
+            "small": {
+              "h": 680,
+              "resize": "fit",
+              "w": 511
+            },
+            "thumb": {
+              "h": 150,
+              "resize": "crop",
+              "w": 150
+            }
+          },
+          "type": "photo",
+          "url": "https://t.co/Jntzo0Bdhn"
+        }
+      ]
+    },
+    "favorite_count": 578,
+    "favorited": false,
+    "full_text": "Viva Las Vegas in just two hours on @ITV and @itvhub on #GordonGinoAndFred !! Hopefully we don’t end up with a tiger.... https://t.co/Jntzo0Bdhn",
+    "geo": null,
+    "id": 1248313529414742017,
+    "id_str": "1248313529414742017",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "possibly_sensitive_appealable": false,
+    "retweet_count": 39,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Mon Feb 01 08:31:59 +0000 2010",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Always near food. Text me @ +1 (310) 620-6468\nCatch new Scrambled Episodes now !",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "youtu.be/lomPpgq9sCw",
+              "expanded_url": "https://youtu.be/lomPpgq9sCw",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/fsLwrAzPPy"
+            }
+          ]
+        }
+      },
+      "favourites_count": 807,
+      "follow_request_sent": false,
+      "followers_count": 7377972,
+      "following": true,
+      "friends_count": 35399,
+      "geo_enabled": true,
+      "has_extended_profile": false,
+      "id": 110365072,
+      "id_str": "110365072",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 15269,
+      "location": "",
+      "name": "Gordon Ramsay",
+      "notifications": false,
+      "profile_background_color": "C0DEED",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/110365072/1586371644",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/957485325793730561/FyWB3Ifi_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/957485325793730561/FyWB3Ifi_normal.jpg",
+      "profile_link_color": "19889C",
+      "profile_sidebar_border_color": "C0DEED",
+      "profile_sidebar_fill_color": "DDEEF6",
+      "profile_text_color": "333333",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "GordonRamsay",
+      "statuses_count": 22650,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/fsLwrAzPPy",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 18:15:00 +0000 2020",
+    "display_text_range": [
+      0,
+      188
+    ],
+    "entities": {
+      "hashtags": [
+        {
+          "indices": [
+            136,
+            148
+          ],
+          "text": "COVID19Fund"
+        },
+        {
+          "indices": [
+            155,
+            162
+          ],
+          "text": "WithMe"
+        }
+      ],
+      "media": [
+        {
+          "display_url": "pic.twitter.com/sNoFOlJ2Hp",
+          "expanded_url": "https://twitter.com/YouTube/status/1248313477342490626/photo/1",
+          "id": 1248309237458976768,
+          "id_str": "1248309237458976768",
+          "indices": [
+            189,
+            212
+          ],
+          "media_url": "http://pbs.twimg.com/tweet_video_thumb/EVLiozyUwAAPbZA.jpg",
+          "media_url_https": "https://pbs.twimg.com/tweet_video_thumb/EVLiozyUwAAPbZA.jpg",
+          "sizes": {
+            "large": {
+              "h": 406,
+              "resize": "fit",
+              "w": 748
+            },
+            "medium": {
+              "h": 406,
+              "resize": "fit",
+              "w": 748
+            },
+            "small": {
+              "h": 369,
+              "resize": "fit",
+              "w": 680
+            },
+            "thumb": {
+              "h": 150,
+              "resize": "crop",
+              "w": 150
+            }
+          },
+          "type": "photo",
+          "url": "https://t.co/sNoFOlJ2Hp"
+        }
+      ],
+      "symbols": [],
+      "urls": [
+        {
+          "display_url": "youtu.be/GJMipzFQnV0",
+          "expanded_url": "https://youtu.be/GJMipzFQnV0",
+          "indices": [
+            165,
+            188
+          ],
+          "url": "https://t.co/rjnyrE75mJ"
+        }
+      ],
+      "user_mentions": [
+        {
+          "id": 3058223719,
+          "id_str": "3058223719",
+          "indices": [
+            4,
+            12
+          ],
+          "name": "The Try Guys",
+          "screen_name": "tryguys"
+        }
+      ]
+    },
+    "extended_entities": {
+      "media": [
+        {
+          "display_url": "pic.twitter.com/sNoFOlJ2Hp",
+          "expanded_url": "https://twitter.com/YouTube/status/1248313477342490626/photo/1",
+          "id": 1248309237458976768,
+          "id_str": "1248309237458976768",
+          "indices": [
+            189,
+            212
+          ],
+          "media_url": "http://pbs.twimg.com/tweet_video_thumb/EVLiozyUwAAPbZA.jpg",
+          "media_url_https": "https://pbs.twimg.com/tweet_video_thumb/EVLiozyUwAAPbZA.jpg",
+          "sizes": {
+            "large": {
+              "h": 406,
+              "resize": "fit",
+              "w": 748
+            },
+            "medium": {
+              "h": 406,
+              "resize": "fit",
+              "w": 748
+            },
+            "small": {
+              "h": 369,
+              "resize": "fit",
+              "w": 680
+            },
+            "thumb": {
+              "h": 150,
+              "resize": "crop",
+              "w": 150
+            }
+          },
+          "type": "animated_gif",
+          "url": "https://t.co/sNoFOlJ2Hp",
+          "video_info": {
+            "aspect_ratio": [
+              374,
+              203
+            ],
+            "variants": [
+              {
+                "bitrate": 0,
+                "content_type": "video/mp4",
+                "url": "https://video.twimg.com/tweet_video/EVLiozyUwAAPbZA.mp4"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "favorite_count": 215,
+    "favorited": false,
+    "full_text": "The @TryGuys may be running out of ideas but are running stronger than ever on solidarity. If you can, join them in supporting the UN's #COVID19Fund. Give #WithMe.\n\nhttps://t.co/rjnyrE75mJ https://t.co/sNoFOlJ2Hp",
+    "geo": null,
+    "id": 1248313477342490626,
+    "id_str": "1248313477342490626",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "possibly_sensitive_appealable": false,
+    "retweet_count": 25,
+    "retweeted": false,
+    "source": "<a href=\"https://studio.twitter.com\" rel=\"nofollow\">Twitter Media Studio</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Tue Nov 13 21:43:46 +0000 2007",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Stay Home #WithMe",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "youtube.com",
+              "expanded_url": "https://www.youtube.com/",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/qkVaJFk2CG"
+            }
+          ]
+        }
+      },
+      "favourites_count": 3026,
+      "follow_request_sent": false,
+      "followers_count": 72431668,
+      "following": true,
+      "friends_count": 1082,
+      "geo_enabled": false,
+      "has_extended_profile": false,
+      "id": 10228272,
+      "id_str": "10228272",
+      "is_translation_enabled": true,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 82106,
+      "location": "San Bruno, CA",
+      "name": "YouTube at 🏠",
+      "notifications": false,
+      "profile_background_color": "AF0000",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme14/bg.gif",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme14/bg.gif",
+      "profile_background_tile": true,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/10228272/1586218688",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1240095851999113218/Y0WfOzVr_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1240095851999113218/Y0WfOzVr_normal.jpg",
+      "profile_link_color": "C9191D",
+      "profile_sidebar_border_color": "000000",
+      "profile_sidebar_fill_color": "EFEFEF",
+      "profile_text_color": "333333",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "YouTube",
+      "statuses_count": 25249,
+      "time_zone": null,
+      "translator_type": "regular",
+      "url": "https://t.co/qkVaJFk2CG",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 17:57:37 +0000 2020",
+    "display_text_range": [
+      0,
+      37
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [
+        {
+          "display_url": "twitter.com/slopefillers/s…",
+          "expanded_url": "https://twitter.com/slopefillers/status/1248306068259831808",
+          "indices": [
+            38,
+            61
+          ],
+          "url": "https://t.co/w5Vf4yAW97"
+        }
+      ],
+      "user_mentions": [
+        {
+          "id": 174765323,
+          "id_str": "174765323",
+          "indices": [
+            21,
+            34
+          ],
+          "name": "Gregg Blanchard",
+          "screen_name": "slopefillers"
+        }
+      ]
+    },
+    "favorite_count": 2,
+    "favorited": false,
+    "full_text": "Thanks for the post, @slopefillers. 👊 https://t.co/w5Vf4yAW97",
+    "geo": null,
+    "id": 1248309104398852098,
+    "id_str": "1248309104398852098",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": true,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "possibly_sensitive_appealable": false,
+    "quoted_status": {
+      "contributors": null,
+      "coordinates": null,
+      "created_at": "Thu Apr 09 17:45:33 +0000 2020",
+      "display_text_range": [
+        0,
+        280
+      ],
+      "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [
+          {
+            "display_url": "slopefillers.com/crystal-mounta…",
+            "expanded_url": "https://www.slopefillers.com/crystal-mountain-shopify-store/",
+            "indices": [
+              257,
+              280
+            ],
+            "url": "https://t.co/jIJPV6LrNd"
+          }
+        ],
+        "user_mentions": [
+          {
+            "id": 17597754,
+            "id_str": "17597754",
+            "indices": [
+              179,
+              195
+            ],
+            "name": "Crystal Mountain",
+            "screen_name": "CrystalMountain"
+          }
+        ]
+      },
+      "favorite_count": 5,
+      "favorited": false,
+      "full_text": "\"People are still shopping. And they still love your brand. But many of the products you’d be selling right now are tricky during a pandemic.\n\n\"This connects those dots and gives @CrystalMountain a safe, relevant, revenue-generating message to get behind.\" https://t.co/jIJPV6LrNd",
+      "geo": null,
+      "id": 1248306068259831808,
+      "id_str": "1248306068259831808",
+      "in_reply_to_screen_name": null,
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "is_quote_status": false,
+      "lang": "en",
+      "place": null,
+      "possibly_sensitive": false,
+      "possibly_sensitive_appealable": false,
+      "retweet_count": 0,
+      "retweeted": false,
+      "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+      "truncated": false,
+      "user": {
+        "contributors_enabled": false,
+        "created_at": "Wed Aug 04 19:32:01 +0000 2010",
+        "default_profile": false,
+        "default_profile_image": false,
+        "description": "Ski resort marketing ideas, inspiration, and analysis.",
+        "entities": {
+          "description": {
+            "urls": []
+          },
+          "url": {
+            "urls": [
+              {
+                "display_url": "bit.ly/slopefillers",
+                "expanded_url": "http://bit.ly/slopefillers",
+                "indices": [
+                  0,
+                  22
+                ],
+                "url": "http://t.co/C9jdrN1KIn"
+              }
+            ]
+          }
+        },
+        "favourites_count": 8610,
+        "follow_request_sent": false,
+        "followers_count": 3182,
+        "following": false,
+        "friends_count": 856,
+        "geo_enabled": true,
+        "has_extended_profile": false,
+        "id": 174765323,
+        "id_str": "174765323",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 168,
+        "location": "Eden, UT",
+        "name": "Gregg Blanchard",
+        "notifications": false,
+        "profile_background_color": "000000",
+        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/174765323/1372977058",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/869955363189145600/F1IBkb-5_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/869955363189145600/F1IBkb-5_normal.jpg",
+        "profile_link_color": "4881D5",
+        "profile_sidebar_border_color": "000000",
+        "profile_sidebar_fill_color": "252429",
+        "profile_text_color": "666666",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "slopefillers",
+        "statuses_count": 11031,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": "http://t.co/C9jdrN1KIn",
+        "utc_offset": null,
+        "verified": false
+      }
+    },
+    "quoted_status_id": 1248306068259831808,
+    "quoted_status_id_str": "1248306068259831808",
+    "quoted_status_permalink": {
+      "display": "twitter.com/slopefillers/s…",
+      "expanded": "https://twitter.com/slopefillers/status/1248306068259831808",
+      "url": "https://t.co/w5Vf4yAW97"
+    },
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Mon Nov 24 18:39:42 +0000 2008",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Four-season ski, golf and spa resort in northwest lower Michigan, near Sleeping Bear Dunes National Lakeshore, Lake Michigan, Frankfort and Traverse City.",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "crystalmountain.com",
+              "expanded_url": "http://crystalmountain.com",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/yqTA4bBWVN"
+            }
+          ]
+        }
+      },
+      "favourites_count": 1194,
+      "follow_request_sent": false,
+      "followers_count": 7865,
+      "following": true,
+      "friends_count": 2758,
+      "geo_enabled": true,
+      "has_extended_profile": false,
+      "id": 17597754,
+      "id_str": "17597754",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 231,
+      "location": "Thompsonville, Michigan",
+      "name": "Crystal Mountain",
+      "notifications": false,
+      "profile_background_color": "FFFFFF",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/17597754/1573074684",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/461880691584544769/Hrda2qJY_normal.jpeg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/461880691584544769/Hrda2qJY_normal.jpeg",
+      "profile_link_color": "1F98C7",
+      "profile_sidebar_border_color": "FFFFFF",
+      "profile_sidebar_fill_color": "DAECF4",
+      "profile_text_color": "663B12",
+      "profile_use_background_image": false,
+      "protected": false,
+      "screen_name": "CrystalMountain",
+      "statuses_count": 6631,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/yqTA4bBWVN",
+      "utc_offset": null,
+      "verified": false
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 17:52:21 +0000 2020",
+    "display_text_range": [
+      0,
+      140
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [],
+      "user_mentions": [
+        {
+          "id": 2811370788,
+          "id_str": "2811370788",
+          "indices": [
+            3,
+            14
+          ],
+          "name": "WSDOT East",
+          "screen_name": "WSDOT_East"
+        }
+      ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "full_text": "RT @WSDOT_East: On US 2 Stevens Pass the warm temperatures on the snow call for some avalanche control work, beginning at 2 pm today.\n\nEast…",
+    "geo": null,
+    "id": 1248307776889090048,
+    "id_str": "1248307776889090048",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "retweet_count": 8,
+    "retweeted": false,
+    "retweeted_status": {
+      "contributors": null,
+      "coordinates": null,
+      "created_at": "Thu Apr 09 17:31:58 +0000 2020",
+      "display_text_range": [
+        0,
+        272
+      ],
+      "entities": {
+        "hashtags": [],
+        "media": [
+          {
+            "display_url": "pic.twitter.com/89c13MEzTP",
+            "expanded_url": "https://twitter.com/WSDOT_East/status/1248302647414640641/photo/1",
+            "id": 1248302641488121856,
+            "id_str": "1248302641488121856",
+            "indices": [
+              273,
+              296
+            ],
+            "media_url": "http://pbs.twimg.com/tweet_video_thumb/EVLco34U0AADGWG.jpg",
+            "media_url_https": "https://pbs.twimg.com/tweet_video_thumb/EVLco34U0AADGWG.jpg",
+            "sizes": {
+              "large": {
+                "h": 268,
+                "resize": "fit",
+                "w": 500
+              },
+              "medium": {
+                "h": 268,
+                "resize": "fit",
+                "w": 500
+              },
+              "small": {
+                "h": 268,
+                "resize": "fit",
+                "w": 500
+              },
+              "thumb": {
+                "h": 150,
+                "resize": "crop",
+                "w": 150
+              }
+            },
+            "type": "photo",
+            "url": "https://t.co/89c13MEzTP"
+          }
+        ],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": []
+      },
+      "extended_entities": {
+        "media": [
+          {
+            "display_url": "pic.twitter.com/89c13MEzTP",
+            "expanded_url": "https://twitter.com/WSDOT_East/status/1248302647414640641/photo/1",
+            "id": 1248302641488121856,
+            "id_str": "1248302641488121856",
+            "indices": [
+              273,
+              296
+            ],
+            "media_url": "http://pbs.twimg.com/tweet_video_thumb/EVLco34U0AADGWG.jpg",
+            "media_url_https": "https://pbs.twimg.com/tweet_video_thumb/EVLco34U0AADGWG.jpg",
+            "sizes": {
+              "large": {
+                "h": 268,
+                "resize": "fit",
+                "w": 500
+              },
+              "medium": {
+                "h": 268,
+                "resize": "fit",
+                "w": 500
+              },
+              "small": {
+                "h": 268,
+                "resize": "fit",
+                "w": 500
+              },
+              "thumb": {
+                "h": 150,
+                "resize": "crop",
+                "w": 150
+              }
+            },
+            "type": "animated_gif",
+            "url": "https://t.co/89c13MEzTP",
+            "video_info": {
+              "aspect_ratio": [
+                125,
+                67
+              ],
+              "variants": [
+                {
+                  "bitrate": 0,
+                  "content_type": "video/mp4",
+                  "url": "https://video.twimg.com/tweet_video/EVLco34U0AADGWG.mp4"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "favorite_count": 14,
+      "favorited": false,
+      "full_text": "On US 2 Stevens Pass the warm temperatures on the snow call for some avalanche control work, beginning at 2 pm today.\n\nEastbound traffic will be stopped at Scenic at (MP 58) and westbound traffic will be stopped at the summit (MP 64). This work takes from 30 min to 2 hrs. https://t.co/89c13MEzTP",
+      "geo": null,
+      "id": 1248302647414640641,
+      "id_str": "1248302647414640641",
+      "in_reply_to_screen_name": null,
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "is_quote_status": false,
+      "lang": "en",
+      "place": null,
+      "possibly_sensitive": false,
+      "possibly_sensitive_appealable": false,
+      "retweet_count": 8,
+      "retweeted": false,
+      "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+      "truncated": false,
+      "user": {
+        "contributors_enabled": false,
+        "created_at": "Mon Sep 15 14:19:54 +0000 2014",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "Official WSDOT account for information east of the Cascade Mountains. Monitored 7 am-5 pm Mon-Fri. Please call 911 to report road hazards.",
+        "entities": {
+          "description": {
+            "urls": []
+          },
+          "url": {
+            "urls": [
+              {
+                "display_url": "wsdot.wa.gov",
+                "expanded_url": "http://wsdot.wa.gov/",
+                "indices": [
+                  0,
+                  23
+                ],
+                "url": "https://t.co/jd7azEvMiF"
+              }
+            ]
+          }
+        },
+        "favourites_count": 1428,
+        "follow_request_sent": false,
+        "followers_count": 15196,
+        "following": false,
+        "friends_count": 303,
+        "geo_enabled": true,
+        "has_extended_profile": false,
+        "id": 2811370788,
+        "id_str": "2811370788",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 264,
+        "location": "Ellensburg to Spokane",
+        "name": "WSDOT East",
+        "notifications": false,
+        "profile_background_color": "C0DEED",
+        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/2811370788/1578348260",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1246283121923739649/vxfdcHvH_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1246283121923739649/vxfdcHvH_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "WSDOT_East",
+        "statuses_count": 6910,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": "https://t.co/jd7azEvMiF",
+        "utc_offset": null,
+        "verified": false
+      }
+    },
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Tue Mar 11 14:53:06 +0000 2008",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Official Washington State Department of Transportation Twitter account. For road hazards and emergencies, please call 911.",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "wsdot.wa.gov",
+              "expanded_url": "http://www.wsdot.wa.gov",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/unI3GB5JiL"
+            }
+          ]
+        }
+      },
+      "favourites_count": 9448,
+      "follow_request_sent": false,
+      "followers_count": 294631,
+      "following": true,
+      "friends_count": 7652,
+      "geo_enabled": true,
+      "has_extended_profile": false,
+      "id": 14124059,
+      "id_str": "14124059",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 2850,
+      "location": "State of Washington",
+      "name": "Washington State DOT",
+      "notifications": false,
+      "profile_background_color": "FFFFFF",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/14124059/1532118569",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1246213324527656961/7r1WKlgY_normal.png",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1246213324527656961/7r1WKlgY_normal.png",
+      "profile_link_color": "0B7550",
+      "profile_sidebar_border_color": "FFFFFF",
+      "profile_sidebar_fill_color": "DBF0E5",
+      "profile_text_color": "000000",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "wsdot",
+      "statuses_count": 37238,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/unI3GB5JiL",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 17:49:11 +0000 2020",
+    "display_text_range": [
+      0,
+      140
+    ],
+    "entities": {
+      "hashtags": [
+        {
+          "indices": [
+            31,
+            35
+          ],
+          "text": "CO2"
+        }
+      ],
+      "symbols": [],
+      "urls": [],
+      "user_mentions": [
+        {
+          "id": 49251910,
+          "id_str": "49251910",
+          "indices": [
+            3,
+            13
+          ],
+          "name": "CO2_Earth",
+          "screen_name": "CO2_earth"
+        }
+      ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "full_text": "RT @CO2_earth: 🏆📈🏆  416.96 ppm #CO2 in Earth’s atmosphere on April 8, 2020 🏆 HIGHEST EVER daily average at the Mauna Loa Observatory 🏆 Up f…",
+    "geo": null,
+    "id": 1248306980839723009,
+    "id_str": "1248306980839723009",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "retweet_count": 246,
+    "retweeted": false,
+    "retweeted_status": {
+      "contributors": null,
+      "coordinates": null,
+      "created_at": "Thu Apr 09 14:57:28 +0000 2020",
+      "display_text_range": [
+        0,
+        248
+      ],
+      "entities": {
+        "hashtags": [
+          {
+            "indices": [
+              16,
+              20
+            ],
+            "text": "CO2"
+          },
+          {
+            "indices": [
+              152,
+              157
+            ],
+            "text": "NOAA"
+          }
+        ],
+        "media": [
+          {
+            "display_url": "pic.twitter.com/2V7Jop9rI7",
+            "expanded_url": "https://twitter.com/CO2_earth/status/1248263767756079105/photo/1",
+            "id": 1248263765964939264,
+            "id_str": "1248263765964939264",
+            "indices": [
+              249,
+              272
+            ],
+            "media_url": "http://pbs.twimg.com/media/EVK5SBRU4AAGf8D.png",
+            "media_url_https": "https://pbs.twimg.com/media/EVK5SBRU4AAGf8D.png",
+            "sizes": {
+              "large": {
+                "h": 700,
+                "resize": "fit",
+                "w": 1000
+              },
+              "medium": {
+                "h": 700,
+                "resize": "fit",
+                "w": 1000
+              },
+              "small": {
+                "h": 476,
+                "resize": "fit",
+                "w": 680
+              },
+              "thumb": {
+                "h": 150,
+                "resize": "crop",
+                "w": 150
+              }
+            },
+            "type": "photo",
+            "url": "https://t.co/2V7Jop9rI7"
+          }
+        ],
+        "symbols": [],
+        "urls": [
+          {
+            "display_url": "esrl.noaa.gov/gmd/ccgg/trend…",
+            "expanded_url": "https://www.esrl.noaa.gov/gmd/ccgg/trends/monthly.html",
+            "indices": [
+              166,
+              189
+            ],
+            "url": "https://t.co/MZIEphYygh"
+          },
+          {
+            "display_url": "CO2.Earth",
+            "expanded_url": "http://CO2.Earth",
+            "indices": [
+              192,
+              215
+            ],
+            "url": "https://t.co/DpFGQoYEwb"
+          },
+          {
+            "display_url": "co2.earth/co2-records",
+            "expanded_url": "https://www.co2.earth/co2-records",
+            "indices": [
+              225,
+              248
+            ],
+            "url": "https://t.co/YU3HoKfp4a"
+          }
+        ],
+        "user_mentions": []
+      },
+      "extended_entities": {
+        "media": [
+          {
+            "display_url": "pic.twitter.com/2V7Jop9rI7",
+            "expanded_url": "https://twitter.com/CO2_earth/status/1248263767756079105/photo/1",
+            "id": 1248263765964939264,
+            "id_str": "1248263765964939264",
+            "indices": [
+              249,
+              272
+            ],
+            "media_url": "http://pbs.twimg.com/media/EVK5SBRU4AAGf8D.png",
+            "media_url_https": "https://pbs.twimg.com/media/EVK5SBRU4AAGf8D.png",
+            "sizes": {
+              "large": {
+                "h": 700,
+                "resize": "fit",
+                "w": 1000
+              },
+              "medium": {
+                "h": 700,
+                "resize": "fit",
+                "w": 1000
+              },
+              "small": {
+                "h": 476,
+                "resize": "fit",
+                "w": 680
+              },
+              "thumb": {
+                "h": 150,
+                "resize": "crop",
+                "w": 150
+              }
+            },
+            "type": "photo",
+            "url": "https://t.co/2V7Jop9rI7"
+          }
+        ]
+      },
+      "favorite_count": 451,
+      "favorited": false,
+      "full_text": "🏆📈🏆  416.96 ppm #CO2 in Earth’s atmosphere on April 8, 2020 🏆 HIGHEST EVER daily average at the Mauna Loa Observatory 🏆 Up from 412.31 ppm a year ago 🏆 #NOAA source: https://t.co/MZIEphYygh 🏆 https://t.co/DpFGQoYEwb records: https://t.co/YU3HoKfp4a https://t.co/2V7Jop9rI7",
+      "geo": null,
+      "id": 1248263767756079105,
+      "id_str": "1248263767756079105",
+      "in_reply_to_screen_name": null,
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "is_quote_status": false,
+      "lang": "en",
+      "place": null,
+      "possibly_sensitive": false,
+      "possibly_sensitive_appealable": false,
+      "retweet_count": 246,
+      "retweeted": false,
+      "source": "<a href=\"https://www.hootsuite.com\" rel=\"nofollow\">Hootsuite Inc.</a>",
+      "truncated": false,
+      "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jun 21 06:23:56 +0000 2009",
+        "default_profile": false,
+        "default_profile_image": false,
+        "description": "The world's latest data for atmospheric CO2, practically in real time. #carbon #ghg #CO2 #unfccc #CSR #energy #CSR #globalwarming #climate #science",
+        "entities": {
+          "description": {
+            "urls": []
+          },
+          "url": {
+            "urls": [
+              {
+                "display_url": "co2.earth",
+                "expanded_url": "https://www.co2.earth/",
+                "indices": [
+                  0,
+                  23
+                ],
+                "url": "https://t.co/3LCKpSO0DS"
+              }
+            ]
+          }
+        },
+        "favourites_count": 6108,
+        "follow_request_sent": false,
+        "followers_count": 21623,
+        "following": false,
+        "friends_count": 12100,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 49251910,
+        "id_str": "49251910",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 589,
+        "location": "The Atmosphere @ 3400 Metres",
+        "name": "CO2_Earth",
+        "notifications": false,
+        "profile_background_color": "9AE4E8",
+        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/49251910/1572237958",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/688774134856171521/buykfR0Z_normal.png",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/688774134856171521/buykfR0Z_normal.png",
+        "profile_link_color": "0084B4",
+        "profile_sidebar_border_color": "BDDCAD",
+        "profile_sidebar_fill_color": "DDFFCC",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "CO2_earth",
+        "statuses_count": 4542,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": "https://t.co/3LCKpSO0DS",
+        "utc_offset": null,
+        "verified": false
+      }
+    },
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Tue Jun 12 06:14:23 +0000 2018",
+      "default_profile": true,
+      "default_profile_image": false,
+      "description": "17 year old climate and environmental activist with Asperger’s  #climatestrike #fridaysforfuture #schoolstrike4climate",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "youtu.be/H2QxFM9y0tY",
+              "expanded_url": "https://youtu.be/H2QxFM9y0tY",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/T59gBserXD"
+            }
+          ]
+        }
+      },
+      "favourites_count": 16770,
+      "follow_request_sent": false,
+      "followers_count": 4132458,
+      "following": true,
+      "friends_count": 1922,
+      "geo_enabled": false,
+      "has_extended_profile": true,
+      "id": 1006419421244678144,
+      "id_str": "1006419421244678144",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 8526,
+      "location": "Sverige",
+      "name": "Greta Thunberg",
+      "notifications": false,
+      "profile_background_color": "F5F8FA",
+      "profile_background_image_url": null,
+      "profile_background_image_url_https": null,
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/1006419421244678144/1559499911",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1205151355230457856/h78KQbyF_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1205151355230457856/h78KQbyF_normal.jpg",
+      "profile_link_color": "1DA1F2",
+      "profile_sidebar_border_color": "C0DEED",
+      "profile_sidebar_fill_color": "DDEEF6",
+      "profile_text_color": "333333",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "GretaThunberg",
+      "statuses_count": 6989,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/T59gBserXD",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 17:25:43 +0000 2020",
+    "display_text_range": [
+      0,
+      203
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [
+        {
+          "display_url": "twitter.com/BuzzFeed/statu…",
+          "expanded_url": "https://twitter.com/BuzzFeed/status/1248279757579522051",
+          "indices": [
+            204,
+            227
+          ],
+          "url": "https://t.co/prGkPosH3Z"
+        }
+      ],
+      "user_mentions": [
+        {
+          "id": 235758051,
+          "id_str": "235758051",
+          "indices": [
+            27,
+            42
+          ],
+          "name": "Fitness Blender",
+          "screen_name": "FitnessBlender"
+        },
+        {
+          "id": 168939370,
+          "id_str": "168939370",
+          "indices": [
+            43,
+            54
+          ],
+          "name": "❤ Cassey Ho ❤",
+          "screen_name": "blogilates"
+        },
+        {
+          "id": 577406690,
+          "id_str": "577406690",
+          "indices": [
+            55,
+            71
+          ],
+          "name": "Adriene Mishler",
+          "screen_name": "yogawithadriene"
+        },
+        {
+          "id": 783284570,
+          "id_str": "783284570",
+          "indices": [
+            72,
+            88
+          ],
+          "name": "Maddie Lymburner",
+          "screen_name": "maddielymburner"
+        },
+        {
+          "id": 2996783046,
+          "id_str": "2996783046",
+          "indices": [
+            89,
+            104
+          ],
+          "name": "Caleb Marshall",
+          "screen_name": "TheFitMarshall"
+        },
+        {
+          "id": 337327788,
+          "id_str": "337327788",
+          "indices": [
+            105,
+            118
+          ],
+          "name": "The Body Coach",
+          "screen_name": "thebodycoach"
+        },
+        {
+          "id": 18905134,
+          "id_str": "18905134",
+          "indices": [
+            120,
+            129
+          ],
+          "name": "Tone It Up",
+          "screen_name": "ToneItUp"
+        },
+        {
+          "id": 10921932,
+          "id_str": "10921932",
+          "indices": [
+            130,
+            146
+          ],
+          "name": "POPSUGAR Fitness",
+          "screen_name": "POPSUGARFitness"
+        },
+        {
+          "id": 36832167,
+          "id_str": "36832167",
+          "indices": [
+            147,
+            155
+          ],
+          "name": "Alo Yoga",
+          "screen_name": "aloyoga"
+        },
+        {
+          "id": 371452651,
+          "id_str": "371452651",
+          "indices": [
+            156,
+            169
+          ],
+          "name": "HASfit",
+          "screen_name": "HeartSoulFit"
+        },
+        {
+          "id": 464041224,
+          "id_str": "464041224",
+          "indices": [
+            170,
+            186
+          ],
+          "name": "Lesley Fightmaster",
+          "screen_name": "fightmasteryoga"
+        },
+        {
+          "id": 16426213,
+          "id_str": "16426213",
+          "indices": [
+            187,
+            203
+          ],
+          "name": "Jessica Valant",
+          "screen_name": "jessicavpilates"
+        }
+      ]
+    },
+    "favorite_count": 266,
+    "favorited": false,
+    "full_text": "Get fit with your faves 💪\n\n@FitnessBlender\n@blogilates\n@yogawithadriene\n@maddielymburner\n@TheFitMarshall\n@thebodycoach \n@toneitup\n@POPSUGARFitness\n@aloyoga\n@heartsoulfit\n@fightmasteryoga\n@jessicavpilates https://t.co/prGkPosH3Z",
+    "geo": null,
+    "id": 1248301076136071173,
+    "id_str": "1248301076136071173",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": true,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "possibly_sensitive_appealable": false,
+    "quoted_status": {
+      "contributors": null,
+      "coordinates": null,
+      "created_at": "Thu Apr 09 16:01:00 +0000 2020",
+      "display_text_range": [
+        0,
+        65
+      ],
+      "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [
+          {
+            "display_url": "buzzfeed.com/abbykass/great…",
+            "expanded_url": "https://www.buzzfeed.com/abbykass/great-workout-channels-on-youtube?utm_source=dynamic&utm_campaign=bftwbuzzfeed&ref=bftwbuzzfeed",
+            "indices": [
+              42,
+              65
+            ],
+            "url": "https://t.co/g34eRC6zHl"
+          }
+        ],
+        "user_mentions": []
+      },
+      "favorite_count": 162,
+      "favorited": false,
+      "full_text": "Just 13 Great Workout Channels On YouTube https://t.co/g34eRC6zHl",
+      "geo": null,
+      "id": 1248279757579522051,
+      "id_str": "1248279757579522051",
+      "in_reply_to_screen_name": null,
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "is_quote_status": false,
+      "lang": "en",
+      "place": null,
+      "possibly_sensitive": false,
+      "possibly_sensitive_appealable": false,
+      "retweet_count": 23,
+      "retweeted": false,
+      "source": "<a href=\"https://pubhub.buzzfeed.com\" rel=\"nofollow\">PubHub by BuzzFeed</a>",
+      "truncated": false,
+      "user": {
+        "contributors_enabled": false,
+        "created_at": "Tue May 01 21:40:03 +0000 2007",
+        "default_profile": false,
+        "default_profile_image": false,
+        "description": "Brb, taking quizzes.",
+        "entities": {
+          "description": {
+            "urls": []
+          },
+          "url": {
+            "urls": [
+              {
+                "display_url": "buzzfeed.com",
+                "expanded_url": "http://buzzfeed.com",
+                "indices": [
+                  0,
+                  23
+                ],
+                "url": "https://t.co/iiAufe34NG"
+              }
+            ]
+          }
+        },
+        "favourites_count": 5600,
+        "follow_request_sent": false,
+        "followers_count": 6586673,
+        "following": false,
+        "friends_count": 2909,
+        "geo_enabled": true,
+        "has_extended_profile": false,
+        "id": 5695632,
+        "id_str": "5695632",
+        "is_translation_enabled": true,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 23942,
+        "location": "New York",
+        "name": "BuzzFeed",
+        "notifications": false,
+        "profile_background_color": "FFFFFF",
+        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_tile": true,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/5695632/1576098627",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/687767655214891008/n9pHVYUl_normal.png",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/687767655214891008/n9pHVYUl_normal.png",
+        "profile_link_color": "0077CC",
+        "profile_sidebar_border_color": "FFFFFF",
+        "profile_sidebar_fill_color": "EEEEEE",
+        "profile_text_color": "000000",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "BuzzFeed",
+        "statuses_count": 245506,
+        "time_zone": null,
+        "translator_type": "regular",
+        "url": "https://t.co/iiAufe34NG",
+        "utc_offset": null,
+        "verified": true
+      }
+    },
+    "quoted_status_id": 1248279757579522051,
+    "quoted_status_id_str": "1248279757579522051",
+    "quoted_status_permalink": {
+      "display": "twitter.com/BuzzFeed/statu…",
+      "expanded": "https://twitter.com/BuzzFeed/status/1248279757579522051",
+      "url": "https://t.co/prGkPosH3Z"
+    },
+    "retweet_count": 38,
+    "retweeted": false,
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Tue Nov 13 21:43:46 +0000 2007",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Stay Home #WithMe",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "youtube.com",
+              "expanded_url": "https://www.youtube.com/",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/qkVaJFk2CG"
+            }
+          ]
+        }
+      },
+      "favourites_count": 3026,
+      "follow_request_sent": false,
+      "followers_count": 72431668,
+      "following": true,
+      "friends_count": 1082,
+      "geo_enabled": false,
+      "has_extended_profile": false,
+      "id": 10228272,
+      "id_str": "10228272",
+      "is_translation_enabled": true,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 82106,
+      "location": "San Bruno, CA",
+      "name": "YouTube at 🏠",
+      "notifications": false,
+      "profile_background_color": "AF0000",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme14/bg.gif",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme14/bg.gif",
+      "profile_background_tile": true,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/10228272/1586218688",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1240095851999113218/Y0WfOzVr_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1240095851999113218/Y0WfOzVr_normal.jpg",
+      "profile_link_color": "C9191D",
+      "profile_sidebar_border_color": "000000",
+      "profile_sidebar_fill_color": "EFEFEF",
+      "profile_text_color": "333333",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "YouTube",
+      "statuses_count": 25249,
+      "time_zone": null,
+      "translator_type": "regular",
+      "url": "https://t.co/qkVaJFk2CG",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 17:21:13 +0000 2020",
+    "display_text_range": [
+      0,
+      13
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [
+        {
+          "display_url": "twitter.com/peteregan6/sta…",
+          "expanded_url": "https://twitter.com/peteregan6/status/1248299633857699840",
+          "indices": [
+            14,
+            37
+          ],
+          "url": "https://t.co/mckSDCREQs"
+        }
+      ],
+      "user_mentions": []
+    },
+    "favorite_count": 14,
+    "favorited": false,
+    "full_text": "About time!🙏🐶 https://t.co/mckSDCREQs",
+    "geo": null,
+    "id": 1248299944882118663,
+    "id_str": "1248299944882118663",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": true,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "possibly_sensitive_appealable": false,
+    "quoted_status": {
+      "contributors": null,
+      "coordinates": null,
+      "created_at": "Thu Apr 09 17:19:59 +0000 2020",
+      "display_text_range": [
+        0,
+        169
+      ],
+      "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [
+          {
+            "display_url": "independent.co.uk/news/world/asi…",
+            "expanded_url": "https://www.independent.co.uk/news/world/asia/china-dog-meat-trade-ban-cats-coronavirus-wuhan-wet-market-wildlife-a9457426.html",
+            "indices": [
+              146,
+              169
+            ],
+            "url": "https://t.co/WiJlAO0UCz"
+          }
+        ],
+        "user_mentions": []
+      },
+      "favorite_count": 861,
+      "favorited": false,
+      "full_text": "It’s about time this declaration was made it will now have to be rigourously policed : China declares dogs are companions and should not be eaten https://t.co/WiJlAO0UCz",
+      "geo": null,
+      "id": 1248299633857699840,
+      "id_str": "1248299633857699840",
+      "in_reply_to_screen_name": null,
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "is_quote_status": false,
+      "lang": "en",
+      "place": null,
+      "possibly_sensitive": false,
+      "possibly_sensitive_appealable": false,
+      "retweet_count": 358,
+      "retweeted": false,
+      "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+      "truncated": false,
+      "user": {
+        "contributors_enabled": false,
+        "created_at": "Sun Jan 01 12:18:53 +0000 2012",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "Downton Abbey. Unforgotten. Hold the Sunset. A Perfect Spy. EDC Married to Myra. Nuts about Dogs & Moon Bears UK Ambassador Animalsasia. https://t.co/l1ztQpdYwu",
+        "entities": {
+          "description": {
+            "urls": [
+              {
+                "display_url": "facebook.com/PeterEganAnima…",
+                "expanded_url": "https://www.facebook.com/PeterEganAnimalAdvocate",
+                "indices": [
+                  137,
+                  160
+                ],
+                "url": "https://t.co/l1ztQpdYwu"
+              }
+            ]
+          },
+          "url": {
+            "urls": [
+              {
+                "display_url": "peter-egan.co.uk",
+                "expanded_url": "http://www.peter-egan.co.uk",
+                "indices": [
+                  0,
+                  22
+                ],
+                "url": "http://t.co/HvTMQn5sJK"
+              }
+            ]
+          }
+        },
+        "favourites_count": 36275,
+        "follow_request_sent": false,
+        "followers_count": 73882,
+        "following": false,
+        "friends_count": 18231,
+        "geo_enabled": true,
+        "has_extended_profile": false,
+        "id": 452100948,
+        "id_str": "452100948",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 509,
+        "location": "https://www.facebook.com/Pete",
+        "name": "Peter Egan",
+        "notifications": false,
+        "profile_background_color": "C0DEED",
+        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/452100948/1580739481",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/963517381401366528/3T1haqbg_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/963517381401366528/3T1haqbg_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "PeterEgan6",
+        "statuses_count": 58792,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": "http://t.co/HvTMQn5sJK",
+        "utc_offset": null,
+        "verified": true
+      }
+    },
+    "quoted_status_id": 1248299633857699840,
+    "quoted_status_id_str": "1248299633857699840",
+    "quoted_status_permalink": {
+      "display": "twitter.com/peteregan6/sta…",
+      "expanded": "https://twitter.com/peteregan6/status/1248299633857699840",
+      "url": "https://t.co/mckSDCREQs"
+    },
+    "retweet_count": 0,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Sat Feb 05 01:18:36 +0000 2011",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Australian Snooker professional. World Champion, Triple crown winner. Global ambassador for @singleshotinc .Managed by @grovesnooker",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "nr147.com",
+              "expanded_url": "http://nr147.com",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/Bh3XkW3TQc"
+            }
+          ]
+        }
+      },
+      "favourites_count": 17557,
+      "follow_request_sent": false,
+      "followers_count": 116824,
+      "following": true,
+      "friends_count": 502,
+      "geo_enabled": true,
+      "has_extended_profile": false,
+      "id": 247546239,
+      "id_str": "247546239",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 719,
+      "location": "England, United Kingdom",
+      "name": "Neil Robertson🌱",
+      "notifications": false,
+      "profile_background_color": "000000",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/247546239/1348101480",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/714815326421168128/OmSb3z0d_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/714815326421168128/OmSb3z0d_normal.jpg",
+      "profile_link_color": "0084B4",
+      "profile_sidebar_border_color": "FFFFFF",
+      "profile_sidebar_fill_color": "DDEEF6",
+      "profile_text_color": "333333",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "nr147",
+      "statuses_count": 7339,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/Bh3XkW3TQc",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 17:18:53 +0000 2020",
+    "display_text_range": [
+      0,
+      84
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [],
+      "user_mentions": []
+    },
+    "favorite_count": 53,
+    "favorited": false,
+    "full_text": "hey idiots\n\n6 feet away applies when you're walking past someone on the sidewalk too",
+    "geo": null,
+    "id": 1248299358161793024,
+    "id_str": "1248299358161793024",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "retweet_count": 5,
+    "retweeted": false,
+    "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Tue Apr 05 20:55:27 +0000 2016",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Former epidemiologist, current brat 😎 I escaped the alt right pipeline & now host a political show talking about it: https://t.co/5YaJBBO78h (She/Her) #Bernie2020",
+      "entities": {
+        "description": {
+          "urls": [
+            {
+              "display_url": "twitch.tv/badbunny",
+              "expanded_url": "http://twitch.tv/badbunny",
+              "indices": [
+                117,
+                140
+              ],
+              "url": "https://t.co/5YaJBBO78h"
+            }
+          ]
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "streamlabs.com/badbunny1",
+              "expanded_url": "https://streamlabs.com/badbunny1",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/Btx3YXoWot"
+            }
+          ]
+        }
+      },
+      "favourites_count": 27500,
+      "follow_request_sent": false,
+      "followers_count": 12524,
+      "following": true,
+      "friends_count": 642,
+      "geo_enabled": true,
+      "has_extended_profile": true,
+      "id": 717455633331556352,
+      "id_str": "717455633331556352",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 83,
+      "location": "hell",
+      "name": "BadBunny (Nicole)🌹MPH",
+      "notifications": false,
+      "profile_background_color": "F433FF",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/717455633331556352/1583477754",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1235802355230101506/2ilclDUt_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1235802355230101506/2ilclDUt_normal.jpg",
+      "profile_link_color": "1B95E0",
+      "profile_sidebar_border_color": "000000",
+      "profile_sidebar_fill_color": "000000",
+      "profile_text_color": "000000",
+      "profile_use_background_image": false,
+      "protected": false,
+      "screen_name": "BadBunnyTwitch",
+      "statuses_count": 18472,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/Btx3YXoWot",
+      "utc_offset": null,
+      "verified": false
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 17:13:39 +0000 2020",
+    "display_text_range": [
+      0,
+      140
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [],
+      "user_mentions": [
+        {
+          "id": 22185437,
+          "id_str": "22185437",
+          "indices": [
+            3,
+            14
+          ],
+          "name": "Dallas Mavericks",
+          "screen_name": "dallasmavs"
+        },
+        {
+          "id": 16228398,
+          "id_str": "16228398",
+          "indices": [
+            28,
+            35
+          ],
+          "name": "Mark Cuban",
+          "screen_name": "mcuban"
+        },
+        {
+          "id": 1531669496,
+          "id_str": "1531669496",
+          "indices": [
+            40,
+            49
+          ],
+          "name": "DoorDash",
+          "screen_name": "DoorDash"
+        }
+      ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "full_text": "RT @dallasmavs: Shoutout to @mcuban and @doordash for their generous donation to the frontline workers at Parkland Hospital! Keep supportin…",
+    "geo": null,
+    "id": 1248298038537273344,
+    "id_str": "1248298038537273344",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "retweet_count": 27,
+    "retweeted": false,
+    "retweeted_status": {
+      "contributors": null,
+      "coordinates": null,
+      "created_at": "Thu Apr 09 13:00:01 +0000 2020",
+      "display_text_range": [
+        0,
+        233
+      ],
+      "entities": {
+        "hashtags": [
+          {
+            "indices": [
+              217,
+              233
+            ],
+            "text": "OpenForDelivery"
+          }
+        ],
+        "media": [
+          {
+            "display_url": "pic.twitter.com/CJadgvgCOC",
+            "expanded_url": "https://twitter.com/dallasmavs/status/1248234209640054786/video/1",
+            "id": 1248022501088735232,
+            "id_str": "1248022501088735232",
+            "indices": [
+              234,
+              257
+            ],
+            "media_url": "http://pbs.twimg.com/amplify_video_thumb/1248022501088735232/img/dz8lF3N4HyWZ7eYD.jpg",
+            "media_url_https": "https://pbs.twimg.com/amplify_video_thumb/1248022501088735232/img/dz8lF3N4HyWZ7eYD.jpg",
+            "sizes": {
+              "large": {
+                "h": 720,
+                "resize": "fit",
+                "w": 1280
+              },
+              "medium": {
+                "h": 675,
+                "resize": "fit",
+                "w": 1200
+              },
+              "small": {
+                "h": 383,
+                "resize": "fit",
+                "w": 680
+              },
+              "thumb": {
+                "h": 150,
+                "resize": "crop",
+                "w": 150
+              }
+            },
+            "type": "photo",
+            "url": "https://t.co/CJadgvgCOC"
+          }
+        ],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+          {
+            "id": 16228398,
+            "id_str": "16228398",
+            "indices": [
+              12,
+              19
+            ],
+            "name": "Mark Cuban",
+            "screen_name": "mcuban"
+          },
+          {
+            "id": 1531669496,
+            "id_str": "1531669496",
+            "indices": [
+              24,
+              33
+            ],
+            "name": "DoorDash",
+            "screen_name": "DoorDash"
+          }
+        ]
+      },
+      "extended_entities": {
+        "media": [
+          {
+            "additional_media_info": {
+              "description": "",
+              "embeddable": true,
+              "monetizable": false,
+              "title": ""
+            },
+            "display_url": "pic.twitter.com/CJadgvgCOC",
+            "expanded_url": "https://twitter.com/dallasmavs/status/1248234209640054786/video/1",
+            "id": 1248022501088735232,
+            "id_str": "1248022501088735232",
+            "indices": [
+              234,
+              257
+            ],
+            "media_url": "http://pbs.twimg.com/amplify_video_thumb/1248022501088735232/img/dz8lF3N4HyWZ7eYD.jpg",
+            "media_url_https": "https://pbs.twimg.com/amplify_video_thumb/1248022501088735232/img/dz8lF3N4HyWZ7eYD.jpg",
+            "sizes": {
+              "large": {
+                "h": 720,
+                "resize": "fit",
+                "w": 1280
+              },
+              "medium": {
+                "h": 675,
+                "resize": "fit",
+                "w": 1200
+              },
+              "small": {
+                "h": 383,
+                "resize": "fit",
+                "w": 680
+              },
+              "thumb": {
+                "h": 150,
+                "resize": "crop",
+                "w": 150
+              }
+            },
+            "type": "video",
+            "url": "https://t.co/CJadgvgCOC",
+            "video_info": {
+              "aspect_ratio": [
+                16,
+                9
+              ],
+              "duration_millis": 32966,
+              "variants": [
+                {
+                  "bitrate": 2176000,
+                  "content_type": "video/mp4",
+                  "url": "https://video.twimg.com/amplify_video/1248022501088735232/vid/1280x720/MJDfybAAgh_xiryX.mp4?tag=13"
+                },
+                {
+                  "bitrate": 832000,
+                  "content_type": "video/mp4",
+                  "url": "https://video.twimg.com/amplify_video/1248022501088735232/vid/640x360/acHN8Vl0DhOHCU31.mp4?tag=13"
+                },
+                {
+                  "content_type": "application/x-mpegURL",
+                  "url": "https://video.twimg.com/amplify_video/1248022501088735232/pl/6a9kbVrQkw-Dpv03.m3u8?tag=13"
+                },
+                {
+                  "bitrate": 288000,
+                  "content_type": "video/mp4",
+                  "url": "https://video.twimg.com/amplify_video/1248022501088735232/vid/480x270/DFvSmq6QdgsJJMV9.mp4?tag=13"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "favorite_count": 147,
+      "favorited": false,
+      "full_text": "Shoutout to @mcuban and @doordash for their generous donation to the frontline workers at Parkland Hospital! Keep supporting Campisi’s and other local restaurants by ordering through the DoorDash app because they are #OpenForDelivery https://t.co/CJadgvgCOC",
+      "geo": null,
+      "id": 1248234209640054786,
+      "id_str": "1248234209640054786",
+      "in_reply_to_screen_name": null,
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "is_quote_status": false,
+      "lang": "en",
+      "place": null,
+      "possibly_sensitive": false,
+      "possibly_sensitive_appealable": false,
+      "retweet_count": 27,
+      "retweeted": false,
+      "source": "<a href=\"https://studio.twitter.com\" rel=\"nofollow\">Twitter Media Studio</a>",
+      "truncated": false,
+      "user": {
+        "contributors_enabled": false,
+        "created_at": "Fri Feb 27 20:26:05 +0000 2009",
+        "default_profile": false,
+        "default_profile_image": false,
+        "description": "Official Dallas Mavericks Twitter Page",
+        "entities": {
+          "description": {
+            "urls": []
+          },
+          "url": {
+            "urls": [
+              {
+                "display_url": "mavs.com",
+                "expanded_url": "https://www.mavs.com",
+                "indices": [
+                  0,
+                  23
+                ],
+                "url": "https://t.co/WjxJRo2kgC"
+              }
+            ]
+          }
+        },
+        "favourites_count": 6304,
+        "follow_request_sent": false,
+        "followers_count": 1727124,
+        "following": false,
+        "friends_count": 531,
+        "geo_enabled": true,
+        "has_extended_profile": false,
+        "id": 22185437,
+        "id_str": "22185437",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 7683,
+        "location": "Dallas, Texas",
+        "name": "Dallas Mavericks",
+        "notifications": false,
+        "profile_background_color": "FFFFFF",
+        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/22185437/1559252763",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1200199164531007491/EueIUbKX_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1200199164531007491/EueIUbKX_normal.jpg",
+        "profile_link_color": "9C9897",
+        "profile_sidebar_border_color": "FFFFFF",
+        "profile_sidebar_fill_color": "030003",
+        "profile_text_color": "006BB7",
+        "profile_use_background_image": false,
+        "protected": false,
+        "screen_name": "dallasmavs",
+        "statuses_count": 42979,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": "https://t.co/WjxJRo2kgC",
+        "utc_offset": null,
+        "verified": true
+      }
+    },
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Wed Jun 19 18:44:44 +0000 2013",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "#OpenForDelivery\nCustomer Service: https://t.co/PZX5wlaUjP…",
+      "entities": {
+        "description": {
+          "urls": [
+            {
+              "display_url": "help.doordash.com/s/?language=en",
+              "expanded_url": "http://help.doordash.com/s/?language=en",
+              "indices": [
+                35,
+                58
+              ],
+              "url": "https://t.co/PZX5wlaUjP"
+            }
+          ]
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "doordash.com",
+              "expanded_url": "http://www.doordash.com",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/eo8O9Fmj1u"
+            }
+          ]
+        }
+      },
+      "favourites_count": 13104,
+      "follow_request_sent": false,
+      "followers_count": 135635,
+      "following": true,
+      "friends_count": 20133,
+      "geo_enabled": false,
+      "has_extended_profile": false,
+      "id": 1531669496,
+      "id_str": "1531669496",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 371,
+      "location": "San Francisco, CA",
+      "name": "DoorDash",
+      "notifications": false,
+      "profile_background_color": "FFFFFA",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme14/bg.gif",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme14/bg.gif",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/1531669496/1575346247",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1145729935140478976/gMIgJt8n_normal.png",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1145729935140478976/gMIgJt8n_normal.png",
+      "profile_link_color": "FF3008",
+      "profile_sidebar_border_color": "FFFFFF",
+      "profile_sidebar_fill_color": "DDEEF6",
+      "profile_text_color": "333333",
+      "profile_use_background_image": false,
+      "protected": false,
+      "screen_name": "DoorDash",
+      "statuses_count": 13417,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/eo8O9Fmj1u",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 17:11:01 +0000 2020",
+    "display_text_range": [
+      0,
+      61
+    ],
+    "entities": {
+      "hashtags": [],
+      "media": [
+        {
+          "display_url": "pic.twitter.com/r0S2EYBcO9",
+          "expanded_url": "https://twitter.com/oOoOOsounds/status/1247643675557011457/photo/1",
+          "id": 1247643414948184070,
+          "id_str": "1247643414948184070",
+          "indices": [
+            38,
+            61
+          ],
+          "media_url": "http://pbs.twimg.com/media/EVCFE1pXgAYKod1.jpg",
+          "media_url_https": "https://pbs.twimg.com/media/EVCFE1pXgAYKod1.jpg",
+          "sizes": {
+            "large": {
+              "h": 1070,
+              "resize": "fit",
+              "w": 2048
+            },
+            "medium": {
+              "h": 627,
+              "resize": "fit",
+              "w": 1200
+            },
+            "small": {
+              "h": 355,
+              "resize": "fit",
+              "w": 680
+            },
+            "thumb": {
+              "h": 150,
+              "resize": "crop",
+              "w": 150
+            }
+          },
+          "source_status_id": 1247643675557011457,
+          "source_status_id_str": "1247643675557011457",
+          "source_user_id": 111224012,
+          "source_user_id_str": "111224012",
+          "type": "photo",
+          "url": "https://t.co/r0S2EYBcO9"
+        }
+      ],
+      "symbols": [],
+      "urls": [],
+      "user_mentions": [
+        {
+          "id": 111224012,
+          "id_str": "111224012",
+          "indices": [
+            3,
+            15
+          ],
+          "name": "oOoOO",
+          "screen_name": "oOoOOsounds"
+        }
+      ]
+    },
+    "extended_entities": {
+      "media": [
+        {
+          "display_url": "pic.twitter.com/r0S2EYBcO9",
+          "expanded_url": "https://twitter.com/oOoOOsounds/status/1247643675557011457/photo/1",
+          "id": 1247643414948184070,
+          "id_str": "1247643414948184070",
+          "indices": [
+            38,
+            61
+          ],
+          "media_url": "http://pbs.twimg.com/media/EVCFE1pXgAYKod1.jpg",
+          "media_url_https": "https://pbs.twimg.com/media/EVCFE1pXgAYKod1.jpg",
+          "sizes": {
+            "large": {
+              "h": 1070,
+              "resize": "fit",
+              "w": 2048
+            },
+            "medium": {
+              "h": 627,
+              "resize": "fit",
+              "w": 1200
+            },
+            "small": {
+              "h": 355,
+              "resize": "fit",
+              "w": 680
+            },
+            "thumb": {
+              "h": 150,
+              "resize": "crop",
+              "w": 150
+            }
+          },
+          "source_status_id": 1247643675557011457,
+          "source_status_id_str": "1247643675557011457",
+          "source_user_id": 111224012,
+          "source_user_id_str": "111224012",
+          "type": "photo",
+          "url": "https://t.co/r0S2EYBcO9"
+        }
+      ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "full_text": "RT @oOoOOsounds: Jesus Fucking Christ https://t.co/r0S2EYBcO9",
+    "geo": null,
+    "id": 1248297375216439296,
+    "id_str": "1248297375216439296",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "possibly_sensitive_appealable": false,
+    "retweet_count": 11280,
+    "retweeted": false,
+    "retweeted_status": {
+      "contributors": null,
+      "coordinates": null,
+      "created_at": "Tue Apr 07 21:53:27 +0000 2020",
+      "display_text_range": [
+        0,
+        20
+      ],
+      "entities": {
+        "hashtags": [],
+        "media": [
+          {
+            "display_url": "pic.twitter.com/r0S2EYBcO9",
+            "expanded_url": "https://twitter.com/oOoOOsounds/status/1247643675557011457/photo/1",
+            "id": 1247643414948184070,
+            "id_str": "1247643414948184070",
+            "indices": [
+              21,
+              44
+            ],
+            "media_url": "http://pbs.twimg.com/media/EVCFE1pXgAYKod1.jpg",
+            "media_url_https": "https://pbs.twimg.com/media/EVCFE1pXgAYKod1.jpg",
+            "sizes": {
+              "large": {
+                "h": 1070,
+                "resize": "fit",
+                "w": 2048
+              },
+              "medium": {
+                "h": 627,
+                "resize": "fit",
+                "w": 1200
+              },
+              "small": {
+                "h": 355,
+                "resize": "fit",
+                "w": 680
+              },
+              "thumb": {
+                "h": 150,
+                "resize": "crop",
+                "w": 150
+              }
+            },
+            "type": "photo",
+            "url": "https://t.co/r0S2EYBcO9"
+          }
+        ],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": []
+      },
+      "extended_entities": {
+        "media": [
+          {
+            "display_url": "pic.twitter.com/r0S2EYBcO9",
+            "expanded_url": "https://twitter.com/oOoOOsounds/status/1247643675557011457/photo/1",
+            "id": 1247643414948184070,
+            "id_str": "1247643414948184070",
+            "indices": [
+              21,
+              44
+            ],
+            "media_url": "http://pbs.twimg.com/media/EVCFE1pXgAYKod1.jpg",
+            "media_url_https": "https://pbs.twimg.com/media/EVCFE1pXgAYKod1.jpg",
+            "sizes": {
+              "large": {
+                "h": 1070,
+                "resize": "fit",
+                "w": 2048
+              },
+              "medium": {
+                "h": 627,
+                "resize": "fit",
+                "w": 1200
+              },
+              "small": {
+                "h": 355,
+                "resize": "fit",
+                "w": 680
+              },
+              "thumb": {
+                "h": 150,
+                "resize": "crop",
+                "w": 150
+              }
+            },
+            "type": "photo",
+            "url": "https://t.co/r0S2EYBcO9"
+          }
+        ]
+      },
+      "favorite_count": 44550,
+      "favorited": false,
+      "full_text": "Jesus Fucking Christ https://t.co/r0S2EYBcO9",
+      "geo": null,
+      "id": 1247643675557011457,
+      "id_str": "1247643675557011457",
+      "in_reply_to_screen_name": null,
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "is_quote_status": false,
+      "lang": "en",
+      "place": null,
+      "possibly_sensitive": false,
+      "possibly_sensitive_appealable": false,
+      "retweet_count": 11280,
+      "retweeted": false,
+      "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+      "truncated": false,
+      "user": {
+        "contributors_enabled": false,
+        "created_at": "Thu Feb 04 05:36:39 +0000 2010",
+        "default_profile": false,
+        "default_profile_image": false,
+        "description": "1/2 of Drab City \nhttps://t.co/YBDA7cEoxZ\nhttps://t.co/0eWdzVdCRf",
+        "entities": {
+          "description": {
+            "urls": [
+              {
+                "display_url": "instagram.com/drab_city/",
+                "expanded_url": "http://instagram.com/drab_city/",
+                "indices": [
+                  18,
+                  41
+                ],
+                "url": "https://t.co/YBDA7cEoxZ"
+              },
+              {
+                "display_url": "facebook.com/drabcityoffici…",
+                "expanded_url": "https://www.facebook.com/drabcityofficial/",
+                "indices": [
+                  42,
+                  65
+                ],
+                "url": "https://t.co/0eWdzVdCRf"
+              }
+            ]
+          },
+          "url": {
+            "urls": [
+              {
+                "display_url": "instagram.com/ooooo_music/",
+                "expanded_url": "https://www.instagram.com/ooooo_music/",
+                "indices": [
+                  0,
+                  23
+                ],
+                "url": "https://t.co/QnYV4dx8WQ"
+              }
+            ]
+          }
+        },
+        "favourites_count": 1457,
+        "follow_request_sent": false,
+        "followers_count": 9743,
+        "following": false,
+        "friends_count": 392,
+        "geo_enabled": false,
+        "has_extended_profile": false,
+        "id": 111224012,
+        "id_str": "111224012",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 261,
+        "location": "www.soundcloud.com/oOoOOsounds",
+        "name": "oOoOO",
+        "notifications": false,
+        "profile_background_color": "C0DEED",
+        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_tile": true,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/111224012/1520734875",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1049651984758919169/1ZZIfF96_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1049651984758919169/1ZZIfF96_normal.jpg",
+        "profile_link_color": "E3A6A6",
+        "profile_sidebar_border_color": "FFFFFF",
+        "profile_sidebar_fill_color": "030202",
+        "profile_text_color": "DEA5BA",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "oOoOOsounds",
+        "statuses_count": 148,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": "https://t.co/QnYV4dx8WQ",
+        "utc_offset": null,
+        "verified": true
+      }
+    },
+    "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Tue Apr 05 20:55:27 +0000 2016",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Former epidemiologist, current brat 😎 I escaped the alt right pipeline & now host a political show talking about it: https://t.co/5YaJBBO78h (She/Her) #Bernie2020",
+      "entities": {
+        "description": {
+          "urls": [
+            {
+              "display_url": "twitch.tv/badbunny",
+              "expanded_url": "http://twitch.tv/badbunny",
+              "indices": [
+                117,
+                140
+              ],
+              "url": "https://t.co/5YaJBBO78h"
+            }
+          ]
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "streamlabs.com/badbunny1",
+              "expanded_url": "https://streamlabs.com/badbunny1",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/Btx3YXoWot"
+            }
+          ]
+        }
+      },
+      "favourites_count": 27500,
+      "follow_request_sent": false,
+      "followers_count": 12524,
+      "following": true,
+      "friends_count": 642,
+      "geo_enabled": true,
+      "has_extended_profile": true,
+      "id": 717455633331556352,
+      "id_str": "717455633331556352",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 83,
+      "location": "hell",
+      "name": "BadBunny (Nicole)🌹MPH",
+      "notifications": false,
+      "profile_background_color": "F433FF",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/717455633331556352/1583477754",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1235802355230101506/2ilclDUt_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1235802355230101506/2ilclDUt_normal.jpg",
+      "profile_link_color": "1B95E0",
+      "profile_sidebar_border_color": "000000",
+      "profile_sidebar_fill_color": "000000",
+      "profile_text_color": "000000",
+      "profile_use_background_image": false,
+      "protected": false,
+      "screen_name": "BadBunnyTwitch",
+      "statuses_count": 18472,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/Btx3YXoWot",
+      "utc_offset": null,
+      "verified": false
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 17:09:48 +0000 2020",
+    "display_text_range": [
+      0,
+      140
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [],
+      "user_mentions": [
+        {
+          "id": 813534323743883264,
+          "id_str": "813534323743883264",
+          "indices": [
+            3,
+            18
+          ],
+          "name": "lexi 🐰☕",
+          "screen_name": "cyberwitchlexi"
+        }
+      ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "full_text": "RT @cyberwitchlexi: instead of telling bernie or bust-rs that they're not \"good leftists\" that its a vote for the right, we could instead d…",
+    "geo": null,
+    "id": 1248297071808937984,
+    "id_str": "1248297071808937984",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "retweet_count": 31,
+    "retweeted": false,
+    "retweeted_status": {
+      "contributors": null,
+      "coordinates": null,
+      "created_at": "Thu Apr 09 11:42:29 +0000 2020",
+      "display_text_range": [
+        0,
+        275
+      ],
+      "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": []
+      },
+      "favorite_count": 223,
+      "favorited": false,
+      "full_text": "instead of telling bernie or bust-rs that they're not \"good leftists\" that its a vote for the right, we could instead direct that frustration in useful ways\n\nlets talk about how to turn our individual voices into collective power. how to pressure politicians to listen to us.",
+      "geo": null,
+      "id": 1248214697779871744,
+      "id_str": "1248214697779871744",
+      "in_reply_to_screen_name": null,
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "is_quote_status": false,
+      "lang": "en",
+      "place": null,
+      "retweet_count": 31,
+      "retweeted": false,
+      "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+      "truncated": false,
+      "user": {
+        "contributors_enabled": false,
+        "created_at": "Mon Dec 26 23:57:52 +0000 2016",
+        "default_profile": false,
+        "default_profile_image": false,
+        "description": "//she/her//23//twitch partner//anarchist when i want to be//#0464//\n💕@tayesadilla 💕\nbusiness contact: cyberwitchlexi@gmail.com",
+        "entities": {
+          "description": {
+            "urls": []
+          },
+          "url": {
+            "urls": [
+              {
+                "display_url": "twitch.tv/cyberwitchlexi",
+                "expanded_url": "https://twitch.tv/cyberwitchlexi",
+                "indices": [
+                  0,
+                  23
+                ],
+                "url": "https://t.co/reCaPe4qQc"
+              }
+            ]
+          }
+        },
+        "favourites_count": 75161,
+        "follow_request_sent": false,
+        "followers_count": 15479,
+        "following": false,
+        "friends_count": 474,
+        "geo_enabled": false,
+        "has_extended_profile": true,
+        "id": 813534323743883264,
+        "id_str": "813534323743883264",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 72,
+        "location": "North Carolina, USA",
+        "name": "lexi 🐰☕",
+        "notifications": false,
+        "profile_background_color": "000000",
+        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/813534323743883264/1578779900",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1228006485139107841/rR0edFU2_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1228006485139107841/rR0edFU2_normal.jpg",
+        "profile_link_color": "981CEB",
+        "profile_sidebar_border_color": "000000",
+        "profile_sidebar_fill_color": "000000",
+        "profile_text_color": "000000",
+        "profile_use_background_image": false,
+        "protected": false,
+        "screen_name": "cyberwitchlexi",
+        "statuses_count": 38791,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": "https://t.co/reCaPe4qQc",
+        "utc_offset": null,
+        "verified": false
+      }
+    },
+    "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Tue Apr 05 20:55:27 +0000 2016",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Former epidemiologist, current brat 😎 I escaped the alt right pipeline & now host a political show talking about it: https://t.co/5YaJBBO78h (She/Her) #Bernie2020",
+      "entities": {
+        "description": {
+          "urls": [
+            {
+              "display_url": "twitch.tv/badbunny",
+              "expanded_url": "http://twitch.tv/badbunny",
+              "indices": [
+                117,
+                140
+              ],
+              "url": "https://t.co/5YaJBBO78h"
+            }
+          ]
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "streamlabs.com/badbunny1",
+              "expanded_url": "https://streamlabs.com/badbunny1",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/Btx3YXoWot"
+            }
+          ]
+        }
+      },
+      "favourites_count": 27500,
+      "follow_request_sent": false,
+      "followers_count": 12524,
+      "following": true,
+      "friends_count": 642,
+      "geo_enabled": true,
+      "has_extended_profile": true,
+      "id": 717455633331556352,
+      "id_str": "717455633331556352",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 83,
+      "location": "hell",
+      "name": "BadBunny (Nicole)🌹MPH",
+      "notifications": false,
+      "profile_background_color": "F433FF",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/717455633331556352/1583477754",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1235802355230101506/2ilclDUt_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1235802355230101506/2ilclDUt_normal.jpg",
+      "profile_link_color": "1B95E0",
+      "profile_sidebar_border_color": "000000",
+      "profile_sidebar_fill_color": "000000",
+      "profile_text_color": "000000",
+      "profile_use_background_image": false,
+      "protected": false,
+      "screen_name": "BadBunnyTwitch",
+      "statuses_count": 18472,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/Btx3YXoWot",
+      "utc_offset": null,
+      "verified": false
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 16:47:03 +0000 2020",
+    "display_text_range": [
+      0,
+      91
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [
+        {
+          "display_url": "bit.ly/3c2W2QB",
+          "expanded_url": "https://bit.ly/3c2W2QB",
+          "indices": [
+            68,
+            91
+          ],
+          "url": "https://t.co/lBR4IRVjq9"
+        }
+      ],
+      "user_mentions": []
+    },
+    "favorite_count": 8,
+    "favorited": false,
+    "full_text": "Why we can’t afford to ignore climate change, especially right now. https://t.co/lBR4IRVjq9",
+    "geo": null,
+    "id": 1248291345229283328,
+    "id_str": "1248291345229283328",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "possibly_sensitive": false,
+    "possibly_sensitive_appealable": false,
+    "retweet_count": 1,
+    "retweeted": false,
+    "source": "<a href=\"https://sproutsocial.com\" rel=\"nofollow\">Sprout Social</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Wed Feb 04 16:48:14 +0000 2009",
+      "default_profile": false,
+      "default_profile_image": false,
+      "description": "Environmental Defense Fund works with businesses, government & communities to create lasting solutions to the most serious enviro problems. #ActOnClimate",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "edf.org",
+              "expanded_url": "http://www.edf.org",
+              "indices": [
+                0,
+                22
+              ],
+              "url": "http://t.co/clxduDiMof"
+            }
+          ]
+        }
+      },
+      "favourites_count": 1221,
+      "follow_request_sent": false,
+      "followers_count": 196448,
+      "following": true,
+      "friends_count": 4175,
+      "geo_enabled": false,
+      "has_extended_profile": false,
+      "id": 20068053,
+      "id_str": "20068053",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 4235,
+      "location": "New York, New York",
+      "name": "EDF",
+      "notifications": false,
+      "profile_background_color": "C6E2EE",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme2/bg.gif",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme2/bg.gif",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/20068053/1578670763",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/459700489102188544/YMAhWNUS_normal.png",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/459700489102188544/YMAhWNUS_normal.png",
+      "profile_link_color": "1F98C7",
+      "profile_sidebar_border_color": "FFFFFF",
+      "profile_sidebar_fill_color": "BFDAEF",
+      "profile_text_color": "663B12",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "EnvDefenseFund",
+      "statuses_count": 30365,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "http://t.co/clxduDiMof",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 16:42:50 +0000 2020",
+    "display_text_range": [
+      0,
+      140
+    ],
+    "entities": {
+      "hashtags": [
+        {
+          "indices": [
+            30,
+            41
+          ],
+          "text": "2020Census"
+        }
+      ],
+      "symbols": [],
+      "urls": [],
+      "user_mentions": [
+        {
+          "id": 18193396,
+          "id_str": "18193396",
+          "indices": [
+            3,
+            16
+          ],
+          "name": "King County, WA",
+          "screen_name": "KingCountyWA"
+        }
+      ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "full_text": "RT @KingCountyWA: The ongoing #2020Census is a chance to work together — as a neighborhood, a county, a state and a nation — to make sure e…",
+    "geo": null,
+    "id": 1248290284842225667,
+    "id_str": "1248290284842225667",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "retweet_count": 2,
+    "retweeted": false,
+    "retweeted_status": {
+      "contributors": null,
+      "coordinates": null,
+      "created_at": "Wed Apr 08 15:00:01 +0000 2020",
+      "display_text_range": [
+        0,
+        274
+      ],
+      "entities": {
+        "hashtags": [
+          {
+            "indices": [
+              12,
+              23
+            ],
+            "text": "2020Census"
+          },
+          {
+            "indices": [
+              219,
+              236
+            ],
+            "text": "KingCountyCounts"
+          },
+          {
+            "indices": [
+              240,
+              258
+            ],
+            "text": "WeCountKingCounty"
+          }
+        ],
+        "media": [
+          {
+            "display_url": "pic.twitter.com/xrVDTVMtFe",
+            "expanded_url": "https://twitter.com/KingCountyWA/status/1247902021841121288/video/1",
+            "id": 1247899601899679746,
+            "id_str": "1247899601899679746",
+            "indices": [
+              275,
+              298
+            ],
+            "media_url": "http://pbs.twimg.com/amplify_video_thumb/1247899601899679746/img/IX9tF_uXShqbTzyz.jpg",
+            "media_url_https": "https://pbs.twimg.com/amplify_video_thumb/1247899601899679746/img/IX9tF_uXShqbTzyz.jpg",
+            "sizes": {
+              "large": {
+                "h": 720,
+                "resize": "fit",
+                "w": 1280
+              },
+              "medium": {
+                "h": 675,
+                "resize": "fit",
+                "w": 1200
+              },
+              "small": {
+                "h": 383,
+                "resize": "fit",
+                "w": 680
+              },
+              "thumb": {
+                "h": 150,
+                "resize": "crop",
+                "w": 150
+              }
+            },
+            "type": "photo",
+            "url": "https://t.co/xrVDTVMtFe"
+          }
+        ],
+        "symbols": [],
+        "urls": [
+          {
+            "display_url": "2020Census.gov",
+            "expanded_url": "http://2020Census.gov",
+            "indices": [
+              161,
+              184
+            ],
+            "url": "https://t.co/hSxRs10TM3"
+          }
+        ],
+        "user_mentions": [
+          {
+            "id": 912391944319336449,
+            "id_str": "912391944319336449",
+            "indices": [
+              261,
+              274
+            ],
+            "name": "King County TV",
+            "screen_name": "KingCountyTV"
+          }
+        ]
+      },
+      "extended_entities": {
+        "media": [
+          {
+            "additional_media_info": {
+              "description": "",
+              "embeddable": true,
+              "monetizable": false,
+              "title": "King County Counts: Elsa Batres-Boni"
+            },
+            "display_url": "pic.twitter.com/xrVDTVMtFe",
+            "expanded_url": "https://twitter.com/KingCountyWA/status/1247902021841121288/video/1",
+            "id": 1247899601899679746,
+            "id_str": "1247899601899679746",
+            "indices": [
+              275,
+              298
+            ],
+            "media_url": "http://pbs.twimg.com/amplify_video_thumb/1247899601899679746/img/IX9tF_uXShqbTzyz.jpg",
+            "media_url_https": "https://pbs.twimg.com/amplify_video_thumb/1247899601899679746/img/IX9tF_uXShqbTzyz.jpg",
+            "sizes": {
+              "large": {
+                "h": 720,
+                "resize": "fit",
+                "w": 1280
+              },
+              "medium": {
+                "h": 675,
+                "resize": "fit",
+                "w": 1200
+              },
+              "small": {
+                "h": 383,
+                "resize": "fit",
+                "w": 680
+              },
+              "thumb": {
+                "h": 150,
+                "resize": "crop",
+                "w": 150
+              }
+            },
+            "type": "video",
+            "url": "https://t.co/xrVDTVMtFe",
+            "video_info": {
+              "aspect_ratio": [
+                16,
+                9
+              ],
+              "duration_millis": 18752,
+              "variants": [
+                {
+                  "bitrate": 288000,
+                  "content_type": "video/mp4",
+                  "url": "https://video.twimg.com/amplify_video/1247899601899679746/vid/480x270/IHSbjPYfr4_jDkx-.mp4?tag=13"
+                },
+                {
+                  "bitrate": 2176000,
+                  "content_type": "video/mp4",
+                  "url": "https://video.twimg.com/amplify_video/1247899601899679746/vid/1280x720/FbWnPJwt0BRg3Oel.mp4?tag=13"
+                },
+                {
+                  "content_type": "application/x-mpegURL",
+                  "url": "https://video.twimg.com/amplify_video/1247899601899679746/pl/kCSHj5VsKGqU66zl.m3u8?tag=13"
+                },
+                {
+                  "bitrate": 832000,
+                  "content_type": "video/mp4",
+                  "url": "https://video.twimg.com/amplify_video/1247899601899679746/vid/640x360/wAZqgR5aN_PFWLqx.mp4?tag=13"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "favorite_count": 2,
+      "favorited": false,
+      "full_text": "The ongoing #2020Census is a chance to work together — as a neighborhood, a county, a state and a nation — to make sure every person is seen and counted.\n\nVisit https://t.co/hSxRs10TM3 to complete the Census and ensure #KingCountyCounts. \n\n#WeCountKingCounty\n\n📹@KingCountyTV https://t.co/xrVDTVMtFe",
+      "geo": null,
+      "id": 1247902021841121288,
+      "id_str": "1247902021841121288",
+      "in_reply_to_screen_name": null,
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "is_quote_status": false,
+      "lang": "en",
+      "place": null,
+      "possibly_sensitive": false,
+      "possibly_sensitive_appealable": false,
+      "retweet_count": 2,
+      "retweeted": false,
+      "source": "<a href=\"https://studio.twitter.com\" rel=\"nofollow\">Twitter Media Studio</a>",
+      "truncated": false,
+      "user": {
+        "contributors_enabled": false,
+        "created_at": "Wed Dec 17 17:07:55 +0000 2008",
+        "default_profile": false,
+        "default_profile_image": false,
+        "description": "We're the only jurisdiction in the world named for Dr. Martin Luther King Jr., America's 12th-largest county, and home of 2.2 million people and 39 cities.",
+        "entities": {
+          "description": {
+            "urls": []
+          },
+          "url": {
+            "urls": [
+              {
+                "display_url": "kingcounty.gov",
+                "expanded_url": "http://kingcounty.gov",
+                "indices": [
+                  0,
+                  23
+                ],
+                "url": "https://t.co/vGyPVhBRJS"
+              }
+            ]
+          }
+        },
+        "favourites_count": 5457,
+        "follow_request_sent": false,
+        "followers_count": 77938,
+        "following": false,
+        "friends_count": 1473,
+        "geo_enabled": true,
+        "has_extended_profile": false,
+        "id": 18193396,
+        "id_str": "18193396",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 1334,
+        "location": "King County, WA",
+        "name": "King County, WA",
+        "notifications": false,
+        "profile_background_color": "131516",
+        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme14/bg.gif",
+        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme14/bg.gif",
+        "profile_background_tile": true,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/18193396/1574123981",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1234152322512474112/97CDA2jJ_normal.png",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1234152322512474112/97CDA2jJ_normal.png",
+        "profile_link_color": "14850A",
+        "profile_sidebar_border_color": "FFFFFF",
+        "profile_sidebar_fill_color": "EFEFEF",
+        "profile_text_color": "333333",
+        "profile_use_background_image": false,
+        "protected": false,
+        "screen_name": "KingCountyWA",
+        "statuses_count": 21666,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": "https://t.co/vGyPVhBRJS",
+        "utc_offset": null,
+        "verified": true
+      }
+    },
+    "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Tue Jul 21 21:31:55 +0000 2009",
+      "default_profile": true,
+      "default_profile_image": false,
+      "description": "Proudly serving Washington State's 9th District. Chairman of the House Armed Services Committee @HASCDemocrats",
+      "entities": {
+        "description": {
+          "urls": []
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "adamsmith.house.gov",
+              "expanded_url": "http://adamsmith.house.gov",
+              "indices": [
+                0,
+                22
+              ],
+              "url": "http://t.co/bEAIcyoDki"
+            }
+          ]
+        }
+      },
+      "favourites_count": 416,
+      "follow_request_sent": false,
+      "followers_count": 38022,
+      "following": true,
+      "friends_count": 1956,
+      "geo_enabled": true,
+      "has_extended_profile": false,
+      "id": 58928690,
+      "id_str": "58928690",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 1413,
+      "location": "Washington's 9th District",
+      "name": "Rep. Adam Smith",
+      "notifications": false,
+      "profile_background_color": "C0DEED",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/58928690/1540239101",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1046859374055047169/OrFwOGl6_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1046859374055047169/OrFwOGl6_normal.jpg",
+      "profile_link_color": "1DA1F2",
+      "profile_sidebar_border_color": "C0DEED",
+      "profile_sidebar_fill_color": "DDEEF6",
+      "profile_text_color": "333333",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "RepAdamSmith",
+      "statuses_count": 4564,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "http://t.co/bEAIcyoDki",
+      "utc_offset": null,
+      "verified": true
+    }
+  },
+  {
+    "contributors": null,
+    "coordinates": null,
+    "created_at": "Thu Apr 09 16:38:50 +0000 2020",
+    "display_text_range": [
+      0,
+      125
+    ],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "urls": [],
+      "user_mentions": [
+        {
+          "id": 24179991,
+          "id_str": "24179991",
+          "indices": [
+            3,
+            13
+          ],
+          "name": "Daniel Vassallo",
+          "screen_name": "dvassallo"
+        },
+        {
+          "id": 381813372,
+          "id_str": "381813372",
+          "indices": [
+            15,
+            25
+          ],
+          "name": "Joe Norman",
+          "screen_name": "normonics"
+        }
+      ]
+    },
+    "favorite_count": 0,
+    "favorited": false,
+    "full_text": "RT @dvassallo: @normonics Same in business. An obsession with data leads to mistaking what can’t be measured as non-existent.",
+    "geo": null,
+    "id": 1248289277990993920,
+    "id_str": "1248289277990993920",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_status_id": null,
+    "in_reply_to_status_id_str": null,
+    "in_reply_to_user_id": null,
+    "in_reply_to_user_id_str": null,
+    "is_quote_status": false,
+    "lang": "en",
+    "place": null,
+    "retweet_count": 2,
+    "retweeted": false,
+    "retweeted_status": {
+      "contributors": null,
+      "coordinates": null,
+      "created_at": "Thu Apr 09 16:09:56 +0000 2020",
+      "display_text_range": [
+        11,
+        110
+      ],
+      "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "urls": [],
+        "user_mentions": [
+          {
+            "id": 381813372,
+            "id_str": "381813372",
+            "indices": [
+              0,
+              10
+            ],
+            "name": "Joe Norman",
+            "screen_name": "normonics"
+          }
+        ]
+      },
+      "favorite_count": 19,
+      "favorited": false,
+      "full_text": "@normonics Same in business. An obsession with data leads to mistaking what can’t be measured as non-existent.",
+      "geo": null,
+      "id": 1248282003432067072,
+      "id_str": "1248282003432067072",
+      "in_reply_to_screen_name": "normonics",
+      "in_reply_to_status_id": 1248279544764784645,
+      "in_reply_to_status_id_str": "1248279544764784645",
+      "in_reply_to_user_id": 381813372,
+      "in_reply_to_user_id_str": "381813372",
+      "is_quote_status": false,
+      "lang": "en",
+      "place": {
+        "attributes": {},
+        "bounding_box": {
+          "coordinates": [
+            [
+              [
+                -122.436232,
+                47.4953154
+              ],
+              [
+                -122.2249728,
+                47.4953154
+              ],
+              [
+                -122.2249728,
+                47.734319
+              ],
+              [
+                -122.436232,
+                47.734319
+              ]
+            ]
+          ],
+          "type": "Polygon"
+        },
+        "contained_within": [],
+        "country": "United States",
+        "country_code": "US",
+        "full_name": "Seattle, WA",
+        "id": "300bcc6e23a88361",
+        "name": "Seattle",
+        "place_type": "city",
+        "url": "https://api.twitter.com/1.1/geo/id/300bcc6e23a88361.json"
+      },
+      "retweet_count": 2,
+      "retweeted": false,
+      "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+      "truncated": false,
+      "user": {
+        "contributors_enabled": false,
+        "created_at": "Fri Mar 13 14:34:10 +0000 2009",
+        "default_profile": true,
+        "default_profile_image": false,
+        "description": "• Becoming self-employed is easy, staying so is hard\n• I tweet about how I'm doing it\n• Building https://t.co/CP5YrWTk2Y\n• Creator on https://t.co/Ua6JqF8zb7",
+        "entities": {
+          "description": {
+            "urls": [
+              {
+                "display_url": "userbase.com",
+                "expanded_url": "http://userbase.com",
+                "indices": [
+                  97,
+                  120
+                ],
+                "url": "https://t.co/CP5YrWTk2Y"
+              },
+              {
+                "display_url": "gumroad.com/dvassallo",
+                "expanded_url": "http://gumroad.com/dvassallo",
+                "indices": [
+                  134,
+                  157
+                ],
+                "url": "https://t.co/Ua6JqF8zb7"
+              }
+            ]
+          },
+          "url": {
+            "urls": [
+              {
+                "display_url": "danielvassallo.com",
+                "expanded_url": "https://danielvassallo.com",
+                "indices": [
+                  0,
+                  23
+                ],
+                "url": "https://t.co/zlCVkcB3je"
+              }
+            ]
+          }
+        },
+        "favourites_count": 6735,
+        "follow_request_sent": false,
+        "followers_count": 22438,
+        "following": true,
+        "friends_count": 218,
+        "geo_enabled": true,
+        "has_extended_profile": true,
+        "id": 24179991,
+        "id_str": "24179991",
+        "is_translation_enabled": false,
+        "is_translator": false,
+        "lang": null,
+        "listed_count": 228,
+        "location": "Seattle, WA",
+        "name": "Daniel Vassallo",
+        "notifications": false,
+        "profile_background_color": "C0DEED",
+        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_tile": false,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/24179991/1549572265",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/1246945079727542272/guSSHzZy_normal.jpg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1246945079727542272/guSSHzZy_normal.jpg",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "protected": false,
+        "screen_name": "dvassallo",
+        "statuses_count": 7467,
+        "time_zone": null,
+        "translator_type": "none",
+        "url": "https://t.co/zlCVkcB3je",
+        "utc_offset": null,
+        "verified": false
+      }
+    },
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "truncated": false,
+    "user": {
+      "contributors_enabled": false,
+      "created_at": "Fri Mar 13 14:34:10 +0000 2009",
+      "default_profile": true,
+      "default_profile_image": false,
+      "description": "• Becoming self-employed is easy, staying so is hard\n• I tweet about how I'm doing it\n• Building https://t.co/CP5YrWTk2Y\n• Creator on https://t.co/Ua6JqF8zb7",
+      "entities": {
+        "description": {
+          "urls": [
+            {
+              "display_url": "userbase.com",
+              "expanded_url": "http://userbase.com",
+              "indices": [
+                97,
+                120
+              ],
+              "url": "https://t.co/CP5YrWTk2Y"
+            },
+            {
+              "display_url": "gumroad.com/dvassallo",
+              "expanded_url": "http://gumroad.com/dvassallo",
+              "indices": [
+                134,
+                157
+              ],
+              "url": "https://t.co/Ua6JqF8zb7"
+            }
+          ]
+        },
+        "url": {
+          "urls": [
+            {
+              "display_url": "danielvassallo.com",
+              "expanded_url": "https://danielvassallo.com",
+              "indices": [
+                0,
+                23
+              ],
+              "url": "https://t.co/zlCVkcB3je"
+            }
+          ]
+        }
+      },
+      "favourites_count": 6735,
+      "follow_request_sent": false,
+      "followers_count": 22438,
+      "following": true,
+      "friends_count": 218,
+      "geo_enabled": true,
+      "has_extended_profile": true,
+      "id": 24179991,
+      "id_str": "24179991",
+      "is_translation_enabled": false,
+      "is_translator": false,
+      "lang": null,
+      "listed_count": 228,
+      "location": "Seattle, WA",
+      "name": "Daniel Vassallo",
+      "notifications": false,
+      "profile_background_color": "C0DEED",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_background_tile": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/24179991/1549572265",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1246945079727542272/guSSHzZy_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1246945079727542272/guSSHzZy_normal.jpg",
+      "profile_link_color": "1DA1F2",
+      "profile_sidebar_border_color": "C0DEED",
+      "profile_sidebar_fill_color": "DDEEF6",
+      "profile_text_color": "333333",
+      "profile_use_background_image": true,
+      "protected": false,
+      "screen_name": "dvassallo",
+      "statuses_count": 7467,
+      "time_zone": null,
+      "translator_type": "none",
+      "url": "https://t.co/zlCVkcB3je",
+      "utc_offset": null,
+      "verified": false
+    }
+  }
+]

@@ -45,10 +45,11 @@ func init() {
 
 type TweetStreem struct {
 	*TwitterConfiguration `json:"twitterConfiguration"`
-	TweetTemplate         string `json:"tweetTemplate"`
-	EnableApi             bool   `json:"enableApi"`
-	ApiPort               int    `json:"apiPort"`
-	AutoHome              bool   `json:"autoHome"`
+	TweetTemplate         string       `json:"tweetTemplate"`
+	TemplateOutputConfig  OutputConfig `json:"templateOutputConfig"`
+	EnableApi             bool         `json:"enableApi"`
+	ApiPort               int          `json:"apiPort"`
+	AutoHome              bool         `json:"autoHome"`
 
 	api           *Api
 	tweetTemplate *template.Template
@@ -60,20 +61,26 @@ type TweetStreem struct {
 	cancel        context.CancelFunc
 }
 
-const DefaultTweetTemplate = `\n{{ .UserName | color "cyan" }} {{ "@" | color "green" }}{{ .ScreenName | color "green" }} {{ .RelativeTweetTime | color "magenta" }}
+const DefaultTweetTemplate = `
+{{ .UserName | color "cyan" }} {{ "@" | color "green" }}{{ .ScreenName | color "green" }} {{ .RelativeTweetTime | color "magenta" }}
 id:{{ .Id }} {{ "rt:" | color "cyan" }}{{ .ReTweetCount | color "cyan" }} {{ "♥:" | color "red" }}{{ .FavoriteCount | color "red" }} via {{ .App | color "blue" }}
-{{ .TweetText }}\n`
+{{ .TweetText }}
+`
 
 func NewTweetStreem() *TweetStreem {
 	ctx, cancel := context.WithCancel(context.Background())
 	return &TweetStreem{
 		ApiPort:              8080,
 		TwitterConfiguration: &TwitterConfiguration{},
-		TweetTemplate:        DefaultTweetTemplate,
-		tweetHistory:         make(map[int]*Tweet),
-		lastTweetId:          new(int32),
-		ctx:                  ctx,
-		cancel:               cancel,
+		TemplateOutputConfig: OutputConfig{
+			MentionHighlightColor: "blue",
+			HashtagHighlightColor: "magenta",
+		},
+		TweetTemplate: DefaultTweetTemplate,
+		tweetHistory:  make(map[int]*Tweet),
+		lastTweetId:   new(int32),
+		ctx:           ctx,
+		cancel:        cancel,
 	}
 }
 
@@ -398,7 +405,7 @@ func (t *TweetStreem) EchoTweets(tweets []*Tweet) {
 			TweetTemplateOutput
 		}{
 			Id:                  int(*t.lastTweetId),
-			TweetTemplateOutput: tweet.TemplateOutput(),
+			TweetTemplateOutput: tweet.TemplateOutput(t.TemplateOutputConfig),
 		}); err != nil {
 			fmt.Println("Error:", err)
 		}
