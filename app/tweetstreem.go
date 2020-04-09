@@ -231,7 +231,7 @@ func (t *TweetStreem) watchTerminal() {
 			case "config":
 				t.Config()
 			case "me":
-
+				err = t.UserTimeline(t.twitter.ScreenName())
 			case "home":
 				err = t.Home()
 			case "h", "help":
@@ -260,6 +260,7 @@ func (t *TweetStreem) Help() {
 		" urt,unretweet - uretweet the selected tweet\n" +
 		" li,like - like the selected tweet\n" +
 		" ul,unlike - unlike the selected tweet\n" +
+		"me - view your recent tweets\n" +
 		"home - view your default timeline\n" +
 		"h help - this help menu\n" +
 		"q,quit,exit - exit tweetstreem.\n" +
@@ -320,6 +321,16 @@ func (t *TweetStreem) TimeLine(screenName string) error {
 
 func (t *TweetStreem) Home() error {
 	tweets, err := t.twitter.HomeTimeline(OaRequestConf{})
+	if err != nil {
+		return err
+	}
+	t.ClearHistory()
+	t.EchoTweets(tweets)
+	return nil
+}
+
+func (t *TweetStreem) UserTimeline(screenName string) error {
+	tweets, err := t.twitter.UserTimeline(OaRequestConf{screenName: screenName})
 	if err != nil {
 		return err
 	}
