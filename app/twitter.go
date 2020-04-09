@@ -23,12 +23,15 @@ var (
 	TwitterTokenRequestURI      = "https://api.twitter.com/oauth/access_token"
 	TwitterAuthorizeURI         = "https://api.twitter.com/oauth/authorize"
 
-	HomeTimelineURI      = "https://api.twitter.com/1.1/statuses/home_timeline.json"
-	StatusesUpdateURI    = "https://api.twitter.com/1.1/statuses/update.json"
-	StatusesRetweetURI   = "https://api.twitter.com/1.1/statuses/retweet"
-	StatusesUnRetweetURI = "https://api.twitter.com/1.1/statuses/unretweet"
-	FavoritesCreateURI   = "https://api.twitter.com/1.1/favorites/create.json"
-	FavoritesDestroyURI  = "https://api.twitter.com/1.1/favorites/destroy.json"
+	AccountSettingsURI  = "https://api.twitter.com/1.1/account/settings.json"
+	UserTimelineURI     = "https://api.twitter.com/1.1/statuses/user_timeline.json"
+	HomeTimelineURI     = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+	StatusesUpdateURI   = "https://api.twitter.com/1.1/statuses/update.json"
+	FavoritesCreateURI  = "https://api.twitter.com/1.1/favorites/create.json"
+	FavoritesDestroyURI = "https://api.twitter.com/1.1/favorites/destroy.json"
+
+	StatusesRetweetURITemplate   = "https://api.twitter.com/1.1/statuses/retweet/%s.json"
+	StatusesUnRetweetURITemplate = "https://api.twitter.com/1.1/statuses/unretweet/%s.json"
 
 	TweetLinkUriTemplate = "https://twitter.com/%s/status/%s"
 
@@ -66,14 +69,15 @@ type Twitter struct {
 	configuration *TwitterConfiguration
 	Credentials   *oauth.Credentials
 
-	pollerPaused bool
-	lastTweet    *Tweet
-	wg           sync.WaitGroup
-	ctx          context.Context
-	done         context.CancelFunc
-	oauthClient  oauth.Client
-	lock         sync.Mutex
-	debug        bool
+	accountSettings *AccountSettings
+	pollerPaused    bool
+	lastTweet       *Tweet
+	wg              sync.WaitGroup
+	ctx             context.Context
+	done            context.CancelFunc
+	oauthClient     oauth.Client
+	lock            sync.Mutex
+	debug           bool
 }
 
 func NewTwitter(conf *TwitterConfiguration) *Twitter {
@@ -97,7 +101,12 @@ func NewTwitter(conf *TwitterConfiguration) *Twitter {
 func (t *Twitter) Init() error {
 	// TODO: validate instead of check for empty
 	if t.configuration.UserToken == "" || t.configuration.UserSecret == "" {
-		return t.Authorize()
+		if err := t.Authorize(); err != nil {
+			return err
+		}
+	}
+	if err := t.updateAccountSettings(); err != nil {
+		return err
 	}
 	return nil
 }
@@ -132,6 +141,7 @@ func (t *Twitter) Authorize() error {
 type OaRequestConf struct {
 	id              string
 	status          string
+	screenName      string
 	count           int
 	sinceId         string
 	includeEntities bool
@@ -142,6 +152,12 @@ func (g *OaRequestConf) ToForm() url.Values {
 	form := url.Values{}
 	if len(g.id) > 0 {
 		form.Set("id", g.id)
+	}
+	if len(g.status) > 0 {
+		form.Set("status", g.status)
+	}
+	if len(g.screenName) > 0 {
+		form.Set("screen_name", g.screenName)
 	}
 	if g.count > 0 {
 		cnt := strconv.Itoa(g.count)
@@ -194,7 +210,7 @@ func (t *Twitter) UpdateStatus(status string, conf OaRequestConf) (*Tweet, error
 }
 
 func (t *Twitter) ReTweet(tw *Tweet, conf OaRequestConf) error {
-	data, err := t.oaRequest(http.MethodPost, StatusesRetweetURI+"/"+tw.IDStr, conf)
+	data, err := t.oaRequest(http.MethodPost, fmt.Sprintf(StatusesRetweetURITemplate, tw.IDStr), conf)
 	if err != nil {
 		return err
 	}
@@ -205,7 +221,7 @@ func (t *Twitter) ReTweet(tw *Tweet, conf OaRequestConf) error {
 }
 
 func (t *Twitter) UnReTweet(tw *Tweet, conf OaRequestConf) error {
-	data, err := t.oaRequest(http.MethodPost, StatusesUnRetweetURI+"/"+tw.IDStr, conf)
+	data, err := t.oaRequest(http.MethodPost, fmt.Sprintf(StatusesUnRetweetURITemplate, tw.IDStr), conf)
 	if err != nil {
 		return err
 	}
@@ -248,6 +264,22 @@ func (t *Twitter) UnmarshalError(data []byte) error {
 	return nil
 }
 
+func (t *Twitter) ScreenName() string {
+	return t.accountSettings.ScreenName
+}
+
+func (t *Twitter) updateAccountSettings() error {
+	raw, err := t.oaRequest(http.MethodGet, AccountSettingsURI, OaRequestConf{})
+	if err != nil {
+		return err
+	}
+
+	if err := t.UnmarshalError(raw); err != nil {
+		return err
+	}
+	return json.Unmarshal(raw, &t.accountSettings)
+}
+
 func (t *Twitter) HomeTimeline(conf OaRequestConf) ([]*Tweet, error) {
 	rawTweets, err := t.oaRequest(http.MethodGet, HomeTimelineURI, conf)
 	if err != nil {
@@ -270,7 +302,7 @@ func (t *Twitter) HomeTimeline(conf OaRequestConf) ([]*Tweet, error) {
 }
 
 func (t *Twitter) UserTimeline(conf OaRequestConf) ([]*Tweet, error) {
-	rawTweets, err := t.oaRequest(http.MethodGet, HomeTimelineURI, conf)
+	rawTweets, err := t.oaRequest(http.MethodGet, UserTimelineURI, conf)
 	if err != nil {
 		return nil, err
 	}
@@ -306,6 +338,9 @@ func (t *Twitter) oaRequest(method, u string, conf OaRequestConf) ([]byte, error
 		return nil, err
 	}
 	if resp != nil {
+		if resp.StatusCode != http.StatusOK { // TODO: only non 200 ?
+			return nil, fmt.Errorf("failed: %d - %s", resp.StatusCode, resp.Status)
+		}
 		defer resp.Body.Close()
 		return ioutil.ReadAll(resp.Body)
 	}
@@ -362,8 +397,32 @@ func (t *Twitter) Shutdown() error {
 	return nil
 }
 
-type Entities struct {
+type HashTag struct {
+	Indices []int  `json:"indices"`
+	Text    string `json:"text"`
+}
+
+type UserMention struct {
+	Name       string `json:"name"`
+	Indices    []int  `json:"indices"`
+	ScreenName string `json:"screen_name"`
+	Id         int64  `json:"id"`
+	IdStr      string `json:"id_str"`
+}
+
+type Symbol struct {
 	// TODO:
+}
+
+type Url struct {
+	// TODO
+}
+
+type Entities struct {
+	HashTags    []HashTag     `json:"hash_tags"`
+	Url         []Url         `json:"urls"`
+	UserMention []UserMention `json:"user_mentions"`
+	Symbol      []Symbol      `json:"symbols"`
 }
 
 type Enrichment struct {
@@ -471,7 +530,7 @@ func (t *Tweet) TemplateOutput() TweetTemplateOutput {
 		ReTweetCount:      strconv.Itoa(t.ReTweetCount),
 		FavoriteCount:     strconv.Itoa(t.FavoriteCount),
 		App:               ExtractAnchorText(t.Source),
-		TweetText:         t.TweetText(),
+		TweetText:         t.TweetText(true),
 	}
 }
 
@@ -489,9 +548,68 @@ func (t *Tweet) RelativeTweetTime() string {
 	return tstr
 }
 
-func (t *Tweet) TweetText() string {
+func (t *Tweet) TweetText(highlight bool) string {
+	text := ""
 	if len(t.FullText) > 0 {
-		return html.UnescapeString(t.FullText)
+		text = html.UnescapeString(t.FullText)
+	} else {
+		text = html.UnescapeString(t.Text)
 	}
-	return html.UnescapeString(t.Text)
+	if highlight {
+		for _, ht := range t.Entities.HashTags {
+			start, end := ht.Indices[0], ht.Indices[1]
+			tag := text[start:end]
+
+			text = text[:start] + Colors.Colorize("magenta", tag) + text[end:]
+		}
+		for _, um := range t.Entities.UserMention {
+			start, end := um.Indices[0], um.Indices[1]
+			tag := text[start:end]
+
+			text = text[:start] + Colors.Colorize("blue", tag) + text[end:]
+		}
+	}
+	return text
+}
+
+type SleepTime struct {
+	Enabled   bool   `json:"enabled"`
+	EndTime   *int64 `json:"end_time"`
+	StartTime *int64 `json:"start_time"`
+}
+
+type TimeZone struct {
+	Name       string `json:"name"`
+	TzinfoName string `json:"tzinfo_name"`
+	UtcOffset  int64  `json:"utc_offset"`
+}
+
+type PlaceType struct {
+	Code int    `json:"code"`
+	Name string `json:"name"`
+}
+
+type TrendLocation struct {
+	Country     string `json:"country"`
+	CountryCode string `json:"countryCode"`
+	Name        string `json:"name"`
+	ParentId    int64  `json:"parentid"`
+	PlaceType   `json:"placeType"`
+	Url         string `json:"url"`
+	Woeid       int64  `json:"woeid"`
+}
+
+type AccountSettings struct {
+	AlwaysUseHttps           bool   `json:"always_use_https"`
+	DiscoverableByEmail      bool   `json:"discoverable_by_email"`
+	GeoEnabled               bool   `json:"geo_enabled"`
+	Language                 string `json:"language"`
+	Protected                bool   `json:"protected"`
+	ScreenName               string `json:"screen_name"`
+	ShowAllInlineMedia       bool   `json:"show_all_inline_media"`
+	SleepTime                `json:"sleep_time"`
+	TimeZone                 `json:"time_zone"`
+	TrendLocation            []TrendLocation `json:"trend_location"`
+	UseCookiePersonalization bool            `json:"use_cookie_personalization"`
+	AllowContributorRequest  string          `json:"allow_contributor_request"`
 }

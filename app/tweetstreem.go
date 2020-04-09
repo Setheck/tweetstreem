@@ -60,11 +60,9 @@ type TweetStreem struct {
 	cancel        context.CancelFunc
 }
 
-const DefaultTweetTemplate = `{{ .UserName | color "cyan" }} {{ "@" | color "green" }}{{ .ScreenName | color "green" }} {{ .RelativeTweetTime | color "magenta" }}
+const DefaultTweetTemplate = `\n{{ .UserName | color "cyan" }} {{ "@" | color "green" }}{{ .ScreenName | color "green" }} {{ .RelativeTweetTime | color "magenta" }}
 id:{{ .Id }} {{ "rt:" | color "cyan" }}{{ .ReTweetCount | color "cyan" }} {{ "♥:" | color "red" }}{{ .FavoriteCount | color "red" }} via {{ .App | color "blue" }}
-{{ .TweetText }}
-
-`
+{{ .TweetText }}\n`
 
 func NewTweetStreem() *TweetStreem {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -182,9 +180,9 @@ func (t *TweetStreem) handleInput() chan string {
 
 func (t *TweetStreem) watchTerminal() {
 	inCh := t.handleInput()
-
+	userPrompt := fmt.Sprintf("[@%s] ", t.twitter.ScreenName())
 	for {
-		fmt.Print("> ")
+		fmt.Print(Colors.Colorize("red", userPrompt))
 		var err error
 		select {
 		case <-t.ctx.Done():
@@ -225,6 +223,8 @@ func (t *TweetStreem) watchTerminal() {
 				}
 			case "config":
 				t.Config()
+			case "me":
+
 			case "home":
 				err = t.Home()
 			case "h", "help":
@@ -300,6 +300,17 @@ func (t *TweetStreem) Pause() {
 	t.twitter.TogglePollerPaused(true)
 }
 
+func (t *TweetStreem) TimeLine(screenName string) error {
+	conf := OaRequestConf{screenName: screenName}
+	tweets, err := t.twitter.UserTimeline(conf)
+	if err != nil {
+		return err
+	}
+	t.ClearHistory()
+	t.EchoTweets(tweets)
+	return nil
+}
+
 func (t *TweetStreem) Home() error {
 	tweets, err := t.twitter.HomeTimeline(OaRequestConf{})
 	if err != nil {
@@ -333,6 +344,8 @@ func (t *TweetStreem) ReTweet(id int) {
 	if tw := t.GetHistoryTweet(id); tw != nil {
 		if err := t.twitter.ReTweet(tw, OaRequestConf{}); err != nil {
 			fmt.Println("Error:", err)
+		} else {
+			fmt.Printf("tweet by @%s retweeted\n", tw.User.ScreenName)
 		}
 	} else {
 		fmt.Println("unknown tweet - id:", id)
@@ -343,6 +356,8 @@ func (t *TweetStreem) UnReTweet(id int) {
 	if tw := t.GetHistoryTweet(id); tw != nil {
 		if err := t.twitter.UnReTweet(tw, OaRequestConf{}); err != nil {
 			fmt.Println("Error:", err)
+		} else {
+			fmt.Printf("tweet by @%s unretweeted\n", tw.User.ScreenName)
 		}
 	} else {
 		fmt.Println("unknown tweet - id:", id)
@@ -353,6 +368,8 @@ func (t *TweetStreem) Like(id int) {
 	if tw := t.GetHistoryTweet(id); tw != nil {
 		if err := t.twitter.Like(tw, OaRequestConf{}); err != nil {
 			fmt.Println("Error:", err)
+		} else {
+			fmt.Printf("tweet by @%s liked\n", tw.User.ScreenName)
 		}
 	} else {
 		fmt.Println("unknown tweet - id:", id)
@@ -363,6 +380,8 @@ func (t *TweetStreem) UnLike(id int) {
 	if tw := t.GetHistoryTweet(id); tw != nil {
 		if err := t.twitter.UnLike(tw, OaRequestConf{}); err != nil {
 			fmt.Println("Error:", err)
+		} else {
+			fmt.Printf("tweet by @%s unliked\n", tw.User.ScreenName)
 		}
 	} else {
 		fmt.Println("unknown tweet - id:", id)
