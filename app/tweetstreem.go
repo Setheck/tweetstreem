@@ -84,7 +84,7 @@ func NewTweetStreem() *TweetStreem {
 	}
 }
 
-func (t *TweetStreem) LogTweet(id int, tweet *Tweet) {
+func (t *TweetStreem) logTweet(id int, tweet *Tweet) {
 	t.histLock.Lock()
 	defer t.histLock.Unlock()
 	if id > TweetHistorySize {
@@ -93,13 +93,13 @@ func (t *TweetStreem) LogTweet(id int, tweet *Tweet) {
 	t.tweetHistory[id] = tweet
 }
 
-func (t *TweetStreem) GetHistoryTweet(id int) *Tweet {
+func (t *TweetStreem) getHistoryTweet(id int) *Tweet {
 	t.histLock.Lock()
 	defer t.histLock.Unlock()
 	return t.tweetHistory[id]
 }
 
-func (t *TweetStreem) ClearHistory() {
+func (t *TweetStreem) clearHistory() {
 	t.histLock.Lock()
 	defer t.histLock.Unlock()
 	t.tweetHistory = make(map[int]*Tweet)
@@ -111,19 +111,19 @@ func (t *TweetStreem) Run() int {
 	t.loadConfig()
 	fmt.Printf("%s\npolling every: %s\n", Banner, t.PollTime.Truncate(time.Second).String())
 
-	if err := t.InitTwitter(); err != nil {
+	if err := t.initTwitter(); err != nil {
 		fmt.Println("Error:", err)
 		return 1
 	}
 	if t.EnableApi {
-		t.InitApi()
+		t.initApi()
 	}
 	go t.echoOnPoll()
 	go t.watchTerminal()
 	go t.signalWatcher()
 
 	if t.AutoHome {
-		t.Home()
+		t.homeTimeline()
 	}
 	<-t.ctx.Done()
 	t.saveConfig()
@@ -131,7 +131,7 @@ func (t *TweetStreem) Run() int {
 	return 0
 }
 
-func (t *TweetStreem) InitTwitter() error {
+func (t *TweetStreem) initTwitter() error {
 	tpl, err := template.New("").Funcs(
 		map[string]interface{}{
 			"color": Colors.Colorize,
@@ -144,7 +144,7 @@ func (t *TweetStreem) InitTwitter() error {
 	return t.twitter.Init()
 }
 
-func (t *TweetStreem) InitApi() {
+func (t *TweetStreem) initApi() {
 	t.api = NewApi(t.ctx, t.ApiPort) // pass in context so there is no need to call api.Stop()
 	t.api.Start()
 }
@@ -159,7 +159,7 @@ func (t *TweetStreem) signalWatcher() {
 
 func (t *TweetStreem) echoOnPoll() {
 	for tweets := range t.twitter.startPoller() {
-		t.EchoTweets(tweets)
+		t.echoTweets(tweets)
 	}
 }
 
@@ -195,22 +195,22 @@ func (t *TweetStreem) watchTerminal() {
 		case <-t.ctx.Done():
 			return
 		case input := <-inCh:
-			command, args := t.SplitCommand(input)
+			command, args := SplitCommand(input)
 			switch command {
 			//case "c": // clear screen
 			case "p", "pause": // pause the streem
-				t.Pause()
+				t.pause()
 			case "r", "resume": // unpause the streem
-				t.Resume()
+				t.resume()
 			case "v", "version": // show version
 				t.Version()
 			case "o", "open":
 				if n, ok := FirstNumber(args...); ok {
-					t.Open(n)
+					t.open(n)
 				}
 			case "b", "browse":
 				if n, ok := FirstNumber(args...); ok {
-					t.Browse(n)
+					t.browse(n)
 				}
 			//case "t", "tweet":
 			// TODO
@@ -221,33 +221,33 @@ func (t *TweetStreem) watchTerminal() {
 			//		if msg, err := ClipboardHelper.ReadAll(); err != nil {
 			//			fmt.Println("Error:", err)
 			//		} else {
-			//			t.Reply(n, msg)
+			//			t.reply(n, msg)
 			//		}
 			//	}
 			case "urt", "unretweet":
 				if n, ok := FirstNumber(args...); ok {
-					t.UnReTweet(n)
+					t.unReTweet(n)
 				}
 			case "rt", "retweet":
 				if n, ok := FirstNumber(args...); ok {
-					t.ReTweet(n)
+					t.reTweet(n)
 				}
 			case "ul", "unlike":
 				if n, ok := FirstNumber(args...); ok {
-					t.UnLike(n)
+					t.unLike(n)
 				}
 			case "li", "like":
 				if n, ok := FirstNumber(args...); ok {
-					t.Like(n)
+					t.like(n)
 				}
 			case "config":
-				t.Config()
+				t.config()
 			case "me":
-				err = t.UserTimeline(t.twitter.ScreenName())
+				err = t.userTimeline(t.twitter.ScreenName())
 			case "home":
-				err = t.Home()
+				err = t.homeTimeline()
 			case "h", "help":
-				t.Help()
+				t.help()
 			case "q", "quit", "exit":
 				t.cancel()
 				return
@@ -259,7 +259,7 @@ func (t *TweetStreem) watchTerminal() {
 	}
 }
 
-func (t *TweetStreem) Help() {
+func (t *TweetStreem) help() {
 	fmt.Println("Options:\n" +
 		"config - show the current configuration\n" +
 		"p,pause - pause the stream\n" +
@@ -280,27 +280,13 @@ func (t *TweetStreem) Help() {
 
 }
 
-func (t *TweetStreem) Config() {
+func (t *TweetStreem) config() {
 	if b, err := json.Marshal(t); err != nil {
 		fmt.Println("Error:", err)
 	} else {
 		fmt.Println(string(b))
 	}
 
-}
-
-// SplitCommand takes a string and resturns command and arguments
-func (t *TweetStreem) SplitCommand(str string) (string, []string) {
-	str = strings.ToLower(str)
-	str = strings.TrimSpace(str)
-	split := strings.Split(str, " ")
-	if len(split) > 1 {
-		return split[0], split[1:]
-	}
-	if len(split) > 0 {
-		return split[0], nil
-	}
-	return "", nil
 }
 
 func (t *TweetStreem) Version() {
@@ -310,49 +296,49 @@ func (t *TweetStreem) Version() {
 	fmt.Println("  built:", Built)
 }
 
-func (t *TweetStreem) Resume() {
+func (t *TweetStreem) resume() {
 	fmt.Println("resuming streem.")
 	t.twitter.TogglePollerPaused(false)
 }
 
-func (t *TweetStreem) Pause() {
+func (t *TweetStreem) pause() {
 	fmt.Println("pausing streem.")
 	t.twitter.TogglePollerPaused(true)
 }
 
-func (t *TweetStreem) TimeLine(screenName string) error {
+func (t *TweetStreem) timeLine(screenName string) error {
 	conf := OaRequestConf{screenName: screenName}
 	tweets, err := t.twitter.UserTimeline(conf)
 	if err != nil {
 		return err
 	}
-	t.ClearHistory()
-	t.EchoTweets(tweets)
+	t.clearHistory()
+	t.echoTweets(tweets)
 	return nil
 }
 
-func (t *TweetStreem) Home() error {
+func (t *TweetStreem) homeTimeline() error {
 	tweets, err := t.twitter.HomeTimeline(OaRequestConf{})
 	if err != nil {
 		return err
 	}
-	t.ClearHistory()
-	t.EchoTweets(tweets)
+	t.clearHistory()
+	t.echoTweets(tweets)
 	return nil
 }
 
-func (t *TweetStreem) UserTimeline(screenName string) error {
+func (t *TweetStreem) userTimeline(screenName string) error {
 	tweets, err := t.twitter.UserTimeline(OaRequestConf{screenName: screenName})
 	if err != nil {
 		return err
 	}
-	t.ClearHistory()
-	t.EchoTweets(tweets)
+	t.clearHistory()
+	t.echoTweets(tweets)
 	return nil
 }
 
-func (t *TweetStreem) Browse(id int) {
-	tw := t.GetHistoryTweet(id)
+func (t *TweetStreem) browse(id int) {
+	tw := t.getHistoryTweet(id)
 	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
 		return
@@ -362,8 +348,8 @@ func (t *TweetStreem) Browse(id int) {
 	}
 }
 
-func (t *TweetStreem) Open(id int) {
-	tw := t.GetHistoryTweet(id)
+func (t *TweetStreem) open(id int) {
+	tw := t.getHistoryTweet(id)
 	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
 		return
@@ -378,7 +364,7 @@ func (t *TweetStreem) Open(id int) {
 	}
 }
 
-func (t *TweetStreem) Tweet(msg string) {
+func (t *TweetStreem) tweet(msg string) {
 	if len(msg) < 1 {
 		fmt.Println("Some text is required to tweet")
 		return
@@ -390,8 +376,8 @@ func (t *TweetStreem) Tweet(msg string) {
 	}
 }
 
-func (t *TweetStreem) Reply(id int, msg string) {
-	tw := t.GetHistoryTweet(id)
+func (t *TweetStreem) reply(id int, msg string) {
+	tw := t.getHistoryTweet(id)
 	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
 		return
@@ -409,8 +395,8 @@ func (t *TweetStreem) Reply(id int, msg string) {
 	}
 }
 
-func (t *TweetStreem) ReTweet(id int) {
-	tw := t.GetHistoryTweet(id)
+func (t *TweetStreem) reTweet(id int) {
+	tw := t.getHistoryTweet(id)
 	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
 		return
@@ -422,8 +408,8 @@ func (t *TweetStreem) ReTweet(id int) {
 	}
 }
 
-func (t *TweetStreem) UnReTweet(id int) {
-	tw := t.GetHistoryTweet(id)
+func (t *TweetStreem) unReTweet(id int) {
+	tw := t.getHistoryTweet(id)
 	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
 		return
@@ -435,8 +421,8 @@ func (t *TweetStreem) UnReTweet(id int) {
 	}
 }
 
-func (t *TweetStreem) Like(id int) {
-	tw := t.GetHistoryTweet(id)
+func (t *TweetStreem) like(id int) {
+	tw := t.getHistoryTweet(id)
 	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
 		return
@@ -448,8 +434,8 @@ func (t *TweetStreem) Like(id int) {
 	}
 }
 
-func (t *TweetStreem) UnLike(id int) {
-	tw := t.GetHistoryTweet(id)
+func (t *TweetStreem) unLike(id int) {
+	tw := t.getHistoryTweet(id)
 	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
 		return
@@ -461,11 +447,11 @@ func (t *TweetStreem) UnLike(id int) {
 	}
 }
 
-func (t *TweetStreem) EchoTweets(tweets []*Tweet) {
+func (t *TweetStreem) echoTweets(tweets []*Tweet) {
 	for i := len(tweets) - 1; i >= 0; i-- {
 		tweet := tweets[i]
 		atomic.AddInt32(t.lastTweetId, 1)
-		t.LogTweet(int(*t.lastTweetId), tweet)
+		t.logTweet(int(*t.lastTweetId), tweet)
 		if err := t.tweetTemplate.Execute(os.Stdout, struct {
 			Id int
 			TweetTemplateOutput
