@@ -569,6 +569,25 @@ func (t *Tweet) RelativeTweetTime() string {
 	return tstr
 }
 
+func (t *Tweet) highlightEntities(config OutputConfig) HighlightEntityList {
+	var hlents HighlightEntityList
+	for _, ht := range t.Entities.HashTags {
+		start, end := ht.Indices[0], ht.Indices[1]
+		hlents = append(hlents, HighlightEntity{
+			startIdx: start,
+			endIdx:   end,
+			color:    config.HashtagHighlightColor})
+	}
+	for _, um := range t.Entities.UserMention {
+		start, end := um.Indices[0], um.Indices[1]
+		hlents = append(hlents, HighlightEntity{
+			startIdx: start,
+			endIdx:   end,
+			color:    config.MentionHighlightColor})
+	}
+	return hlents
+}
+
 func (t *Tweet) TweetText(config OutputConfig, highlight bool) string {
 	text := ""
 	if t.ReTweetedStatus != nil {
@@ -582,45 +601,31 @@ func (t *Tweet) TweetText(config OutputConfig, highlight bool) string {
 		text = t.Text
 	}
 	if highlight {
-		var higlightEntryList HighlightEntryList
-		for _, ht := range t.Entities.HashTags {
-			start, end := ht.Indices[0], ht.Indices[1]
-			higlightEntryList = append(higlightEntryList, HighlightEntry{
-				startIdx: start,
-				endIdx:   end,
-				color:    config.HashtagHighlightColor})
-		}
-		for _, um := range t.Entities.UserMention {
-			start, end := um.Indices[0], um.Indices[1]
-			higlightEntryList = append(higlightEntryList, HighlightEntry{
-				startIdx: start,
-				endIdx:   end,
-				color:    config.MentionHighlightColor})
-		}
-		text = highlightEntries(text, higlightEntryList)
+		list := t.highlightEntities(config)
+		text = highlightEntries(text, list)
 	}
 	return html.UnescapeString(text)
 }
 
-type HighlightEntry struct {
+type HighlightEntity struct {
 	startIdx int
 	endIdx   int
 	color    string
 }
 
-type HighlightEntryList []HighlightEntry
+type HighlightEntityList []HighlightEntity
 
-func (l HighlightEntryList) Len() int {
+func (l HighlightEntityList) Len() int {
 	return len(l)
 }
-func (l HighlightEntryList) Swap(i, j int) {
+func (l HighlightEntityList) Swap(i, j int) {
 	l[i], l[j] = l[j], l[i]
 }
-func (l HighlightEntryList) Less(i, j int) bool {
+func (l HighlightEntityList) Less(i, j int) bool {
 	return l[i].startIdx < l[j].startIdx
 }
 
-func highlightEntries(text string, hlist HighlightEntryList) string {
+func highlightEntries(text string, hlist HighlightEntityList) string {
 	sort.Sort(hlist)
 	rtext := []rune(text)
 	resultText := ""

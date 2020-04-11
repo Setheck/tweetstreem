@@ -39,7 +39,7 @@ const Banner = `
 func init() {
 	viper.SetConfigName(ConfigFile)
 	viper.SetConfigType(ConfigFormat)
-	viper.AddConfigPath("$HOME/")
+	viper.AddConfigPath("$HOME/") // TODO:(smt) how does this work on windows.
 	viper.AddConfigPath(".")
 }
 
