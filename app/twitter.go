@@ -199,7 +199,7 @@ func (twe TwError) String() string {
 }
 
 func (t *Twitter) UpdateStatus(status string, conf OaRequestConf) (*Tweet, error) {
-	conf.status = url.QueryEscape(status)
+	conf.status = status
 	data, err := t.oaRequest(http.MethodPost, StatusesUpdateURI, conf)
 	if err != nil {
 		return nil, err
@@ -426,11 +426,25 @@ type Url struct {
 	Url         string `json:"url"`
 }
 
+type Media struct {
+	DisplayUrl    string `json:"display_url"`
+	ExpandedUrl   string `json:"expanded_url"`
+	Id            int64  `json:"id"`
+	IdStr         string `json:"id_str"`
+	Indices       []int  `json:"indices"`
+	MediaUrl      string `json:"media_url"`
+	MediaUrlHttps string `json:"media_url_https"`
+	//Sizes - TODO
+	Type string `json:"photo"`
+	Url  string `json:"url"`
+}
+
 type Entities struct {
 	HashTags    []HashTag     `json:"hashtags"`
 	Urls        []Url         `json:"urls"`
 	UserMention []UserMention `json:"user_mentions"`
 	Symbol      []Symbol      `json:"symbols"`
+	Media       []Media       `json:"media"`
 }
 
 type Enrichment struct {
@@ -520,10 +534,13 @@ func (t *Tweet) HtmlLink() string {
 	return fmt.Sprintf(TweetLinkUriTemplate, t.User.ScreenName, t.IDStr)
 }
 
-func (t *Tweet) ExpandedUrls() []string {
+func (t *Tweet) Links() []string {
 	ulist := make([]string, 0)
 	for _, u := range t.Entities.Urls {
 		ulist = append(ulist, u.ExpandedUrl)
+	}
+	for _, u := range t.Entities.Media {
+		ulist = append(ulist, u.MediaUrl)
 	}
 	return ulist
 }

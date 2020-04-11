@@ -174,15 +174,29 @@ func (t *TweetStreem) handleInput() chan string {
 				return
 			default:
 				if in.Scan() {
-					input := in.Text()
-					if len(input) > 0 {
-						inputCh <- input
-					}
+					inputCh <- in.Text()
 				}
 			}
 		}
 	}(inputCh)
 	return inputCh
+}
+
+func (t *TweetStreem) confirmation(inputCh chan string, defaultYes bool) bool {
+	request := "please confirm "
+	if defaultYes {
+		request += "(Y/n):"
+	} else {
+		request += "(N/y):"
+	}
+	fmt.Print(request)
+	confirmation := <-inputCh
+	confIn, _ := SplitCommand(confirmation)
+	if defaultYes {
+		return confIn == "y" || confIn == "yes"
+	} else {
+		return confIn == "n" || confIn == "no"
+	}
 }
 
 func (t *TweetStreem) watchTerminal() {
@@ -206,24 +220,47 @@ func (t *TweetStreem) watchTerminal() {
 				t.Version()
 			case "o", "open":
 				if n, ok := FirstNumber(args...); ok {
-					t.open(n)
+					idx, ok := FirstNumber(args[1:]...)
+					if !ok {
+						idx = 0
+					}
+					t.open(n, idx)
 				}
 			case "b", "browse":
 				if n, ok := FirstNumber(args...); ok {
 					t.browse(n)
 				}
-			//case "t", "tweet":
-			// TODO
-			//case "reply":
-			// TODO
-			//case "cbreply": // TODO: confirmation
-			//	if n, ok := FirstNumber(args...); ok {
-			//		if msg, err := ClipboardHelper.ReadAll(); err != nil {
-			//			fmt.Println("Error:", err)
-			//		} else {
-			//			t.reply(n, msg)
-			//		}
-			//	}
+			case "t", "tweet":
+				message := strings.Join(args, " ")
+				fmt.Println("tweet:", message)
+				if t.confirmation(inCh, true) {
+					t.tweet(message)
+				} else {
+					fmt.Println("tweet aborted")
+				}
+			case "reply":
+				if n, ok := FirstNumber(args...); ok {
+					msg := strings.Join(args[1:], " ")
+					fmt.Printf("reply to %d: %s\n", n, msg)
+					if t.confirmation(inCh, true) {
+						t.reply(n, msg)
+					} else {
+						fmt.Println("reply aborted")
+					}
+				}
+			case "cbreply": // TODO: confirmation
+				if n, ok := FirstNumber(args...); ok {
+					if msg, err := ClipboardHelper.ReadAll(); err != nil {
+						fmt.Println("Error:", err)
+					} else {
+						fmt.Printf("reply to %d: %s\n", n, msg)
+						if t.confirmation(inCh, true) {
+							t.reply(n, msg)
+						} else {
+							fmt.Println("reply aborted")
+						}
+					}
+				}
 			case "urt", "unretweet":
 				if n, ok := FirstNumber(args...); ok {
 					t.unReTweet(n)
@@ -266,12 +303,15 @@ func (t *TweetStreem) help() {
 		"r,resume - resume the stream\n" +
 		"v,version - print tweetstreem version\n" +
 		"Select a tweet by id, eg: 'open 2'\n" +
-		" o,open - open the link in the selected tweet\n" +
+		" o,open - open the link in the selected tweet (optionally provide 0 based index)\n" +
 		" b,browse - open the selected tweet in a browser\n" +
 		" rt,retweet - retweet the selected tweet\n" +
 		" urt,unretweet - uretweet the selected tweet\n" +
 		" li,like - like the selected tweet\n" +
 		" ul,unlike - unlike the selected tweet\n" +
+		" reply <id> <status> - reply to the tweet id (requires user mention, and confirmation)\n" +
+		" cbreply <id> - reply to tweet id with clipboard contents (requires confirmation)\n" +
+		"t,tweet <status> - create a new tweet and post (requires confirmation)\n" +
 		"me - view your recent tweets\n" +
 		"home - view your default timeline\n" +
 		"h help - this help menu\n" +
@@ -348,19 +388,22 @@ func (t *TweetStreem) browse(id int) {
 	}
 }
 
-func (t *TweetStreem) open(id int) {
+func (t *TweetStreem) open(id, linkIdx int) {
 	tw := t.getHistoryTweet(id)
 	if tw == nil {
 		fmt.Println("unknown tweet - id:", id)
 		return
 	}
-	ulist := tw.ExpandedUrls()
-	if len(ulist) > 0 { // TODO: select url
-		if err := OpenBrowser(ulist[0]); err != nil {
+	if linkIdx < 1 {
+		linkIdx = 0
+	}
+	ulist := tw.Links()
+	if len(ulist) > 0 && linkIdx < len(ulist) { // TODO: select url
+		if err := OpenBrowser(ulist[linkIdx]); err != nil {
 			fmt.Println("Error:", err)
 		}
 	} else {
-		fmt.Println("tweet contains no links")
+		fmt.Println("could not find link for index:", linkIdx)
 	}
 }
 
