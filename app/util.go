@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"runtime"
 	"strconv"
+	"strings"
 	"syscall"
 )
 
@@ -58,4 +59,18 @@ func FirstNumber(args ...string) (int, bool) {
 		}
 	}
 	return 0, false
+}
+
+// SplitCommand takes a string and resturns command and arguments
+func SplitCommand(str string) (string, []string) {
+	str = strings.ToLower(str)
+	str = strings.TrimSpace(str)
+	split := strings.Split(str, " ")
+	if len(split) > 1 {
+		return split[0], split[1:]
+	}
+	if len(split) > 0 {
+		return split[0], nil
+	}
+	return "", nil
 }
