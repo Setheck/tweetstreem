@@ -51,14 +51,16 @@ type TweetStreem struct {
 	ApiPort               int          `json:"apiPort"`
 	AutoHome              bool         `json:"autoHome"`
 
-	api           *Api
-	tweetTemplate *template.Template
-	twitter       *Twitter
-	tweetHistory  map[int]*Tweet
-	histLock      sync.Mutex
-	lastTweetId   *int32
-	ctx           context.Context
-	cancel        context.CancelFunc
+	api            *Api
+	tweetTemplate  *template.Template
+	twitter        *Twitter
+	tweetHistory   map[int]*Tweet
+	histLock       sync.Mutex
+	lastTweetId    *int32
+	inputCh        chan string
+	nonInteractive bool
+	ctx            context.Context
+	cancel         context.CancelFunc
 }
 
 const DefaultTweetTemplate = `
@@ -79,6 +81,7 @@ func NewTweetStreem() *TweetStreem {
 		TweetTemplate: DefaultTweetTemplate,
 		tweetHistory:  make(map[int]*Tweet),
 		lastTweetId:   new(int32),
+		inputCh:       make(chan string, 0),
 		ctx:           ctx,
 		cancel:        cancel,
 	}
@@ -123,7 +126,7 @@ func (t *TweetStreem) Run() int {
 	go t.signalWatcher()
 
 	if t.AutoHome {
-		t.homeTimeline()
+		_ = t.homeTimeline()
 	}
 	<-t.ctx.Done()
 	t.saveConfig()
@@ -163,44 +166,121 @@ func (t *TweetStreem) echoOnPoll() {
 	}
 }
 
-func (t *TweetStreem) handleInput() chan string {
-	inputCh := make(chan string, 0)
+func (t *TweetStreem) handleInput() {
 	go func(ch chan string) {
 		in := bufio.NewScanner(os.Stdin)
 		for {
 			select {
 			case <-t.ctx.Done():
-				close(inputCh)
+				close(ch)
 				return
 			default:
 				if in.Scan() {
-					inputCh <- in.Text()
+					ch <- in.Text()
 				}
 			}
 		}
-	}(inputCh)
-	return inputCh
+	}(t.inputCh)
 }
 
-func (t *TweetStreem) confirmation(inputCh chan string, defaultYes bool) bool {
+func (t *TweetStreem) confirmation(msg, abort string, defaultYes bool) bool {
+	if t.nonInteractive {
+		return true
+	}
 	request := "please confirm "
 	if defaultYes {
 		request += "(Y/n):"
 	} else {
 		request += "(N/y):"
 	}
+	fmt.Print(msg)
 	fmt.Print(request)
-	confirmation := <-inputCh
+	confirmation := <-t.inputCh
 	confIn, _ := SplitCommand(confirmation)
-	if defaultYes {
-		return confIn == "y" || confIn == "yes"
-	} else {
-		return confIn == "n" || confIn == "no"
+	if (defaultYes && confIn == "") || confIn == "y" || confIn == "yes" {
+		return true
 	}
+	fmt.Print(abort)
+	return false
+}
+
+func (t *TweetStreem) ProcessCommand(input string) error {
+	command, args := SplitCommand(input)
+	var err error
+	switch command {
+	//case "c": // clear screen
+	case "p", "pause": // pause the streem
+		t.pause()
+	case "r", "resume": // unpause the streem
+		t.resume()
+	case "v", "version": // show version
+		t.Version()
+	case "o", "open":
+		if n, ok := FirstNumber(args...); ok {
+			idx, ok := FirstNumber(args[1:]...)
+			if !ok {
+				idx = 0
+			}
+			t.open(n, idx)
+		}
+	case "b", "browse":
+		if n, ok := FirstNumber(args...); ok {
+			t.browse(n)
+		}
+	case "t", "tweet":
+		message := strings.Join(args, " ")
+		if t.confirmation(fmt.Sprintln("tweet:", message), "tweet aborted\n", true) {
+			t.tweet(message)
+		}
+	case "reply":
+		if n, ok := FirstNumber(args...); ok {
+			msg := strings.Join(args[1:], " ")
+			if t.confirmation(fmt.Sprintf("reply to %d: %s\n", n, msg), "reply aborted\n", true) {
+				t.reply(n, msg)
+			}
+		}
+	case "cbreply":
+		if n, ok := FirstNumber(args...); ok {
+			if msg, err := ClipboardHelper.ReadAll(); err != nil {
+				fmt.Println("Error:", err)
+			} else {
+				if t.confirmation(fmt.Sprintf("reply to %d: %s\n", n, msg), "reply aborted\n", true) {
+					t.reply(n, msg)
+				}
+			}
+		}
+	case "urt", "unretweet":
+		if n, ok := FirstNumber(args...); ok {
+			t.unReTweet(n)
+		}
+	case "rt", "retweet":
+		if n, ok := FirstNumber(args...); ok {
+			t.reTweet(n)
+		}
+	case "ul", "unlike":
+		if n, ok := FirstNumber(args...); ok {
+			t.unLike(n)
+		}
+	case "li", "like":
+		if n, ok := FirstNumber(args...); ok {
+			t.like(n)
+		}
+	case "config":
+		t.config()
+	case "me":
+		err = t.userTimeline(t.twitter.ScreenName())
+	case "home":
+		err = t.homeTimeline()
+	case "h", "help":
+		t.help()
+	case "q", "quit", "exit":
+		t.cancel()
+	}
+	return err
 }
 
 func (t *TweetStreem) watchTerminal() {
-	inCh := t.handleInput()
+	t.handleInput()
 	userPrompt := fmt.Sprintf("[@%s] ", t.twitter.ScreenName())
 	for {
 		fmt.Print(Colors.Colorize("red", userPrompt))
@@ -208,87 +288,8 @@ func (t *TweetStreem) watchTerminal() {
 		select {
 		case <-t.ctx.Done():
 			return
-		case input := <-inCh:
-			command, args := SplitCommand(input)
-			switch command {
-			//case "c": // clear screen
-			case "p", "pause": // pause the streem
-				t.pause()
-			case "r", "resume": // unpause the streem
-				t.resume()
-			case "v", "version": // show version
-				t.Version()
-			case "o", "open":
-				if n, ok := FirstNumber(args...); ok {
-					idx, ok := FirstNumber(args[1:]...)
-					if !ok {
-						idx = 0
-					}
-					t.open(n, idx)
-				}
-			case "b", "browse":
-				if n, ok := FirstNumber(args...); ok {
-					t.browse(n)
-				}
-			case "t", "tweet":
-				message := strings.Join(args, " ")
-				fmt.Println("tweet:", message)
-				if t.confirmation(inCh, true) {
-					t.tweet(message)
-				} else {
-					fmt.Println("tweet aborted")
-				}
-			case "reply":
-				if n, ok := FirstNumber(args...); ok {
-					msg := strings.Join(args[1:], " ")
-					fmt.Printf("reply to %d: %s\n", n, msg)
-					if t.confirmation(inCh, true) {
-						t.reply(n, msg)
-					} else {
-						fmt.Println("reply aborted")
-					}
-				}
-			case "cbreply": // TODO: confirmation
-				if n, ok := FirstNumber(args...); ok {
-					if msg, err := ClipboardHelper.ReadAll(); err != nil {
-						fmt.Println("Error:", err)
-					} else {
-						fmt.Printf("reply to %d: %s\n", n, msg)
-						if t.confirmation(inCh, true) {
-							t.reply(n, msg)
-						} else {
-							fmt.Println("reply aborted")
-						}
-					}
-				}
-			case "urt", "unretweet":
-				if n, ok := FirstNumber(args...); ok {
-					t.unReTweet(n)
-				}
-			case "rt", "retweet":
-				if n, ok := FirstNumber(args...); ok {
-					t.reTweet(n)
-				}
-			case "ul", "unlike":
-				if n, ok := FirstNumber(args...); ok {
-					t.unLike(n)
-				}
-			case "li", "like":
-				if n, ok := FirstNumber(args...); ok {
-					t.like(n)
-				}
-			case "config":
-				t.config()
-			case "me":
-				err = t.userTimeline(t.twitter.ScreenName())
-			case "home":
-				err = t.homeTimeline()
-			case "h", "help":
-				t.help()
-			case "q", "quit", "exit":
-				t.cancel()
-				return
-			}
+		case input := <-t.inputCh:
+			err = t.ProcessCommand(input)
 		}
 		if err != nil {
 			fmt.Println("Error:", err)
