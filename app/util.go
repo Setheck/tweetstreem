@@ -13,7 +13,6 @@ import (
 )
 
 func OpenBrowser(url string) error {
-	fmt.Println("opening url in browser:", url)
 	var err error
 	switch runtime.GOOS {
 	case "linux":
@@ -44,14 +43,6 @@ func ExtractAnchorText(anchor string) string {
 	return ""
 }
 
-//func NumberString(args ...string) (int, string, bool) {
-//	n := 0
-//	str := ""
-//	for _, a := range args {
-//
-//	}
-//}
-
 func FirstNumber(args ...string) (int, bool) {
 	for _, a := range args {
 		if n, err := strconv.Atoi(a); err == nil {
@@ -61,7 +52,7 @@ func FirstNumber(args ...string) (int, bool) {
 	return 0, false
 }
 
-// SplitCommand takes a string and resturns command and arguments
+// SplitCommand takes a string and returns command and arguments
 func SplitCommand(str string) (string, []string) {
 	str = strings.ToLower(str)
 	str = strings.TrimSpace(str)
