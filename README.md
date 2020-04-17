@@ -1,6 +1,5 @@
 TweetStreem
 ---
-
 A cross platform twitter client for the terminal. 
 Inspired heavily by [rainbowstream](https://github.com/orakaro/rainbowstream)
 
@@ -22,6 +21,29 @@ Inspired heavily by [rainbowstream](https://github.com/orakaro/rainbowstream)
 * home - view your default timeline
 * q,quit,exit - exit tweetstreem.
 * h,help - this help menu :D
+
+### Configuration
+Tweetstream will create `$HOME/.tweetstreem.json`
+Example of default configuration
+```
+{
+  "config": {
+    "twitterConfiguration": {
+      "pollTime": 120000000000,
+      "userToken": "*****",
+      "userSecret": "*****"
+    },
+    "tweetTemplate": "\n{{ .UserName | color \"cyan\" }} {{ \"@\" | color \"green\" }}{{ .ScreenName | color \"green\" }} {{ .RelativeTweetTime | color \"magenta\" }}\nid:{{ .Id }} {{ \"rt:\" | color \"cyan\" }}{{ .ReTweetCount | color \"cyan\" }} {{ \"♥:\" | color \"red\" }}{{ .FavoriteCount | color \"red\" }} via {{ .App | color \"blue\" }}\n{{ .TweetText }}\n",
+    "templateOutputConfig": {
+      "MentionHighlightColor": "blue",
+      "HashtagHighlightColor": "magenta"
+    },
+    "enableApi": false,
+    "apiPort": 8080,
+    "autoHome": false
+  }
+}
+```
 
 ### Templating
 Output of tweets is based on go templates and some home grown helpers.
