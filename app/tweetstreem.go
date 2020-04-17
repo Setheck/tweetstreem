@@ -330,9 +330,8 @@ func (t *TweetStreem) help() string {
 		"t,tweet <status> - create a new tweet and post (requires confirmation)\n" +
 		"me - view your recent tweets\n" +
 		"home - view your default timeline\n" +
-		"h help - this help menu\n" +
-		"q,quit,exit - exit tweetstreem.\n" +
-		"help (h) - this help menu :D")
+		"h,help - this help menu\n" +
+		"q,quit,exit - exit tweetstreem.")
 
 }
 

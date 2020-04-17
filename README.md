@@ -1,11 +1,31 @@
 TweetStreem
 ---
 
-A cross platform twitter client for the terminal.
+A cross platform twitter client for the terminal. 
+Inspired heavily by [rainbowstream](https://github.com/orakaro/rainbowstream)
 
-###Templating
+### Actions
+* config - show the current configuration
+* p,pause - pause the stream
+* r,resume - resume the stream
+* v,version - print tweetstreem version
+* o,open - open the link in the selected tweet (optionally provide 0 based index)
+* b,browse - open the selected tweet in a browser
+* rt,retweet - retweet the selected tweet
+* urt,unretweet - uretweet the selected tweet
+* li,like - like the selected tweet
+* ul,unlike - unlike the selected tweet
+* reply <id> <status> - reply to the tweet id (requires user mention, and confirmation)
+* cbreply <id> - reply to tweet id with clipboard contents (requires confirmation)
+* t,tweet <status> - create a new tweet and post (requires confirmation)
+* me - view your recent tweets
+* home - view your default timeline
+* q,quit,exit - exit tweetstreem.
+* h,help - this help menu :D
+
+### Templating
 Output of tweets is based on go templates and some home grown helpers.
-The default Template is
+The default Template is:
 
 ```
 
@@ -19,3 +39,15 @@ Template Helpers that exist are
 `color <colorstr> <text to colorize>`
 
 *Note Windows terminal does not support colors*
+
+Available colors are 
+* black
+* red
+* green
+* yellow
+* blue
+* magenta
+* cyan
+* gray
+* white
+
