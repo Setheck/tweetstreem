@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -109,9 +110,22 @@ func (t *TweetStreem) clearHistory() {
 	atomic.StoreInt32(t.lastTweetId, 0)
 }
 
+func (t *TweetStreem) ParseFlags() {
+	input := flag.String("c", "", "client input")
+	flag.Parse()
+
+	if *input != "" {
+		err := RemoteClient{}.RpcCall(*input)
+		fmt.Println(err)
+		os.Exit(0)
+	}
+}
+
 // Run is the main entry point, returns result code
 func (t *TweetStreem) Run() int {
 	t.loadConfig()
+	t.ParseFlags()
+
 	fmt.Printf("%s\npolling every: %s\n", Banner, t.PollTime.Truncate(time.Second).String())
 
 	if err := t.initTwitter(); err != nil {
@@ -120,9 +134,11 @@ func (t *TweetStreem) Run() int {
 	}
 	if t.EnableApi {
 		t.initApi()
+	} else {
+		go t.watchTerminalInput()
 	}
 	go t.echoOnPoll()
-	go t.watchTerminal()
+	go t.consumeInput()
 	go t.signalWatcher()
 
 	if t.AutoHome {
@@ -148,6 +164,7 @@ func (t *TweetStreem) initTwitter() error {
 }
 
 func (t *TweetStreem) initApi() {
+	t.nonInteractive = true
 	t.api = NewApi(t.ctx, t.ApiPort) // pass in context so there is no need to call api.Stop()
 	if err := t.api.Start(t); err != nil {
 		panic(err) // TODO:
@@ -168,21 +185,18 @@ func (t *TweetStreem) echoOnPoll() {
 	}
 }
 
-func (t *TweetStreem) handleInput() {
-	go func(ch chan string) {
-		in := bufio.NewScanner(os.Stdin)
-		for {
-			select {
-			case <-t.ctx.Done():
-				close(ch)
-				return
-			default:
-				if in.Scan() {
-					ch <- in.Text()
-				}
+func (t *TweetStreem) watchTerminalInput() {
+	in := bufio.NewScanner(os.Stdin)
+	for {
+		select {
+		case <-t.ctx.Done():
+			return
+		default:
+			if in.Scan() {
+				t.inputCh <- in.Text()
 			}
 		}
-	}(t.inputCh)
+	}
 }
 
 func (t *TweetStreem) confirmation(msg, abort string, defaultYes bool) bool {
@@ -206,9 +220,9 @@ func (t *TweetStreem) confirmation(msg, abort string, defaultYes bool) bool {
 	return false
 }
 
-func (t *TweetStreem) RpcProcessCommand(in, out *string) error {
+func (t *TweetStreem) RpcProcessCommand(args *Arguments, out *string) error {
 	var err error
-	*out, err = t.ProcessCommand(*in)
+	*out, err = t.ProcessCommand(args.Input)
 	return err
 }
 
@@ -226,7 +240,7 @@ func (t *TweetStreem) ProcessCommand(input string) (string, error) {
 		output = t.Version()
 	case "o", "open":
 		if n, ok := FirstNumber(args...); ok {
-			idx, ok := FirstNumber(args[1:]...)
+			idx, ok := FirstNumber(args[1:]...) // TODO:(smt) range check?
 			if !ok {
 				idx = 0
 			}
@@ -294,8 +308,7 @@ func (t *TweetStreem) ProcessCommand(input string) (string, error) {
 	return output, err
 }
 
-func (t *TweetStreem) watchTerminal() {
-	t.handleInput()
+func (t *TweetStreem) consumeInput() {
 	userPrompt := fmt.Sprintf("[@%s] ", t.twitter.ScreenName())
 	for {
 		fmt.Print(Colors.Colorize("red", userPrompt))
@@ -413,7 +426,7 @@ func (t *TweetStreem) open(id, linkIdx int) string {
 	}
 	var u string
 	ulist := tw.Links()
-	if len(ulist) > 0 && linkIdx < len(ulist) { // TODO: select url
+	if len(ulist) >= 0 && linkIdx < len(ulist) { // TODO: select url
 		u = ulist[linkIdx]
 	} else {
 		return fmt.Sprintln("could not find link for index:", linkIdx)
