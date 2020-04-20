@@ -4,45 +4,17 @@ import (
 	"bufio"
 	"context"
 	"encoding/json"
-	"flag"
 	"fmt"
-	"log"
 	"os"
-	"path/filepath"
 	"strings"
 	"sync"
 	"sync/atomic"
 	"text/template"
-	"time"
-
-	"github.com/spf13/viper"
-)
-
-var (
-	Version = "0.0.1"
-	Commit  = "dev"
-	Built   = "0"
-
-	ConfigFile   = ".tweetstreem"
-	ConfigFormat = "json"
 )
 
 const (
 	TweetHistorySize = 100
 )
-
-const Banner = `
-~~~~~~~~~~~~~~~~
-~~Tweet
-~~   Streem
-~~~~~~~~~~~~~~~~`
-
-func init() {
-	viper.SetConfigName(ConfigFile)
-	viper.SetConfigType(ConfigFormat)
-	viper.AddConfigPath("$HOME/") // TODO:(smt) how does this work on windows.
-	viper.AddConfigPath(".")
-}
 
 type TweetStreem struct {
 	*TwitterConfiguration `json:"twitterConfiguration"`
@@ -110,46 +82,6 @@ func (t *TweetStreem) clearHistory() {
 	atomic.StoreInt32(t.lastTweetId, 0)
 }
 
-func (t *TweetStreem) ParseFlags() {
-	input := flag.String("c", "", "client input")
-	flag.Parse()
-
-	if *input != "" {
-		err := RemoteClient{}.RpcCall(*input)
-		fmt.Println(err)
-		os.Exit(0)
-	}
-}
-
-// Run is the main entry point, returns result code
-func (t *TweetStreem) Run() int {
-	t.loadConfig()
-	t.ParseFlags()
-
-	fmt.Printf("%s\npolling every: %s\n", Banner, t.PollTime.Truncate(time.Second).String())
-
-	if err := t.initTwitter(); err != nil {
-		fmt.Println("Error:", err)
-		return 1
-	}
-	if t.EnableApi {
-		t.initApi()
-	} else {
-		go t.watchTerminalInput()
-	}
-	go t.echoOnPoll()
-	go t.consumeInput()
-	go t.signalWatcher()
-
-	if t.AutoHome {
-		_ = t.homeTimeline()
-	}
-	<-t.ctx.Done()
-	t.saveConfig()
-	fmt.Println("\n'till next time o/ ")
-	return 0
-}
-
 func (t *TweetStreem) initTwitter() error {
 	tpl, err := template.New("").Funcs(
 		map[string]interface{}{
@@ -165,7 +97,7 @@ func (t *TweetStreem) initTwitter() error {
 
 func (t *TweetStreem) initApi() {
 	t.nonInteractive = true
-	t.api = NewApi(t.ctx, t.ApiPort) // pass in context so there is no need to call api.Stop()
+	t.api = NewApi(t.ctx, t.ApiPort, false) // pass in context so there is no need to call api.Stop()
 	if err := t.api.Start(t); err != nil {
 		panic(err) // TODO:
 	}
@@ -222,11 +154,11 @@ func (t *TweetStreem) confirmation(msg, abort string, defaultYes bool) bool {
 
 func (t *TweetStreem) RpcProcessCommand(args *Arguments, out *string) error {
 	var err error
-	*out, err = t.ProcessCommand(args.Input)
+	*out, err = t.processCommand(args.Input)
 	return err
 }
 
-func (t *TweetStreem) ProcessCommand(input string) (string, error) {
+func (t *TweetStreem) processCommand(input string) (string, error) {
 	command, args := SplitCommand(input)
 	var output string
 	var err error
@@ -237,7 +169,7 @@ func (t *TweetStreem) ProcessCommand(input string) (string, error) {
 	case "r", "resume": // unpause the streem
 		output = t.resume()
 	case "v", "version": // show version
-		output = t.Version()
+		output = version()
 	case "o", "open":
 		if n, ok := FirstNumber(args...); ok {
 			idx, ok := FirstNumber(args[1:]...) // TODO:(smt) range check?
@@ -316,7 +248,7 @@ func (t *TweetStreem) consumeInput() {
 		case <-t.ctx.Done():
 			return
 		case input := <-t.inputCh:
-			if output, err := t.ProcessCommand(input); err != nil {
+			if output, err := t.processCommand(input); err != nil {
 				fmt.Println("Error:", err)
 			} else {
 				fmt.Print(output)
@@ -354,13 +286,6 @@ func (t *TweetStreem) config() string {
 	} else {
 		return fmt.Sprintln(string(b))
 	}
-}
-
-func (t *TweetStreem) Version() string {
-	return fmt.Sprintln(Banner) +
-		fmt.Sprintln("version:", Version) +
-		fmt.Sprintln(" commit:", Commit) +
-		fmt.Sprintln("  built:", Built)
 }
 
 func (t *TweetStreem) resume() string {
@@ -527,31 +452,5 @@ func (t *TweetStreem) echoTweets(tweets []*Tweet) {
 		}); err != nil {
 			fmt.Println("Error:", err)
 		}
-	}
-}
-
-func (t *TweetStreem) loadConfig() {
-	err := viper.ReadInConfig()
-	if err != nil {
-		fmt.Println("Failed to read config file:", err)
-		return
-	}
-
-	err = viper.UnmarshalKey("config", &t)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func (t *TweetStreem) saveConfig() {
-	viper.Set("config", t)
-	hd, err := os.UserHomeDir()
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	fileName := fmt.Sprint(ConfigFile, ".", ConfigFormat)
-	if err := viper.WriteConfigAs(filepath.Join(hd, fileName)); err != nil {
-		log.Println(err)
 	}
 }

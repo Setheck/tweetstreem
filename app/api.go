@@ -21,10 +21,11 @@ type Api struct {
 	cancel context.CancelFunc
 	wg     sync.WaitGroup
 
+	logging    bool
 	errorCount uint64
 }
 
-func NewApi(ctx context.Context, port int) *Api {
+func NewApi(ctx context.Context, port int, logging bool) *Api {
 	server := &http.Server{
 		Addr: fmt.Sprintf(":%d", port),
 		// Good practice to set timeouts to avoid Slowloris attacks.
@@ -40,9 +41,10 @@ func NewApi(ctx context.Context, port int) *Api {
 	api := &Api{
 		Port: port,
 
-		server: server,
-		ctx:    ctx,
-		cancel: cancel,
+		server:  server,
+		ctx:     ctx,
+		cancel:  cancel,
+		logging: logging,
 	}
 	return api
 }
@@ -65,24 +67,31 @@ func (a *Api) handleShutdown() {
 	a.wg.Add(1)
 	defer a.wg.Done()
 	<-a.ctx.Done()
-	log.Println("server shutting down")
+	a.log(nil, "server shutting down")
 	ctx, cancel := context.WithTimeout(a.ctx, 5*time.Second)
 	defer cancel()
 	if err := a.server.Shutdown(ctx); err != nil {
-		a.logError(err, "server shutdown failed:")
+		a.log(err, "server shutdown failed:")
 	}
 }
 
 func (a *Api) listenAndServe() {
-	log.Println("server active on:", a.server.Addr)
+	a.log(nil, "server active on:", a.server.Addr)
 	err := a.server.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
-		a.logError(err)
+		a.log(err)
 		a.cancel()
 	}
 }
 
-func (a *Api) logError(err error, msg ...string) {
-	atomic.AddUint64(&a.errorCount, 1)
-	log.Println("[ERROR]", msg, "err:", err)
+func (a *Api) log(err error, msg ...string) {
+	if !a.logging {
+		return
+	}
+	if err == nil {
+		log.Println(msg)
+	} else {
+		atomic.AddUint64(&a.errorCount, 1)
+		log.Println("[ERROR]", msg, "err:", err)
+	}
 }

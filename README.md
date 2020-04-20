@@ -73,3 +73,14 @@ Available colors are
 * gray
 * white
 
+### Remote Commands
+If the `apiEnabled` flag is set to true, tweetstream will start as an rpc server and only accept commmands from client mode
+
+
+### Client Mode
+If you have another tweetstream running in api mode, you can send remote commands
+with the `-c` flag and your command.
+ex:
+```
+$ tweetstreem -c home
+``` 

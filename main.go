@@ -7,6 +7,6 @@ import (
 )
 
 func main() {
-	code := app.NewTweetStreem().Run()
+	code := app.Run()
 	os.Exit(code)
 }
