@@ -76,7 +76,7 @@ type Twitter struct {
 	wg              sync.WaitGroup
 	ctx             context.Context
 	done            context.CancelFunc
-	oauthClient     oauth.Client
+	oauthClient     OauthFacade
 	lock            sync.Mutex
 	debug           bool
 }
@@ -86,16 +86,17 @@ func NewTwitter(conf *TwitterConfiguration) *Twitter {
 		conf.validate()
 	}
 	ctx, done := context.WithCancel(context.Background())
+	oaconf := OauthConfig{
+		TemporaryCredentialRequestURI: TwitterCredentialRequestURI,
+		TokenRequestURI:               TwitterTokenRequestURI,
+		ResourceOwnerAuthorizationURI: TwitterAuthorizeURI,
+		Credentials:                   oauth.Credentials{Token: AppToken, Secret: AppSecret},
+	}
 	return &Twitter{
 		configuration: conf,
 		ctx:           ctx,
 		done:          done,
-		oauthClient: oauth.Client{
-			TemporaryCredentialRequestURI: TwitterCredentialRequestURI,
-			TokenRequestURI:               TwitterTokenRequestURI,
-			ResourceOwnerAuthorizationURI: TwitterAuthorizeURI,
-			Credentials:                   oauth.Credentials{Token: AppToken, Secret: AppSecret},
-		},
+		oauthClient:   NewOaClient(oaconf),
 	}
 }
 
