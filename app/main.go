@@ -55,8 +55,8 @@ func Run() int {
 		fmt.Println("Error:", err)
 		return 1
 	}
-	fmt.Println("Api")
 	if ts.EnableApi {
+		fmt.Println("api server enabled on port:", ts.ApiPort)
 		ts.initApi()
 	}
 
