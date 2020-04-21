@@ -27,6 +27,9 @@ func (t RemoteClient) RpcCall(str string) error {
 	args := &Arguments{Input: str}
 	var output *string
 	err = client.Call("TweetStreem.RpcProcessCommand", args, &output)
+	if output == nil {
+		*output = ""
+	}
 	fmt.Println(*output)
 	return err
 }
