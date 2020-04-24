@@ -12,6 +12,7 @@
     },
     "enableApi": false,
     "apiPort": 8080,
+    "apiHost": "",
     "autoHome": false
   }
 }
