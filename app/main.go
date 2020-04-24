@@ -28,12 +28,12 @@ func version() string {
 		fmt.Sprintln("  built:", Built)
 }
 
-func ParseFlags(port int) {
+func ParseFlags(host string, port int) {
 	b := flag.Bool("c", false, "client input")
 	flag.Parse()
 
 	if *b {
-		client := NewRemoteClient(fmt.Sprintf(":%d", port))
+		client := NewRemoteClient(fmt.Sprintf("%s:%d", host, port))
 		input := strings.Join(flag.Args(), " ")
 		if err := client.RpcCall(input); err != nil {
 			log.Fatal(err)
@@ -46,7 +46,7 @@ func ParseFlags(port int) {
 func Run() int {
 	ts := NewTweetStreem()
 	loadConfig(ts)
-	ParseFlags(ts.ApiPort)
+	ParseFlags(ts.ApiHost, ts.ApiPort)
 
 	fmt.Println(Banner)
 	fmt.Println("polling every:", ts.PollTime.Truncate(time.Second).String())

@@ -22,6 +22,7 @@ type TweetStreem struct {
 	TemplateOutputConfig  OutputConfig `json:"templateOutputConfig"`
 	EnableApi             bool         `json:"enableApi"`
 	ApiPort               int          `json:"apiPort"`
+	ApiHost               string       `json:"apiHost"`
 	AutoHome              bool         `json:"autoHome"`
 
 	api            *Api
