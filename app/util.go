@@ -27,9 +27,11 @@ func OpenBrowser(url string) error {
 	return err
 }
 
+var Notifier = signal.Notify // break out notifier for test
+
 func Signal() <-chan os.Signal {
 	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, os.Interrupt, syscall.SIGINT)
+	Notifier(ch, os.Interrupt, syscall.SIGINT)
 	return ch
 }
 

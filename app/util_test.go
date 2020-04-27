@@ -1,8 +1,11 @@
 package app
 
 import (
+	"os"
 	"reflect"
+	"syscall"
 	"testing"
+	"time"
 )
 
 func TestExtractAnchorText(t *testing.T) {
@@ -64,6 +67,41 @@ func TestSplitCommand(t *testing.T) {
 			cmd, args := SplitCommand(test.input)
 			if cmd != test.cmd || !reflect.DeepEqual(args, test.args) {
 				t.Fail()
+			}
+		})
+	}
+}
+
+func TestSignal(t *testing.T) {
+	sendCh := make(chan os.Signal, 1)
+
+	// Replace the notifier to what we think it does very naively
+	Notifier = func(c chan<- os.Signal, sig ...os.Signal) {
+		x := <-sendCh
+		if x == os.Interrupt || x == syscall.SIGINT {
+			c <- x
+		} else {
+			t.Fail() // Fail the test if we are expecting something that is not supported
+		}
+	}
+
+	tests := []struct {
+		name   string
+		signal os.Signal
+	}{
+		{"interrupt", os.Interrupt},
+		{"sigint", syscall.SIGINT},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			sendCh <- test.signal // send test signal
+			select {
+			case out := <-Signal():
+				// verify sent was received
+				if out != test.signal {
+					t.Fail()
+				}
+			case <-time.After(time.Millisecond * 10):
 			}
 		})
 	}
