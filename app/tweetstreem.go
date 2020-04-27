@@ -43,8 +43,11 @@ id:{{ .Id }} {{ "rt:" | color "cyan" }}{{ .ReTweetCount | color "cyan" }} {{ "â™
 {{ .TweetText }}
 `
 
-func NewTweetStreem() *TweetStreem {
-	ctx, cancel := context.WithCancel(context.Background())
+func NewTweetStreem(ctx context.Context) *TweetStreem {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	twctx, cancel := context.WithCancel(ctx)
 	return &TweetStreem{
 		ApiPort:              8080,
 		TwitterConfiguration: &TwitterConfiguration{},
@@ -56,7 +59,7 @@ func NewTweetStreem() *TweetStreem {
 		tweetHistory:  make(map[int]*Tweet),
 		lastTweetId:   new(int32),
 		inputCh:       make(chan string, 0),
-		ctx:           ctx,
+		ctx:           twctx,
 		cancel:        cancel,
 	}
 }
