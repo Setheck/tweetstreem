@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -16,7 +17,7 @@ func TestApp_Config(t *testing.T) {
 	ConfigPath = filepath.Join(dir, "testData")
 	ConfigFile = fmt.Sprint(t.Name(), "_config")
 
-	ts := NewTweetStreem()
+	ts := NewTweetStreem(context.TODO())
 	loadConfig(ts)
 	// TODO:(smt) blank these out for safety. (maybe move twitter to anther package)
 	ts.TwitterConfiguration.UserToken = ""
