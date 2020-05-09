@@ -45,7 +45,7 @@ tag: MAJOR=0
 tag: MINOR=1
 tag: PATCH=0
 tag:
-	git tag "${MAJOR}.${MINOR}.${PATCH}"
+	git tag "v${MAJOR}.${MINOR}.${PATCH}"
 	git push origin --tags
 
 ddeploy: clean dbuild
