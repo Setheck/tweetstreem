@@ -10,39 +10,41 @@ import (
 )
 
 const (
-	ConfigFile   = ".tweetstreem"
 	ConfigFormat = "json"
 )
 
+var (
+	ConfigPath = ""
+	ConfigFile = ".tweetstreem"
+)
+
 func init() {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+	if ConfigPath == "" {
+		ConfigPath = home
+	}
 	viper.SetConfigName(ConfigFile)
 	viper.SetConfigType(ConfigFormat)
-	viper.AddConfigPath("$HOME/") // TODO:(smt) how does this work on windows.
-	viper.AddConfigPath(".")
+	viper.AddConfigPath(ConfigPath)
 }
 
-func loadConfig(t interface{}) {
-	err := viper.ReadInConfig()
-	if err != nil {
-		fmt.Println("Failed to read config file:", err)
+func loadConfig(obj interface{}) {
+	if err := viper.ReadInConfig(); err != nil {
+		fmt.Println("failed to read config file:", err)
 		return
 	}
-
-	err = viper.UnmarshalKey("config", &t)
-	if err != nil {
-		fmt.Println(err)
+	if err := viper.UnmarshalKey("config", &obj); err != nil {
+		fmt.Println("unmarshalling config failed:", err)
 	}
 }
 
-func saveConfig(c interface{}) {
-	viper.Set("config", c)
-	hd, err := os.UserHomeDir()
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	fileName := fmt.Sprint(ConfigFile, ".", ConfigFormat)
-	if err := viper.WriteConfigAs(filepath.Join(hd, fileName)); err != nil {
-		log.Println(err)
+func saveConfig(obj interface{}) {
+	viper.Set("config", obj)
+	savePath := filepath.Join(ConfigPath, fmt.Sprint(ConfigFile, ".", ConfigFormat))
+	if err := viper.WriteConfigAs(savePath); err != nil {
+		log.Println("saving config to", savePath, "failed:", err)
 	}
 }

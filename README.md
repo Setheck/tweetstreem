@@ -56,6 +56,8 @@ id:{{ .Id }} {{ "rt:" | color "cyan" }}{{ .ReTweetCount | color "cyan" }} {{ "â™
 {{ .TweetText }}
 
   ```
+which results in the following
+![](./img/display_example.png)
 
 Template Helpers that exist are
 `color <colorstr> <text to colorize>`

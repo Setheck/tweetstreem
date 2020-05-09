@@ -1,0 +1,108 @@
+package app
+
+import (
+	"os"
+	"reflect"
+	"syscall"
+	"testing"
+	"time"
+)
+
+func TestExtractAnchorText(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		want  string
+	}{
+		{"no anchor", "testing", ""},
+		{"simple anchor", "<a>test</a>", "test"},
+		{"anchor with attribs", `<a class="test" id="123">test</a>`, "test"},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got := ExtractAnchorText(test.input)
+			if test.want != got {
+				t.Fail()
+			}
+		})
+	}
+}
+
+func TestFirstNumber(t *testing.T) {
+	tests := []struct {
+		name string
+		args []string
+		want int
+		ok   bool
+	}{
+		{"no number", []string{""}, 0, false},
+		{"happy", []string{"1"}, 1, true},
+		{"happy args", []string{"1", "2", "3"}, 1, true},
+		{"second val", []string{"", "2", "3"}, 2, true},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got, ok := FirstNumber(test.args...)
+			if ok != test.ok {
+				t.Fail()
+			}
+			if test.want != got {
+				t.Fail()
+			}
+		})
+	}
+}
+
+func TestSplitCommand(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		cmd   string
+		args  []string
+	}{
+		{"happy", "help test", "help", []string{"test"}},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			cmd, args := SplitCommand(test.input)
+			if cmd != test.cmd || !reflect.DeepEqual(args, test.args) {
+				t.Fail()
+			}
+		})
+	}
+}
+
+func TestSignal(t *testing.T) {
+	sendCh := make(chan os.Signal, 1)
+
+	// Replace the notifier to what we think it does very naively
+	Notifier = func(c chan<- os.Signal, sig ...os.Signal) {
+		x := <-sendCh
+		if x == os.Interrupt || x == syscall.SIGINT {
+			c <- x
+		} else {
+			t.Fail() // Fail the test if we are expecting something that is not supported
+		}
+	}
+
+	tests := []struct {
+		name   string
+		signal os.Signal
+	}{
+		{"interrupt", os.Interrupt},
+		{"sigint", syscall.SIGINT},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			sendCh <- test.signal // send test signal
+			select {
+			case out := <-Signal():
+				// verify sent was received
+				if out != test.signal {
+					t.Fail()
+				}
+			case <-time.After(time.Millisecond * 10):
+			}
+		})
+	}
+}
