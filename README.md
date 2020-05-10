@@ -3,6 +3,13 @@ TweetStreem
 A cross platform twitter client for the terminal. 
 Inspired heavily by [rainbowstream](https://github.com/orakaro/rainbowstream)
 
+### Installation
+To install, download the release package (tweetstreem.tar.gz) from the [Releases](https://github.com/Setheck/tweetstreem/releases) page.
+Upon first run, it will prompt for login and store your tokens and configurations in `$HOME/.tweetstreem.json` 
+
+**Note** currently `.tweetstreem.json` stores your user token and secret (this is not username or password) in clear text, if you have security concerns with storing these twitter credentials in your home directory, you may want to avoid this application for now.
+You can always revoke these tokens by going to [Twitter Applications](https://twitter.com/settings/applications) while logged in and revoking the `~TweetStreem~` application.
+
 ### Actions
 * config - show the current configuration
 * p,pause - pause the stream
@@ -57,6 +64,7 @@ id:{{ .Id }} {{ "rt:" | color "cyan" }}{{ .ReTweetCount | color "cyan" }} {{ "â™
 
   ```
 which results in the following
+
 ![](./img/display_example.png)
 
 Template Helpers that exist are
