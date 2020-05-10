@@ -67,8 +67,17 @@ which results in the following
 
 ![](./img/display_example.png)
 
+Template Fields that exist are
+* UserName          - The twitter user name who created the tweet
+* ScreenName        - The twitter handle who created the tweet
+* RelativeTweetTime - When the tweet occurred (ex: `1h37m19s ago` if < 24 hours ago, `03/25/2020 01:07:21` otherwise) 
+* ReTweetCount      - # of retweets
+* FavoriteCount     - # of favotires
+* App               - Name of app that created the tweet
+* TweetText         - Text of the tweet
+
 Template Helpers that exist are
-`color <colorstr> <text to colorize>`
+* `color <colorstr> <text to colorize>`
 
 *Note Windows terminal does not support colors*
 

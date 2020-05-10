@@ -87,10 +87,14 @@ func (t *TweetStreem) clearHistory() {
 }
 
 func (t *TweetStreem) initTwitter() error {
-	tpl, err := template.New("").Funcs(
-		map[string]interface{}{
-			"color": Colors.Colorize,
-		}).Parse(t.TweetTemplate)
+	templateHelpers := map[string]interface{}{
+		"color": Colors.Colorize,
+	}
+
+	tpl, err := template.New("").
+		Funcs(templateHelpers).
+		Parse(t.TweetTemplate)
+
 	if err != nil {
 		return err
 	}
