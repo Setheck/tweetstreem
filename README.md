@@ -36,7 +36,7 @@ Example of default configuration
 {
   "config": {
     "twitterConfiguration": {
-      "pollTime": 120000000000,
+      "pollTime": "2m",
       "userToken": "*****",
       "userSecret": "*****"
     },

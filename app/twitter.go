@@ -69,15 +69,18 @@ type TwitterClient interface {
 }
 
 type TwitterConfiguration struct {
-	PollTime   time.Duration `json:"pollTime"`
-	UserToken  string        `json:"userToken"`
-	UserSecret string        `json:"userSecret"`
+	PollTime   string `json:"pollTime"`
+	UserToken  string `json:"userToken"`
+	UserSecret string `json:"userSecret"`
 }
 
-func (t *TwitterConfiguration) validate() {
-	if t.PollTime < time.Minute*2 {
-		t.PollTime = time.Minute * 2
+func (t *TwitterConfiguration) PollTimeDuration() time.Duration {
+	dur, err := time.ParseDuration(t.PollTime)
+	if err != nil {
+		t.PollTime = "2m" // default to 2 min
+		return time.Minute * 2
 	}
+	return dur
 }
 
 var _ TwitterClient = &Twitter{}
@@ -98,9 +101,6 @@ type Twitter struct {
 }
 
 func NewTwitter(conf *TwitterConfiguration) *Twitter {
-	if conf != nil {
-		conf.validate()
-	}
 	ctx, done := context.WithCancel(context.Background())
 	oaconf := OauthConfig{
 		TemporaryCredentialRequestURI: TwitterCredentialRequestURI,
@@ -386,7 +386,7 @@ func (t *Twitter) startPoller() chan []*Tweet {
 			case <-t.ctx.Done():
 				close(tweetCh)
 				return
-			case <-time.After(t.configuration.PollTime):
+			case <-time.After(t.configuration.PollTimeDuration()):
 				if t.debug {
 					fmt.Println("Poll happened")
 				}

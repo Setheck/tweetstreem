@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"strings"
-	"time"
 )
 
 var (
@@ -49,7 +48,7 @@ func Run() int {
 	ParseFlags(ts.ApiHost, ts.ApiPort)
 
 	fmt.Println(Banner)
-	fmt.Println("polling every:", ts.PollTime.Truncate(time.Second).String())
+	fmt.Println("polling every:", ts.PollTimeDuration())
 
 	if err := ts.initTwitter(); err != nil {
 		fmt.Println("Error:", err)
