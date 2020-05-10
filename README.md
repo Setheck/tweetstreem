@@ -84,7 +84,8 @@ Available colors are
 * white
 
 ### Remote Commands
-If the `apiEnabled` flag is set to true, tweetstream will start as an rpc server and only accept commmands from client mode
+If the `apiEnabled` flag is true, tweetstream will start an rpc server and accept commands from client mode.
+This feature mainly exists, so that you can control the tweetstreem output from another terminal session.
 
 
 ### Client Mode
