@@ -49,6 +49,8 @@ func ExtractAnchorText(anchor string) string {
 
 var Stdin io.Reader = os.Stdin // replacable for testing
 
+// SingleWordInput will scan Stdin and return the first word, discarding the rest of the input
+// if for any reason, there is no first word, an empty string is returned
 func SingleWordInput() string {
 	stdin := bufio.NewScanner(Stdin)
 	if stdin.Scan() {

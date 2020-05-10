@@ -117,6 +117,7 @@ func TestSingleWordInput(t *testing.T) {
 		{"happy path", "123", "123"},
 		{"multi word", "one two three", "one"},
 		{"multi line", "one\n two\n three", "one"},
+		{"no input", "", ""},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
