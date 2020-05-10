@@ -3,6 +3,7 @@ package app
 import (
 	"os"
 	"reflect"
+	"strings"
 	"syscall"
 	"testing"
 	"time"
@@ -102,6 +103,28 @@ func TestSignal(t *testing.T) {
 					t.Fail()
 				}
 			case <-time.After(time.Millisecond * 10):
+			}
+		})
+	}
+}
+
+func TestSingleWordInput(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		want  string
+	}{
+		{"happy path", "123", "123"},
+		{"multi word", "one two three", "one"},
+		{"multi line", "one\n two\n three", "one"},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			// Stdin is defined in util.go and defaults to os.Stdin
+			Stdin = strings.NewReader(test.input)
+			got := SingleWordInput()
+			if test.want != got {
+				t.Fail()
 			}
 		})
 	}

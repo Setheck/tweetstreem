@@ -13,7 +13,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/c-bata/go-prompt"
 	"github.com/gomodule/oauth1/oauth"
 )
 
@@ -46,10 +45,6 @@ func init() {
 		AppSecret = os.Getenv("APP_SECRET")
 		fmt.Println("loaded AppToken and AppSecret from environment")
 	}
-}
-
-var NilCompleter = func(document prompt.Document) []prompt.Suggest {
-	return nil
 }
 
 type TwitterClient interface {
@@ -144,7 +139,8 @@ func (t *Twitter) Authorize() error {
 		fmt.Println(err)
 	}
 
-	code := prompt.Input("Enter Pin: ", NilCompleter)
+	fmt.Print("Enter Pin: ")
+	code := SingleWordInput()
 
 	credentials, _, err := t.oauthClient.RequestToken(nil, tempCred, code)
 	if err != nil {
