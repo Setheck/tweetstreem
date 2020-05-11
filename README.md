@@ -46,6 +46,7 @@ Example of default configuration
       "HashtagHighlightColor": "magenta"
     },
     "enableApi": false,
+    "enableClientLinks": false,
     "apiPort": 8080,
     "autoHome": false
   }
