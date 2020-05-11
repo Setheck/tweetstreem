@@ -96,6 +96,7 @@ Available colors are
 If the `apiEnabled` flag is true, tweetstream will start an rpc server and accept commands from client mode.
 This feature mainly exists, so that you can control the tweetstreem output from another terminal session.
 
+If the `enableClientLinks` flag is true, when open or browse is used client side, the link will also be opened client side.
 
 ### Client Mode
 If you have another tweetstream running in api mode, you can send remote commands
