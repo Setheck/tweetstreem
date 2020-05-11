@@ -28,12 +28,12 @@ func version() string {
 }
 
 var ExitFn = os.Exit // replaceable for test
-func ParseFlags(host string, port int) {
+func ParseFlags(ts *TweetStreem) {
 	clientMode := flag.Bool("c", false, "client input")
 	flag.Parse()
 
 	if *clientMode {
-		client := NewRemoteClient(fmt.Sprintf("%s:%d", host, port))
+		client := NewRemoteClient(ts, fmt.Sprintf("%s:%d", ts.ApiHost, ts.ApiPort))
 		input := strings.Join(flag.Args(), " ")
 		if err := client.RpcCall(input); err != nil {
 			log.Fatal(err)
@@ -46,10 +46,10 @@ func ParseFlags(host string, port int) {
 func Run() int {
 	ts := NewTweetStreem(nil)
 	loadConfig(ts)
-	ParseFlags(ts.ApiHost, ts.ApiPort)
+	ParseFlags(ts)
 
 	fmt.Println(Banner)
-	fmt.Println("polling every:", ts.PollTimeDuration())
+	fmt.Println("polling every:", ts.TwitterConfiguration.PollTimeDuration())
 
 	if err := ts.initTwitter(); err != nil {
 		fmt.Println("Error:", err)
@@ -63,6 +63,7 @@ func Run() int {
 	go ts.watchTerminalInput()
 	go ts.echoOnPoll()
 	go ts.consumeInput()
+	go ts.outputPrinter()
 	go ts.signalWatcher()
 
 	if ts.AutoHome {
