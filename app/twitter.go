@@ -84,7 +84,7 @@ type Twitter struct {
 	wg              sync.WaitGroup
 	ctx             context.Context
 	done            context.CancelFunc
-	oauthClient     OauthFacade
+	oauthFacade     OauthFacade
 	lock            sync.Mutex
 	debug           bool
 }
@@ -105,7 +105,7 @@ func NewTwitter(conf *TwitterConfiguration) *Twitter {
 		configuration: conf,
 		ctx:           ctx,
 		done:          done,
-		oauthClient:   NewDefaultOaFacade(oaconf),
+		oauthFacade:   NewDefaultOaFacade(oaconf),
 	}
 }
 
@@ -127,12 +127,12 @@ func (t *Twitter) Configuration() TwitterConfiguration {
 }
 
 func (t *Twitter) Authorize() error {
-	tempCred, err := t.oauthClient.RequestTemporaryCredentials(nil, "oob", nil)
+	tempCred, err := t.oauthFacade.RequestTemporaryCredentials(nil, "oob", nil)
 	if err != nil {
 		return err
 	}
 
-	u := t.oauthClient.AuthorizationURL(tempCred, nil)
+	u := t.oauthFacade.AuthorizationURL(tempCred, nil)
 	if err := OpenBrowser(u); err != nil {
 		fmt.Println(err)
 	}
@@ -140,15 +140,15 @@ func (t *Twitter) Authorize() error {
 	fmt.Print("Enter Pin: ")
 	code := SingleWordInput()
 
-	credentials, _, err := t.oauthClient.RequestToken(nil, tempCred, code)
+	credentials, _, err := t.oauthFacade.RequestToken(nil, tempCred, code)
 	if err != nil {
 		return err
 	}
 
 	t.configuration.UserToken = credentials.Token
-	t.oauthClient.SetToken(credentials.Token)
+	t.oauthFacade.SetToken(credentials.Token)
 	t.configuration.UserSecret = credentials.Secret
-	t.oauthClient.SetSecret(credentials.Secret)
+	t.oauthFacade.SetSecret(credentials.Secret)
 	return nil
 }
 
@@ -213,7 +213,7 @@ func (twe TwError) String() string {
 
 func (t *Twitter) UpdateStatus(status string, conf OaRequestConf) (*Tweet, error) {
 	conf.status = status
-	data, err := t.oauthClient.OaRequest(http.MethodPost, StatusesUpdateURI, conf)
+	data, err := t.oauthFacade.OaRequest(http.MethodPost, StatusesUpdateURI, conf)
 	if err != nil {
 		return nil, err
 	}
@@ -228,7 +228,7 @@ func (t *Twitter) UpdateStatus(status string, conf OaRequestConf) (*Tweet, error
 }
 
 func (t *Twitter) ReTweet(tw *Tweet, conf OaRequestConf) error {
-	data, err := t.oauthClient.OaRequest(http.MethodPost, fmt.Sprintf(StatusesRetweetURITemplate, tw.IDStr), conf)
+	data, err := t.oauthFacade.OaRequest(http.MethodPost, fmt.Sprintf(StatusesRetweetURITemplate, tw.IDStr), conf)
 	if err != nil {
 		return err
 	}
@@ -239,7 +239,7 @@ func (t *Twitter) ReTweet(tw *Tweet, conf OaRequestConf) error {
 }
 
 func (t *Twitter) UnReTweet(tw *Tweet, conf OaRequestConf) error {
-	data, err := t.oauthClient.OaRequest(http.MethodPost, fmt.Sprintf(StatusesUnRetweetURITemplate, tw.IDStr), conf)
+	data, err := t.oauthFacade.OaRequest(http.MethodPost, fmt.Sprintf(StatusesUnRetweetURITemplate, tw.IDStr), conf)
 	if err != nil {
 		return err
 	}
@@ -251,7 +251,7 @@ func (t *Twitter) UnReTweet(tw *Tweet, conf OaRequestConf) error {
 
 func (t *Twitter) Like(tw *Tweet, conf OaRequestConf) error {
 	conf.id = tw.IDStr
-	data, err := t.oauthClient.OaRequest(http.MethodPost, FavoritesCreateURI, conf)
+	data, err := t.oauthFacade.OaRequest(http.MethodPost, FavoritesCreateURI, conf)
 	if err != nil {
 		return err
 	}
@@ -263,7 +263,7 @@ func (t *Twitter) Like(tw *Tweet, conf OaRequestConf) error {
 
 func (t *Twitter) UnLike(tw *Tweet, conf OaRequestConf) error {
 	conf.id = tw.IDStr
-	data, err := t.oauthClient.OaRequest(http.MethodPost, FavoritesDestroyURI, conf)
+	data, err := t.oauthFacade.OaRequest(http.MethodPost, FavoritesDestroyURI, conf)
 	if err != nil {
 		return err
 	}
@@ -287,7 +287,7 @@ func (t *Twitter) ScreenName() string {
 }
 
 func (t *Twitter) updateAccountSettings() error {
-	raw, err := t.oauthClient.OaRequest(http.MethodGet, AccountSettingsURI, OaRequestConf{})
+	raw, err := t.oauthFacade.OaRequest(http.MethodGet, AccountSettingsURI, OaRequestConf{})
 	if err != nil {
 		return err
 	}
@@ -299,7 +299,7 @@ func (t *Twitter) updateAccountSettings() error {
 }
 
 func (t *Twitter) HomeTimeline(conf OaRequestConf) ([]*Tweet, error) {
-	rawTweets, err := t.oauthClient.OaRequest(http.MethodGet, HomeTimelineURI, conf)
+	rawTweets, err := t.oauthFacade.OaRequest(http.MethodGet, HomeTimelineURI, conf)
 	if err != nil {
 		return nil, err
 	}
@@ -320,7 +320,7 @@ func (t *Twitter) HomeTimeline(conf OaRequestConf) ([]*Tweet, error) {
 }
 
 func (t *Twitter) UserTimeline(conf OaRequestConf) ([]*Tweet, error) {
-	rawTweets, err := t.oauthClient.OaRequest(http.MethodGet, UserTimelineURI, conf)
+	rawTweets, err := t.oauthFacade.OaRequest(http.MethodGet, UserTimelineURI, conf)
 	if err != nil {
 		return nil, err
 	}
