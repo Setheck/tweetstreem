@@ -14,6 +14,10 @@ import (
 
 const (
 	TweetHistorySize = 100
+
+	DefaultPort                  = 8080
+	DefaultMentionHighlightColor = "blue"
+	DefaultHashtagHighlightColor = "magenta"
 )
 
 type TweetStreem struct {
@@ -49,11 +53,11 @@ func NewTweetStreem(ctx context.Context) *TweetStreem {
 	}
 	twctx, cancel := context.WithCancel(ctx)
 	return &TweetStreem{
-		ApiPort:              8080,
+		ApiPort:              DefaultPort,
 		TwitterConfiguration: &TwitterConfiguration{},
 		TemplateOutputConfig: OutputConfig{
-			MentionHighlightColor: "blue",
-			HashtagHighlightColor: "magenta",
+			MentionHighlightColor: DefaultMentionHighlightColor,
+			HashtagHighlightColor: DefaultHashtagHighlightColor,
 		},
 		TweetTemplate: DefaultTweetTemplate,
 		tweetHistory:  make(map[int]*Tweet),
