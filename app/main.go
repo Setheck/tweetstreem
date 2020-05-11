@@ -27,6 +27,7 @@ func version() string {
 		fmt.Sprintln("  built:", Built)
 }
 
+var ExitFn = os.Exit // replaceable for test
 func ParseFlags(host string, port int) {
 	clientMode := flag.Bool("c", false, "client input")
 	flag.Parse()
@@ -37,7 +38,7 @@ func ParseFlags(host string, port int) {
 		if err := client.RpcCall(input); err != nil {
 			log.Fatal(err)
 		}
-		os.Exit(0)
+		ExitFn(0)
 	}
 }
 
