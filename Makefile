@@ -54,6 +54,6 @@ ddeploy: clean dbuild
 	docker push ${IMAGE}:${VERSION}
 
 clean:
-	rm -rf tweetstreem*
+	rm -rf tweetstreem* deploy
 
 .PHONY: test build dbuild clean tag tokencheck

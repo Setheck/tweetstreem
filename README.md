@@ -3,6 +3,13 @@ TweetStreem
 A cross platform twitter client for the terminal. 
 Inspired heavily by [rainbowstream](https://github.com/orakaro/rainbowstream)
 
+### Installation
+To install, download the release package (tweetstreem.tar.gz) from the [Releases](https://github.com/Setheck/tweetstreem/releases) page.
+Upon first run, it will prompt for login and store your tokens and configurations in `$HOME/.tweetstreem.json` 
+
+**Note** currently `.tweetstreem.json` stores your user token and secret (this is not username or password) in clear text, if you have security concerns with storing these twitter credentials in your home directory, you may want to avoid this application for now.
+You can always revoke these tokens by going to [Twitter Applications](https://twitter.com/settings/applications) while logged in and revoking the `~TweetStreem~` application.
+
 ### Actions
 * config - show the current configuration
 * p,pause - pause the stream
@@ -29,7 +36,7 @@ Example of default configuration
 {
   "config": {
     "twitterConfiguration": {
-      "pollTime": 120000000000,
+      "pollTime": "2m",
       "userToken": "*****",
       "userSecret": "*****"
     },
@@ -57,10 +64,20 @@ id:{{ .Id }} {{ "rt:" | color "cyan" }}{{ .ReTweetCount | color "cyan" }} {{ "â™
 
   ```
 which results in the following
+
 ![](./img/display_example.png)
 
+Template Fields that exist are
+* UserName          - The twitter user name who created the tweet
+* ScreenName        - The twitter handle who created the tweet
+* RelativeTweetTime - When the tweet occurred (ex: `1h37m19s ago` if < 24 hours ago, `03/25/2020 01:07:21` otherwise) 
+* ReTweetCount      - # of retweets
+* FavoriteCount     - # of favotires
+* App               - Name of app that created the tweet
+* TweetText         - Text of the tweet
+
 Template Helpers that exist are
-`color <colorstr> <text to colorize>`
+* `color <colorstr> <text to colorize>`
 
 *Note Windows terminal does not support colors*
 
@@ -76,8 +93,10 @@ Available colors are
 * white
 
 ### Remote Commands
-If the `apiEnabled` flag is set to true, tweetstream will start as an rpc server and only accept commmands from client mode
+If the `apiEnabled` flag is true, tweetstream will start an rpc server and accept commands from client mode.
+This feature mainly exists, so that you can control the tweetstreem output from another terminal session.
 
+If the `enableClientLinks` flag is true, when open or browse is used client side, the link will also be opened client side.
 
 ### Client Mode
 If you have another tweetstream running in api mode, you can send remote commands
