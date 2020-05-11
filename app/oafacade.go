@@ -25,10 +25,11 @@ type OauthConfig struct {
 	TemporaryCredentialRequestURI string
 	TokenRequestURI               string
 	ResourceOwnerAuthorizationURI string
+	AppToken                      string
+	AppSecret                     string
 	Token                         string
 	Secret                        string
 	UserAgent                     string
-	Credentials                   oauth.Credentials
 }
 
 var _ OauthFacade = &DefaultOaFacade{}
@@ -45,7 +46,7 @@ func NewDefaultOaFacade(c OauthConfig) *DefaultOaFacade {
 		TemporaryCredentialRequestURI: c.TemporaryCredentialRequestURI,
 		TokenRequestURI:               c.TokenRequestURI,
 		ResourceOwnerAuthorizationURI: c.ResourceOwnerAuthorizationURI,
-		Credentials:                   c.Credentials,
+		Credentials:                   oauth.Credentials{Token: c.AppToken, Secret: c.AppSecret},
 	}
 	return &DefaultOaFacade{
 		Client:    client,

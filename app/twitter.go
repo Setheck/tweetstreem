@@ -10,8 +10,6 @@ import (
 	"strconv"
 	"sync"
 	"time"
-
-	"github.com/gomodule/oauth1/oauth"
 )
 
 var (
@@ -79,9 +77,7 @@ func (t *TwitterConfiguration) PollTimeDuration() time.Duration {
 var _ TwitterClient = &Twitter{}
 
 type Twitter struct {
-	configuration *TwitterConfiguration
-	Credentials   *oauth.Credentials
-
+	configuration   *TwitterConfiguration
 	accountSettings *AccountSettings
 	pollerPaused    bool
 	lastTweet       *Tweet
@@ -99,7 +95,8 @@ func NewTwitter(conf *TwitterConfiguration) *Twitter {
 		TemporaryCredentialRequestURI: TwitterCredentialRequestURI,
 		TokenRequestURI:               TwitterTokenRequestURI,
 		ResourceOwnerAuthorizationURI: TwitterAuthorizeURI,
-		Credentials:                   oauth.Credentials{Token: AppToken, Secret: AppSecret},
+		AppToken:                      AppToken,
+		AppSecret:                     AppSecret,
 		UserAgent:                     "~TweetStreem~",
 		Token:                         conf.UserToken,
 		Secret:                        conf.UserSecret,
@@ -108,7 +105,7 @@ func NewTwitter(conf *TwitterConfiguration) *Twitter {
 		configuration: conf,
 		ctx:           ctx,
 		done:          done,
-		oauthClient:   NewDefaultOaFacade(oaconf), //NewOaClient(oaconf),
+		oauthClient:   NewDefaultOaFacade(oaconf),
 	}
 }
 
