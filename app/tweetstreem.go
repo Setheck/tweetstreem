@@ -352,7 +352,8 @@ func (t *TweetStreem) pause() {
 }
 
 func (t *TweetStreem) timeLine(screenName string) error {
-	conf := OaRequestConf{screenName: screenName}
+	conf := NewOaRequestConf()
+	conf.Set("screen_name", screenName)
 	tweets, err := t.twitter.UserTimeline(conf)
 	if err != nil {
 		return err
@@ -363,7 +364,7 @@ func (t *TweetStreem) timeLine(screenName string) error {
 }
 
 func (t *TweetStreem) homeTimeline() error {
-	tweets, err := t.twitter.HomeTimeline(OaRequestConf{})
+	tweets, err := t.twitter.HomeTimeline(NewOaRequestConf())
 	if err != nil {
 		return err
 	}
@@ -373,7 +374,9 @@ func (t *TweetStreem) homeTimeline() error {
 }
 
 func (t *TweetStreem) userTimeline(screenName string) error {
-	tweets, err := t.twitter.UserTimeline(OaRequestConf{screenName: screenName})
+	cfg := NewOaRequestConf()
+	cfg.Set("screen_name", screenName)
+	tweets, err := t.twitter.UserTimeline(cfg)
 	if err != nil {
 		return err
 	}
@@ -436,7 +439,7 @@ func (t *TweetStreem) tweet(msg string) string {
 	if len(msg) < 1 {
 		return fmt.Sprintln("Some text is required to tweet")
 	}
-	if tw, err := t.twitter.UpdateStatus(msg, OaRequestConf{}); err != nil {
+	if tw, err := t.twitter.UpdateStatus(msg, NewOaRequestConf()); err != nil {
 		return fmt.Sprintln("Error:", err)
 	} else {
 		return fmt.Sprintf("tweet success! [%s]\n", tw.IDStr)
@@ -451,9 +454,10 @@ func (t *TweetStreem) reply(id int, msg string) string {
 	if !strings.Contains(msg, tw.User.ScreenName) {
 		return fmt.Sprintf("reply must contain the original screen name [%s]\n", tw.User.ScreenName)
 	}
-	if tw, err := t.twitter.UpdateStatus(msg, OaRequestConf{
-		InReplyToStatusId: tw.IDStr,
-	}); err != nil {
+
+	conf := NewOaRequestConf()
+	conf.Set("in_reply_to_status_id", tw.IDStr)
+	if tw, err := t.twitter.UpdateStatus(msg, conf); err != nil {
 		return fmt.Sprintln("Error:", err)
 	} else {
 		return fmt.Sprintf("tweet success! [%s]\n", tw.IDStr)
@@ -465,7 +469,7 @@ func (t *TweetStreem) reTweet(id int) string {
 	if tw == nil {
 		return fmt.Sprintln("unknown tweet - id:", id)
 	}
-	if err := t.twitter.ReTweet(tw, OaRequestConf{}); err != nil {
+	if err := t.twitter.ReTweet(tw, NewOaRequestConf()); err != nil {
 		return fmt.Sprintln("Error:", err)
 	} else {
 		return fmt.Sprintf("tweet by @%s retweeted\n", tw.User.ScreenName)
@@ -477,7 +481,7 @@ func (t *TweetStreem) unReTweet(id int) string {
 	if tw == nil {
 		return fmt.Sprintln("unknown tweet - id:", id)
 	}
-	if err := t.twitter.UnReTweet(tw, OaRequestConf{}); err != nil {
+	if err := t.twitter.UnReTweet(tw, NewOaRequestConf()); err != nil {
 		return fmt.Sprintln("Error:", err)
 	} else {
 		return fmt.Sprintf("tweet by @%s unretweeted\n", tw.User.ScreenName)
@@ -489,7 +493,7 @@ func (t *TweetStreem) like(id int) string {
 	if tw == nil {
 		return fmt.Sprintln("unknown tweet - id:", id)
 	}
-	if err := t.twitter.Like(tw, OaRequestConf{}); err != nil {
+	if err := t.twitter.Like(tw, NewOaRequestConf()); err != nil {
 		return fmt.Sprintln("Error:", err)
 	} else {
 		return fmt.Sprintf("tweet by @%s liked\n", tw.User.ScreenName)
@@ -501,7 +505,7 @@ func (t *TweetStreem) unLike(id int) string {
 	if tw == nil {
 		return fmt.Sprintln("unknown tweet - id:", id)
 	}
-	if err := t.twitter.UnLike(tw, OaRequestConf{}); err != nil {
+	if err := t.twitter.UnLike(tw, NewOaRequestConf()); err != nil {
 		return fmt.Sprintln("Error:", err)
 	} else {
 		return fmt.Sprintf("tweet by @%s unliked\n", tw.User.ScreenName)

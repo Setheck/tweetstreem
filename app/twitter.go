@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strconv"
 	"sync"
 	"time"
 )
@@ -23,6 +22,7 @@ var (
 	StatusesUpdateURI   = "https://api.twitter.com/1.1/statuses/update.json"
 	FavoritesCreateURI  = "https://api.twitter.com/1.1/favorites/create.json"
 	FavoritesDestroyURI = "https://api.twitter.com/1.1/favorites/destroy.json"
+	FollowersListURI    = "https://api.twitter.com/1.1/followers/list.json"
 
 	StatusesRetweetURITemplate   = "https://api.twitter.com/1.1/statuses/retweet/%s.json"
 	StatusesUnRetweetURITemplate = "https://api.twitter.com/1.1/statuses/unretweet/%s.json"
@@ -152,47 +152,26 @@ func (t *Twitter) Authorize() error {
 	return nil
 }
 
-type OaRequestConf struct {
-	id                string
-	status            string
-	screenName        string
-	count             int
-	sinceId           string
-	includeEntities   bool
-	tweetMode         string
-	InReplyToStatusId string
+type OaRequestConf map[string]string
+
+func NewOaRequestConf() OaRequestConf {
+	orc := make(OaRequestConf)
+
+	// defaults
+	orc.Set("tweet_mode", "extended") // Default to extended for full tweet text
+
+	return orc
 }
 
-func (g *OaRequestConf) ToForm() url.Values {
-	form := url.Values{}
-	if len(g.id) > 0 {
-		form.Set("id", g.id)
-	}
-	if len(g.status) > 0 {
-		form.Set("status", g.status)
-	}
-	if len(g.InReplyToStatusId) > 0 {
-		form.Set("in_reply_to_status_id", g.InReplyToStatusId)
-	}
-	if len(g.screenName) > 0 {
-		form.Set("screen_name", g.screenName)
-	}
-	if g.count > 0 {
-		cnt := strconv.Itoa(g.count)
-		form.Set("count", cnt)
-	}
-	if len(g.sinceId) > 0 {
-		form.Set("since_id", g.sinceId)
-	}
-	if g.includeEntities {
-		form.Set("include_entities", "true")
-	}
-	mode := "extended" // Default to extended for full tweet text
-	if len(g.tweetMode) > 0 {
-		mode = g.tweetMode
-	}
-	form.Set("tweet_mode", mode)
+func (g OaRequestConf) Set(key, val string) {
+	g[key] = val
+}
 
+func (g OaRequestConf) ToForm() url.Values {
+	form := url.Values{}
+	for k, v := range g {
+		form.Set(k, v)
+	}
 	return form
 }
 
@@ -212,7 +191,7 @@ func (twe TwError) String() string {
 }
 
 func (t *Twitter) UpdateStatus(status string, conf OaRequestConf) (*Tweet, error) {
-	conf.status = status
+	conf.Set("status", status)
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, StatusesUpdateURI, conf)
 	if err != nil {
 		return nil, err
@@ -250,7 +229,7 @@ func (t *Twitter) UnReTweet(tw *Tweet, conf OaRequestConf) error {
 }
 
 func (t *Twitter) Like(tw *Tweet, conf OaRequestConf) error {
-	conf.id = tw.IDStr
+	conf.Set("id", tw.IDStr)
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, FavoritesCreateURI, conf)
 	if err != nil {
 		return err
@@ -262,7 +241,7 @@ func (t *Twitter) Like(tw *Tweet, conf OaRequestConf) error {
 }
 
 func (t *Twitter) UnLike(tw *Tweet, conf OaRequestConf) error {
-	conf.id = tw.IDStr
+	conf.Set("id", tw.IDStr)
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, FavoritesDestroyURI, conf)
 	if err != nil {
 		return err
@@ -271,6 +250,29 @@ func (t *Twitter) UnLike(tw *Tweet, conf OaRequestConf) error {
 		return err
 	}
 	return nil
+}
+
+type FollowerList struct {
+	Users             []User `json:"users"`
+	NextCursor        uint64 `json:"next_cursor"`
+	NextCursorStr     string `json:"next_cursor_str"`
+	PreviousCursor    uint64 `json:"previous_cursor"`
+	PreviousCursorStr string `json:"previous_cursor_str"`
+}
+
+func (t *Twitter) ListFollowers(conf OaRequestConf) ([]User, error) {
+	data, err := t.oauthFacade.OaRequest(http.MethodGet, FollowersListURI, conf)
+	if err != nil {
+		return nil, err
+	}
+	if err := t.unmarshalError(data); err != nil {
+		return nil, err
+	}
+	fl := &FollowerList{}
+	if err := json.Unmarshal(data, fl); err != nil {
+		return nil, err
+	}
+	return fl.Users, nil
 }
 
 func (t *Twitter) unmarshalError(data []byte) error {
@@ -364,10 +366,11 @@ func (t *Twitter) startPoller() chan []*Tweet {
 				if t.pollerPaused {
 					continue
 				}
-				cfg := OaRequestConf{includeEntities: true}
+				cfg := NewOaRequestConf()
+				cfg.Set("include_entities", "true")
 				if t.lastTweet != nil {
 					t.lock.Lock()
-					cfg.sinceId = t.lastTweet.IDStr
+					cfg.Set("since_id", t.lastTweet.IDStr)
 					t.lock.Unlock()
 				}
 				tweets, err := t.HomeTimeline(cfg)
