@@ -13,10 +13,17 @@ import (
 	_ "net/http/pprof"
 )
 
+type Server interface {
+	ListenAndServe() error
+	Shutdown(ctx context.Context) error
+}
+
+var _ Server = &http.Server{}
+
 type Api struct {
 	Port int
 
-	server *http.Server
+	server Server
 	ctx    context.Context
 	cancel context.CancelFunc
 	wg     sync.WaitGroup
@@ -49,11 +56,18 @@ func NewApi(ctx context.Context, port int, logging bool) *Api {
 	return api
 }
 
+var rpcServer RpcServer = rpc.DefaultServer
+
+type RpcServer interface {
+	Register(interface{}) error
+	HandleHTTP(string, string)
+}
+
 func (a *Api) Start(rcvr interface{}) error {
-	if err := rpc.Register(rcvr); err != nil {
+	if err := rpcServer.Register(rcvr); err != nil {
 		return err
 	}
-	rpc.HandleHTTP()
+	rpcServer.HandleHTTP(rpc.DefaultRPCPath, rpc.DefaultDebugPath)
 	go a.handleShutdown()
 	go a.listenAndServe()
 	return nil
@@ -61,6 +75,7 @@ func (a *Api) Start(rcvr interface{}) error {
 
 func (a *Api) Stop() {
 	a.cancel()
+	a.wg.Wait()
 }
 
 func (a *Api) handleShutdown() {
@@ -76,7 +91,7 @@ func (a *Api) handleShutdown() {
 }
 
 func (a *Api) listenAndServe() {
-	a.log(nil, "server active on:", a.server.Addr)
+	a.log(nil, fmt.Sprint("server active on port:", a.Port))
 	err := a.server.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		a.log(err)
@@ -84,14 +99,16 @@ func (a *Api) listenAndServe() {
 	}
 }
 
+var Println = log.Println
+
 func (a *Api) log(err error, msg ...string) {
 	if !a.logging {
 		return
 	}
 	if err == nil {
-		log.Println(msg)
+		Println(msg)
 	} else {
 		atomic.AddUint64(&a.errorCount, 1)
-		log.Println("[ERROR]", msg, "err:", err)
+		Println("[ERROR]", msg, "err:", err)
 	}
 }
