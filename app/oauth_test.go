@@ -53,7 +53,7 @@ func TestDefaultOaFacade_OaRequest(t *testing.T) {
 
 		var nilHttpClient *http.Client
 		t.Run(test.name, func(t *testing.T) {
-			oaconf := OaRequestConf{}
+			oaconf := NewUrlValues()
 			body := ioutil.NopCloser(bytes.NewBuffer([]byte(theBody)))
 			resp := &http.Response{StatusCode: test.statusCode, Body: body}
 			var requestError error
