@@ -101,16 +101,6 @@ func TestTwitter_Authorize(t *testing.T) {
 	}
 }
 
-func anyNonNil(t *testing.T, objs ...interface{}) bool {
-	t.Helper()
-	for _, obj := range objs {
-		if obj != nil {
-			return true
-		}
-	}
-	return false
-}
-
 func TestNewUrlValues(t *testing.T) {
 	uvs := NewUrlValues()
 
@@ -412,4 +402,14 @@ func createTwitterResponseData(t *testing.T, obj interface{}) []byte {
 		t.Fatal(err)
 	}
 	return b
+}
+
+func anyNonNil(t *testing.T, objs ...interface{}) bool {
+	t.Helper()
+	for _, obj := range objs {
+		if obj != nil {
+			return true
+		}
+	}
+	return false
 }
