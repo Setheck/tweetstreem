@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -44,7 +45,7 @@ func ParseFlags(ts *TweetStreem) {
 
 // Run is the main entry point, returns result code
 func Run() int {
-	ts := NewTweetStreem(nil)
+	ts := NewTweetStreem(context.Background())
 	loadConfig(ts)
 	ParseFlags(ts)
 

@@ -34,7 +34,7 @@ func TestNewApi(t *testing.T) {
 
 func TestApi_Rpc(t *testing.T) {
 	port := 5000
-	api := NewApi(nil, port, true)
+	api := NewApi(context.TODO(), port, true)
 	msgFormat := "pong %s"
 	if err := api.Start(TestReceiver{msgFormat}); err != nil {
 		t.Fatal(err)
@@ -68,7 +68,7 @@ func TestApi_StartStop(t *testing.T) {
 	mockRpcServer.On("HandleHTTP", mock.AnythingOfType("string"), mock.AnythingOfType("string"))
 	rpcServer = mockRpcServer
 
-	api := NewApi(nil, 5000, true)
+	api := NewApi(context.TODO(), 5000, true)
 	api.server = mockServer
 
 	msgFormat := "pong %s"

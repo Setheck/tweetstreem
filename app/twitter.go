@@ -350,9 +350,9 @@ func (t *Twitter) startPoller() chan []*Tweet {
 	if t.debug {
 		fmt.Println("Poller Started")
 	}
-	tweetCh := make(chan []*Tweet, 0)
+	tweetCh := make(chan []*Tweet)
+	t.wg.Add(1)
 	go func() {
-		t.wg.Add(1)
 		defer t.wg.Done()
 		for {
 			select {

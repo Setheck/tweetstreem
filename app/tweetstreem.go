@@ -66,7 +66,7 @@ func NewTweetStreem(ctx context.Context) *TweetStreem {
 		TweetTemplate: DefaultTweetTemplate,
 		tweetHistory:  make(map[int]*Tweet),
 		lastTweetId:   new(int32),
-		inputCh:       make(chan string, 0),
+		inputCh:       make(chan string),
 		printCh:       make(chan string, 5),
 		rpcCh:         make(chan string, 5),
 		ctx:           twctx,
@@ -171,8 +171,7 @@ func (t *TweetStreem) confirmation(msg, abort string, defaultYes bool) bool {
 }
 
 func (t *TweetStreem) RpcProcessCommand(args *Arguments, out *Output) error {
-	var err error
-	err = t.processCommand(true, args.Input)
+	var err = t.processCommand(true, args.Input)
 	select {
 	case o := <-t.rpcCh:
 		out.Result = o
@@ -210,7 +209,7 @@ func (t *TweetStreem) processCommand(isRpc bool, input string) error {
 			if tw, err := t.findTweet(n); err != nil {
 				fmt.Sprintln(err)
 			} else {
-				err = t.browse(isRpc, tw)
+				topErr = t.browse(isRpc, tw)
 			}
 		}
 	case "t", "tweet":
