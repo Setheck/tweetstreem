@@ -14,19 +14,29 @@ import (
 	"syscall"
 )
 
+var ErrUnsupportedPlatform = fmt.Errorf("unsupported platform")
+
+var GOOS = runtime.GOOS
+var startCommand = func(name string, args ...string) error {
+	return exec.Command(name, args...).Start()
+}
+
+// OpenBrowser opens the given url in a web browser.
+// supports linux, windows, and darwin.
 func OpenBrowser(url string) error {
-	var err error
-	switch runtime.GOOS {
+	var name string
+	var args []string
+	switch GOOS {
 	case "linux":
-		err = exec.Command("xdg-open", url).Start()
+		name, args = "xdg-open", []string{url}
 	case "windows":
-		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+		name, args = "rundll32", []string{"url.dll,FileProtocolHandler", url}
 	case "darwin":
-		err = exec.Command("open", url).Start()
+		name, args = "open", []string{url}
 	default:
-		err = fmt.Errorf("unsupported platform")
+		return ErrUnsupportedPlatform
 	}
-	return err
+	return startCommand(name, args...)
 }
 
 var Notifier = signal.Notify // break out notifier for test
@@ -79,8 +89,5 @@ func SplitCommand(str string) (string, []string) {
 	if len(split) > 1 {
 		return split[0], split[1:]
 	}
-	if len(split) > 0 {
-		return split[0], nil
-	}
-	return "", nil
+	return str, nil
 }

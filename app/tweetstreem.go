@@ -409,7 +409,7 @@ func (t *TweetStreem) browse(isRpc bool, tw *Tweet) error {
 	return nil
 }
 
-// returns url that was opened or error
+// returns url that was opened or requestError
 func (t *TweetStreem) open(isRpc bool, tw *Tweet, linkIdx int) error {
 	if tw == nil {
 		return fmt.Errorf("invalid tweet")

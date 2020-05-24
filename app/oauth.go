@@ -10,6 +10,8 @@ import (
 	"github.com/gomodule/oauth1/oauth"
 )
 
+var ErrUnsupportedMethod = fmt.Errorf("unsupported method")
+
 type OauthFacade interface {
 	RequestTemporaryCredentials(client *http.Client, callbackURL string, additionalParams url.Values) (*oauth.Credentials, error)
 	AuthorizationURL(temporaryCredentials *oauth.Credentials, additionalParams url.Values) string
@@ -35,7 +37,7 @@ type OauthConfig struct {
 var _ OauthFacade = &DefaultOaFacade{}
 
 type DefaultOaFacade struct {
-	*oauth.Client
+	OauthClient
 	UserAgent string
 	Token     string
 	Secret    string
@@ -49,10 +51,10 @@ func NewDefaultOaFacade(c OauthConfig) *DefaultOaFacade {
 		Credentials:                   oauth.Credentials{Token: c.AppToken, Secret: c.AppSecret},
 	}
 	return &DefaultOaFacade{
-		Client:    client,
-		UserAgent: c.UserAgent,
-		Token:     c.Token,
-		Secret:    c.Secret,
+		OauthClient: client,
+		UserAgent:   c.UserAgent,
+		Token:       c.Token,
+		Secret:      c.Secret,
 	}
 }
 
@@ -72,9 +74,9 @@ func (o *DefaultOaFacade) OaRequest(method, u string, conf OaRequestConf) ([]byt
 	formData.Set("User-Agent", o.UserAgent)
 	switch strings.ToUpper(method) {
 	case http.MethodPost:
-		resp, err = o.Client.Post(nil, cred, u, formData)
+		resp, err = o.OauthClient.Post(nil, cred, u, formData)
 	case http.MethodGet:
-		resp, err = o.Client.Get(nil, cred, u, formData)
+		resp, err = o.OauthClient.Get(nil, cred, u, formData)
 	}
 	if err != nil {
 		return nil, err
@@ -86,5 +88,5 @@ func (o *DefaultOaFacade) OaRequest(method, u string, conf OaRequestConf) ([]byt
 		defer resp.Body.Close()
 		return ioutil.ReadAll(resp.Body)
 	}
-	return nil, fmt.Errorf("unsupported method")
+	return nil, ErrUnsupportedMethod
 }

@@ -25,17 +25,31 @@ type Output struct {
 	Result string
 }
 
+type RpcClient interface {
+	Call(serviceMethod string, args interface{}, reply interface{}) error
+}
+
+type ClientProvider interface {
+	DialHTTP(string, string) (RpcClient, error)
+}
+
+var rpcDialHTTP = func(network, address string) (RpcClient, error) {
+	return rpc.DialHTTP(network, address)
+}
+
+var openUrlLocal = OpenBrowser
+
 func (t RemoteClient) RpcCall(str string) error {
-	client, err := rpc.DialHTTP("tcp", t.addr)
+	client, err := rpcDialHTTP("tcp", t.addr)
 	if err != nil {
 		return err
 	}
 	args := &Arguments{Input: str}
 	output := &Output{}
 	err = client.Call("TweetStreem.RpcProcessCommand", args, output)
-	if len(output.Result) > 0 && t.TweetStreem.EnableClientLinks {
+	if err == nil && len(output.Result) > 0 && t.TweetStreem.EnableClientLinks {
 		fmt.Println("opening in browser:", output.Result)
-		return OpenBrowser(output.Result)
+		return openUrlLocal(output.Result)
 	}
 	return err
 }

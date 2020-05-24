@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/atotto/clipboard v0.1.2
 	github.com/gomodule/oauth1 v0.0.0-20181215000758-9a59ed3b0a84
+	github.com/magiconair/properties v1.8.1
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/viper v1.6.2
 	github.com/stretchr/testify v1.2.2
