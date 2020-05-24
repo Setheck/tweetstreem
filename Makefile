@@ -15,7 +15,7 @@ LDFLAGS=-ldflags "-w -s \
 	-X ${BASE_PKG}/app.AppSecret=${APP_SECRET}"
 
 test:
-	go test ./... -cover
+	go test ./... -cover -race
 
 build: tokencheck test
 	go build ${LDFLAGS} -o tweetstreem
