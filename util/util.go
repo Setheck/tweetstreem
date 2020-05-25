@@ -83,11 +83,10 @@ func FirstNumber(args ...string) (int, bool) {
 
 // SplitCommand takes a string and returns command and arguments
 func SplitCommand(str string) (string, []string) {
-	str = strings.ToLower(str)
 	str = strings.TrimSpace(str)
 	split := strings.Split(str, " ")
 	if len(split) > 1 {
-		return split[0], split[1:]
+		return strings.ToLower(split[0]), split[1:]
 	}
-	return str, nil
+	return strings.ToLower(str), nil
 }

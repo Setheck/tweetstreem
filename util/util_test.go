@@ -66,6 +66,8 @@ func TestSplitCommand(t *testing.T) {
 	}{
 		{"happy", "help test", "help", []string{"test"}},
 		{"single word", "oneword", "oneword", nil},
+		{"single word uppercase", "ONEWORD", "oneword", nil},                       // BUG #18
+		{"single all uppercase", "ONE TWO THREE", "one", []string{"TWO", "THREE"}}, // BUG #18
 		{"empty", "", "", nil},
 	}
 	for _, test := range tests {
