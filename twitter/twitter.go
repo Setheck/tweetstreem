@@ -56,7 +56,7 @@ type TwitterClient interface {
 	UnLike(tw *Tweet, conf url.Values) error
 	HomeTimeline(conf url.Values) ([]*Tweet, error)
 	UserTimeline(conf url.Values) ([]*Tweet, error)
-	TogglePollerPaused(b bool)
+	SetPollerPaused(b bool)
 	ScreenName() string
 	Shutdown() error
 }
@@ -331,7 +331,7 @@ func (t *Twitter) UserTimeline(conf url.Values) ([]*Tweet, error) {
 	return timeLine, nil
 }
 
-func (t *Twitter) TogglePollerPaused(b bool) {
+func (t *Twitter) SetPollerPaused(b bool) {
 	t.pollerPaused = b
 }
 

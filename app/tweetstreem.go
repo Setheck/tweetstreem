@@ -346,12 +346,12 @@ func (t *TweetStreem) config() string {
 
 func (t *TweetStreem) resume() {
 	t.print("resuming streem.\n")
-	t.twitter.TogglePollerPaused(false)
+	t.twitter.SetPollerPaused(false)
 }
 
 func (t *TweetStreem) pause() {
 	t.print("pausing streem.\n")
-	t.twitter.TogglePollerPaused(true)
+	t.twitter.SetPollerPaused(true)
 }
 
 func (t *TweetStreem) timeLine(screenName string) error {

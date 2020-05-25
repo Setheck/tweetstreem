@@ -121,8 +121,8 @@ func (_m *TwitterClient) Shutdown() error {
 	return r0
 }
 
-// TogglePollerPaused provides a mock function with given fields: b
-func (_m *TwitterClient) TogglePollerPaused(b bool) {
+// SetPollerPaused provides a mock function with given fields: b
+func (_m *TwitterClient) SetPollerPaused(b bool) {
 	_m.Called(b)
 }
 
