@@ -139,8 +139,10 @@ func (t *TweetStreem) echoOnPoll() {
 	}
 }
 
+var Stdin = os.Stdin
+
 func (t *TweetStreem) watchTerminalInput() {
-	in := bufio.NewScanner(os.Stdin)
+	in := bufio.NewScanner(Stdin)
 	for {
 		select {
 		case <-t.ctx.Done():
