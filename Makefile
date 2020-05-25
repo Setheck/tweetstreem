@@ -11,8 +11,8 @@ LDFLAGS=-ldflags "-w -s \
 	-X ${BASE_PKG}/app.Version=${VERSION} \
 	-X ${BASE_PKG}/app.Built=${BUILT} \
 	-X ${BASE_PKG}/app.Commit=${COMMIT} \
-	-X ${BASE_PKG}/app.AppToken=${APP_TOKEN} \
-	-X ${BASE_PKG}/app.AppSecret=${APP_SECRET}"
+	-X ${BASE_PKG}/twitter.AppToken=${APP_TOKEN} \
+	-X ${BASE_PKG}/twitter.AppSecret=${APP_SECRET}"
 
 test:
 	go test ./... -cover -race

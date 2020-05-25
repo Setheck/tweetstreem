@@ -3,6 +3,8 @@ package app
 import (
 	"fmt"
 	"net/rpc"
+
+	"github.com/Setheck/tweetstreem/util"
 )
 
 type RemoteClient struct {
@@ -37,7 +39,7 @@ var rpcDialHTTP = func(network, address string) (RpcClient, error) {
 	return rpc.DialHTTP(network, address)
 }
 
-var openUrlLocal = OpenBrowser
+var openUrlLocal = util.OpenBrowser
 
 func (t RemoteClient) RpcCall(str string) error {
 	client, err := rpcDialHTTP("tcp", t.addr)

@@ -1,12 +1,13 @@
-package app
+package auth
 
 import (
 	"bytes"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"testing"
 
-	"github.com/Setheck/tweetstreem/app/mocks"
+	"github.com/Setheck/tweetstreem/auth/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -53,7 +54,7 @@ func TestDefaultOaFacade_OaRequest(t *testing.T) {
 
 		var nilHttpClient *http.Client
 		t.Run(test.name, func(t *testing.T) {
-			oaconf := NewUrlValues()
+			oaconf := url.Values{}
 			body := ioutil.NopCloser(bytes.NewBuffer([]byte(theBody)))
 			resp := &http.Response{StatusCode: test.statusCode, Body: body}
 			var requestError error

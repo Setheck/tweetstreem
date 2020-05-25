@@ -1,4 +1,4 @@
-package app
+package twitter
 
 import (
 	"fmt"
@@ -6,6 +6,8 @@ import (
 	"sort"
 	"strconv"
 	"time"
+
+	"github.com/Setheck/tweetstreem/util"
 )
 
 type HashTag struct {
@@ -164,6 +166,7 @@ type TweetTemplateOutput struct {
 type OutputConfig struct {
 	MentionHighlightColor string
 	HashtagHighlightColor string
+	Highlight             bool
 }
 
 func (t *Tweet) TemplateOutput(config OutputConfig) TweetTemplateOutput {
@@ -173,20 +176,25 @@ func (t *Tweet) TemplateOutput(config OutputConfig) TweetTemplateOutput {
 		RelativeTweetTime: t.RelativeTweetTime(),
 		ReTweetCount:      strconv.Itoa(t.ReTweetCount),
 		FavoriteCount:     strconv.Itoa(t.FavoriteCount),
-		App:               ExtractAnchorText(t.Source),
-		TweetText:         t.TweetText(config, true),
+		App:               util.ExtractAnchorText(t.Source),
+		TweetText:         t.TweetText(config),
 	}
 }
 
+const (
+	CreatedAtTimeLayout           = "Mon Jan 2 15:04:05 -0700 2006"
+	RelativeTweetTimeOutputLayout = "01/02/2006 15:04:05"
+)
+
 func (t *Tweet) RelativeTweetTime() string {
 	tstr := t.CreatedAt
-	tm, err := time.Parse("Mon Jan 2 15:04:05 -0700 2006", t.CreatedAt)
+	tm, err := time.Parse(CreatedAtTimeLayout, t.CreatedAt)
 	if err == nil {
 		since := time.Since(tm)
 		if since < time.Hour*24 {
 			tstr = since.Truncate(time.Second).String() + " ago"
 		} else {
-			tstr = tm.Format("01/02/2006 15:04:05")
+			tstr = tm.Format(RelativeTweetTimeOutputLayout)
 		}
 	}
 	return tstr
@@ -211,11 +219,11 @@ func (t *Tweet) highlightEntities(config OutputConfig) HighlightEntityList {
 	return hlents
 }
 
-func (t *Tweet) TweetText(config OutputConfig, highlight bool) string {
+func (t *Tweet) TweetText(config OutputConfig) string {
 	text := ""
 	if t.ReTweetedStatus != nil {
-		text = t.ReTweetedStatus.TweetText(config, highlight)
-		screenName := Colors.Colorize(config.MentionHighlightColor, "@"+t.ReTweetedStatus.User.ScreenName)
+		text = t.ReTweetedStatus.TweetText(config)
+		screenName := util.Colors.Colorize(config.MentionHighlightColor, "@"+t.ReTweetedStatus.User.ScreenName)
 		return fmt.Sprintf("RT %s: %s", screenName, text)
 	}
 	if len(t.FullText) > 0 {
@@ -223,7 +231,7 @@ func (t *Tweet) TweetText(config OutputConfig, highlight bool) string {
 	} else {
 		text = t.Text
 	}
-	if highlight {
+	if config.Highlight {
 		list := t.highlightEntities(config)
 		text = highlightEntries(text, list)
 	}
@@ -255,7 +263,7 @@ func highlightEntries(text string, hlist HighlightEntityList) string {
 	position := 0
 	for _, entry := range hlist {
 		resultText += string(rtext[position:entry.startIdx])
-		resultText += Colors.Colorize(entry.color, string(rtext[entry.startIdx:entry.endIdx]))
+		resultText += util.Colors.Colorize(entry.color, string(rtext[entry.startIdx:entry.endIdx]))
 		position = entry.endIdx
 	}
 	resultText += string(rtext[position:])

@@ -1,4 +1,4 @@
-package app
+package twitter
 
 import (
 	"context"
@@ -9,6 +9,9 @@ import (
 	"os"
 	"sync"
 	"time"
+
+	"github.com/Setheck/tweetstreem/auth"
+	"github.com/Setheck/tweetstreem/util"
 )
 
 var (
@@ -44,7 +47,6 @@ func init() {
 }
 
 type TwitterClient interface {
-	Init() error
 	Configuration() TwitterConfiguration
 	Authorize() error
 	UpdateStatus(status string, conf url.Values) (*Tweet, error)
@@ -84,14 +86,14 @@ type Twitter struct {
 	wg              sync.WaitGroup
 	ctx             context.Context
 	done            context.CancelFunc
-	oauthFacade     OauthFacade
+	oauthFacade     auth.OauthFacade
 	lock            sync.Mutex
 	debug           bool
 }
 
 func NewTwitter(conf *TwitterConfiguration) *Twitter {
 	ctx, done := context.WithCancel(context.Background())
-	oaconf := OauthConfig{
+	oaconf := auth.OauthConfig{
 		TemporaryCredentialRequestURI: TwitterCredentialRequestURI,
 		TokenRequestURI:               TwitterTokenRequestURI,
 		ResourceOwnerAuthorizationURI: TwitterAuthorizeURI,
@@ -105,40 +107,34 @@ func NewTwitter(conf *TwitterConfiguration) *Twitter {
 		configuration: conf,
 		ctx:           ctx,
 		done:          done,
-		oauthFacade:   NewDefaultOaFacade(oaconf),
+		oauthFacade:   auth.NewDefaultOaFacade(oaconf),
 	}
 }
 
-func (t *Twitter) Init() error {
-	// TODO: validate instead of check for empty
-	if t.configuration.UserToken == "" || t.configuration.UserSecret == "" {
-		if err := t.Authorize(); err != nil {
-			return err
-		}
-	}
-	if err := t.updateAccountSettings(); err != nil {
-		return err
-	}
-	return nil
-}
+var openBrowser = util.OpenBrowser
 
 func (t *Twitter) Configuration() TwitterConfiguration {
 	return *t.configuration
 }
 
 func (t *Twitter) Authorize() error {
+	if t.configuration.UserToken != "" && t.configuration.UserSecret != "" {
+		if err := t.updateAccountSettings(); err == nil {
+			return nil
+		}
+	}
 	tempCred, err := t.oauthFacade.RequestTemporaryCredentials(nil, "oob", nil)
 	if err != nil {
 		return err
 	}
 
 	u := t.oauthFacade.AuthorizationURL(tempCred, nil)
-	if err := OpenBrowser(u); err != nil {
+	if err := openBrowser(u); err != nil {
 		return fmt.Errorf("failed to open browser: %w", err)
 	}
 
 	fmt.Print("Enter Pin: ")
-	code := SingleWordInput()
+	code := util.SingleWordInput()
 
 	credentials, _, err := t.oauthFacade.RequestToken(nil, tempCred, code)
 	if err != nil {
@@ -149,6 +145,9 @@ func (t *Twitter) Authorize() error {
 	t.oauthFacade.SetToken(credentials.Token)
 	t.configuration.UserSecret = credentials.Secret
 	t.oauthFacade.SetSecret(credentials.Secret)
+	if err := t.updateAccountSettings(); err != nil {
+		return fmt.Errorf("failed to authorize, couldn't get account settings: %w", err)
+	}
 	return nil
 }
 
@@ -285,6 +284,8 @@ func (t *Twitter) updateAccountSettings() error {
 	if err := t.unmarshalError(raw); err != nil {
 		return err
 	}
+	t.lock.Lock()
+	defer t.lock.Unlock()
 	return json.Unmarshal(raw, &t.accountSettings)
 }
 
@@ -334,7 +335,7 @@ func (t *Twitter) TogglePollerPaused(b bool) {
 	t.pollerPaused = b
 }
 
-func (t *Twitter) startPoller() chan []*Tweet {
+func (t *Twitter) StartPoller() chan []*Tweet {
 	if t.debug {
 		fmt.Println("Poller Started")
 	}

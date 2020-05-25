@@ -1,4 +1,4 @@
-package app
+package twitter
 
 import (
 	"bytes"
@@ -8,8 +8,11 @@ import (
 	"net/http"
 	"net/url"
 	"testing"
+	"time"
 
-	"github.com/Setheck/tweetstreem/app/mocks"
+	mocks2 "github.com/Setheck/tweetstreem/auth/mocks"
+
+	"github.com/Setheck/tweetstreem/util"
 	"github.com/gomodule/oauth1/oauth"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -30,8 +33,26 @@ func TestHighlight(t *testing.T) {
 		text := tw.TweetText(OutputConfig{
 			MentionHighlightColor: "red",
 			HashtagHighlightColor: "blue",
-		}, true)
+			Highlight:             true,
+		})
 		fmt.Println(text)
+	}
+}
+
+func TestTwitterConfiguration_PollTimeDuration(t *testing.T) {
+	tests := []struct {
+		name             string
+		expectedDuration time.Duration
+	}{
+		{"", 2 * time.Minute}, // Default
+		{"10s", 10 * time.Second},
+		{"4m", 4 * time.Minute},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			twcfg := &TwitterConfiguration{PollTime: test.name}
+			assert.Equal(t, test.expectedDuration, twcfg.PollTimeDuration())
+		})
 	}
 }
 
@@ -45,15 +66,23 @@ func TestTwitter_Authorize(t *testing.T) {
 		rqTmpCredErr   error
 		openBrowserErr error
 		rqTokenErr     error
+		oaRequestErr   error
 	}{
-		{"success", nil, nil, nil},
-		{"request temp cred failure", assert.AnError, nil, nil},
-		{"open browser failure", nil, assert.AnError, nil},
-		{"request token failure", nil, nil, assert.AnError},
+		{"success", nil, nil, nil, nil},
+		{"request temp cred failure", assert.AnError, nil, nil, nil},
+		{"open browser failure", nil, assert.AnError, nil, nil},
+		{"request token failure", nil, nil, assert.AnError, nil},
+		{"get account fail", nil, nil, nil, assert.AnError},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			mockOauth := new(mocks.OauthFacade)
+			mockOauth := new(mocks2.OauthFacade)
+			mockOauth.On("OaRequest",
+				mock.AnythingOfType("string"),
+				AccountSettingsURI,
+				mock.AnythingOfType("url.Values"),
+			).Return(createTwitterResponseData(t, &AccountSettings{}), test.oaRequestErr)
+
 			mockOauth.On("RequestTemporaryCredentials",
 				mock.AnythingOfType("*http.Client"),
 				"oob",
@@ -67,7 +96,7 @@ func TestTwitter_Authorize(t *testing.T) {
 
 			// Prevent browsers from opening
 			// This is essentially the openBrowser mock
-			startCommand = func(name string, args ...string) error { return test.openBrowserErr }
+			openBrowser = func(url string) error { return test.openBrowserErr }
 
 			mockOauth.On("RequestToken",
 				mock.AnythingOfType("*http.Client"),
@@ -84,13 +113,13 @@ func TestTwitter_Authorize(t *testing.T) {
 				return str == secret
 			}))
 
-			Stdin = bytes.NewBuffer([]byte(codeInput))
+			util.Stdin = bytes.NewBuffer([]byte(codeInput))
 
 			twitter := NewTwitter(&TwitterConfiguration{})
 			twitter.oauthFacade = mockOauth
 
 			err := twitter.Authorize()
-			if anyNonNil(t, test.rqTmpCredErr, test.openBrowserErr, test.rqTokenErr) {
+			if anyNonNil(t, test.rqTmpCredErr, test.openBrowserErr, test.rqTokenErr, test.oaRequestErr) {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
@@ -99,6 +128,26 @@ func TestTwitter_Authorize(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestTwitter_AlreadyAuth(t *testing.T) {
+	userToken, userSecret := "user token", "user secret"
+
+	mockOauth := new(mocks2.OauthFacade)
+	mockOauth.On("OaRequest",
+		mock.AnythingOfType("string"),
+		AccountSettingsURI,
+		mock.AnythingOfType("url.Values"),
+	).Return(createTwitterResponseData(t, &AccountSettings{}), nil)
+
+	twitter := NewTwitter(&TwitterConfiguration{
+		UserToken:  userToken,
+		UserSecret: userSecret})
+	twitter.oauthFacade = mockOauth
+
+	err := twitter.Authorize()
+	assert.NoError(t, err)
+	mockOauth.AssertExpectations(t)
 }
 
 func TestNewUrlValues(t *testing.T) {
@@ -129,7 +178,7 @@ func TestTwitter_UpdateStatus(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 
-			mockOauth := new(mocks.OauthFacade)
+			mockOauth := new(mocks2.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodPost,
 				StatusesUpdateURI,
@@ -166,7 +215,7 @@ func TestTwitter_ReTweet(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			mockOauth := new(mocks.OauthFacade)
+			mockOauth := new(mocks2.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodPost,
 				mock.MatchedBy(func(str string) bool {
@@ -202,7 +251,7 @@ func TestTwitter_UnReTweet(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			mockOauth := new(mocks.OauthFacade)
+			mockOauth := new(mocks2.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodPost,
 				mock.MatchedBy(func(str string) bool {
@@ -238,7 +287,7 @@ func TestTwitter_Like(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			mockOauth := new(mocks.OauthFacade)
+			mockOauth := new(mocks2.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodPost,
 				FavoritesCreateURI,
@@ -272,7 +321,7 @@ func TestTwitter_UnLike(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			mockOauth := new(mocks.OauthFacade)
+			mockOauth := new(mocks2.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodPost,
 				FavoritesDestroyURI,
@@ -315,7 +364,7 @@ func TestTwitter_ListFollowers(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 
-			mockOauth := new(mocks.OauthFacade)
+			mockOauth := new(mocks2.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodGet,
 				FollowersListURI,
@@ -357,7 +406,7 @@ func TestTwitter_UserTimeline(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 
-			mockOauth := new(mocks.OauthFacade)
+			mockOauth := new(mocks2.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodGet,
 				UserTimelineURI,
