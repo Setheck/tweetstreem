@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"testing"
@@ -18,25 +17,24 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestHighlight(t *testing.T) {
-	t.SkipNow()
-	data, err := ioutil.ReadFile("testData/tweets.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var tweets []*Tweet
-	if err := json.Unmarshal(data, &tweets); err != nil {
-		t.Fatal(err)
-	}
+func TestTwitter_ScreenName(t *testing.T) {
+	twitter := &Twitter{}
+	assert.Equal(t, "", twitter.ScreenName())
 
-	for _, tw := range tweets {
-		text := tw.TweetText(OutputConfig{
-			MentionHighlightColor: "red",
-			HashtagHighlightColor: "blue",
-			Highlight:             true,
-		})
-		fmt.Println(text)
-	}
+	screenName := "some screen name"
+	twitter.accountSettings = &AccountSettings{ScreenName: screenName}
+	assert.Equal(t, screenName, twitter.ScreenName())
+}
+
+func TestTwitter_SetPollerPaused(t *testing.T) {
+	twitter := &Twitter{}
+	assert.False(t, twitter.pollerPaused)
+
+	twitter.SetPollerPaused(true)
+	assert.True(t, twitter.pollerPaused)
+
+	twitter.SetPollerPaused(false)
+	assert.False(t, twitter.pollerPaused)
 }
 
 func TestTwitterConfiguration_PollTimeDuration(t *testing.T) {
@@ -57,6 +55,9 @@ func TestTwitterConfiguration_PollTimeDuration(t *testing.T) {
 }
 
 func TestTwitter_Authorize(t *testing.T) {
+	// Replace fmtPrint, to prevent test result status parsing failure
+	fmtPrint = func(a ...interface{}) (n int, err error) { return 0, nil }
+
 	codeInput := "12345"
 	token := "testTokenAsdf123"
 	secret := "secretShhShh"
@@ -416,6 +417,49 @@ func TestTwitter_UserTimeline(t *testing.T) {
 			twitter := &Twitter{}
 			twitter.oauthFacade = mockOauth
 			tweets, err := twitter.UserTimeline(url.Values{})
+			if test.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, expectedTweets, tweets)
+				assert.Equal(t, twitter.lastTweet, tweets[0])
+			}
+		})
+	}
+}
+
+func TestTwitter_HomeTimeline(t *testing.T) {
+	expectedTweets := []*Tweet{
+		{ID: 123, IDStr: "123"},
+		{ID: 1243, IDStr: "1243"},
+		{ID: 1223, IDStr: "1223"},
+		{ID: 11123, IDStr: "11123"},
+	}
+
+	tests := []struct {
+		name        string
+		tweetData   []byte
+		tweetError  error
+		expectError bool
+	}{
+		{"success", createTwitterResponseData(t, expectedTweets), nil, false},
+		{"api error", createTwitterErrorData(t), nil, true},
+		{"marshal error", []byte("garbage"), nil, true},
+		{"request error", nil, assert.AnError, true},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+
+			mockOauth := new(mocks2.OauthFacade)
+			mockOauth.On("OaRequest",
+				http.MethodGet,
+				HomeTimelineURI,
+				mock.AnythingOfType("url.Values"),
+			).Return(test.tweetData, test.tweetError)
+
+			twitter := &Twitter{}
+			twitter.oauthFacade = mockOauth
+			tweets, err := twitter.HomeTimeline(url.Values{})
 			if test.expectError {
 				assert.Error(t, err)
 			} else {

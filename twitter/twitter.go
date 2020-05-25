@@ -117,6 +117,10 @@ func (t *Twitter) Configuration() TwitterConfiguration {
 	return *t.configuration
 }
 
+// replace fmt.Print here because it breaks parsing of test status output
+// ref: https://youtrack.jetbrains.com/issue/GO-7855 & https://github.com/golang/go/issues/23036
+var fmtPrint = fmt.Print
+
 func (t *Twitter) Authorize() error {
 	if t.configuration.UserToken != "" && t.configuration.UserSecret != "" {
 		if err := t.updateAccountSettings(); err == nil {
@@ -133,7 +137,7 @@ func (t *Twitter) Authorize() error {
 		return fmt.Errorf("failed to open browser: %w", err)
 	}
 
-	fmt.Print("Enter Pin: ")
+	fmtPrint("Enter Pin: ")
 	code := util.SingleWordInput()
 
 	credentials, _, err := t.oauthFacade.RequestToken(nil, tempCred, code)
@@ -272,6 +276,9 @@ func (t *Twitter) unmarshalError(data []byte) error {
 }
 
 func (t *Twitter) ScreenName() string {
+	if t.accountSettings == nil {
+		return ""
+	}
 	return t.accountSettings.ScreenName
 }
 
@@ -290,28 +297,15 @@ func (t *Twitter) updateAccountSettings() error {
 }
 
 func (t *Twitter) HomeTimeline(conf url.Values) ([]*Tweet, error) {
-	rawTweets, err := t.oauthFacade.OaRequest(http.MethodGet, HomeTimelineURI, conf)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := t.unmarshalError(rawTweets); err != nil {
-		return nil, err
-	}
-	var timeLine []*Tweet
-	if err := json.Unmarshal(rawTweets, &timeLine); err != nil {
-		return nil, err
-	}
-	if len(timeLine) > 0 {
-		t.lock.Lock()
-		t.lastTweet = timeLine[0]
-		t.lock.Unlock()
-	}
-	return timeLine, nil
+	return t.getTimeline(HomeTimelineURI, conf)
 }
 
 func (t *Twitter) UserTimeline(conf url.Values) ([]*Tweet, error) {
-	rawTweets, err := t.oauthFacade.OaRequest(http.MethodGet, UserTimelineURI, conf)
+	return t.getTimeline(UserTimelineURI, conf)
+}
+
+func (t *Twitter) getTimeline(timelineUri string, conf url.Values) ([]*Tweet, error) {
+	rawTweets, err := t.oauthFacade.OaRequest(http.MethodGet, timelineUri, conf)
 	if err != nil {
 		return nil, err
 	}

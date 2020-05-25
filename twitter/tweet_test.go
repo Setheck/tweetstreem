@@ -7,6 +7,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+//func TestHighlight(t *testing.T) {
+//	t.SkipNow()
+//	data, err := ioutil.ReadFile("testData/tweets.json")
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//	var tweets []*Tweet
+//	if err := json.Unmarshal(data, &tweets); err != nil {
+//		t.Fatal(err)
+//	}
+//
+//	for _, tw := range tweets {
+//		text := tw.TweetText(OutputConfig{
+//			MentionHighlightColor: "red",
+//			HashtagHighlightColor: "blue",
+//			Highlight:             true,
+//		})
+//		fmt.Println(text)
+//	}
+//}
+
 func TestTweet_HtmlLink(t *testing.T) {
 	tweet := &Tweet{
 		IDStr: "12345",
