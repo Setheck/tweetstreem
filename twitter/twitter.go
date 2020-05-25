@@ -15,9 +15,9 @@ import (
 )
 
 var (
-	TwitterCredentialRequestURI = "https://api.twitter.com/oauth/request_token"
-	TwitterTokenRequestURI      = "https://api.twitter.com/oauth/access_token"
-	TwitterAuthorizeURI         = "https://api.twitter.com/oauth/authorize"
+	CredentialRequestURI = "https://api.twitter.com/oauth/request_token"
+	TokenRequestURI      = "https://api.twitter.com/oauth/access_token"
+	AuthorizeURI         = "https://api.twitter.com/oauth/authorize"
 
 	AccountSettingsURI  = "https://api.twitter.com/1.1/account/settings.json"
 	UserTimelineURI     = "https://api.twitter.com/1.1/statuses/user_timeline.json"
@@ -46,8 +46,8 @@ func init() {
 	}
 }
 
-type TwitterClient interface {
-	Configuration() TwitterConfiguration
+type Client interface {
+	Configuration() Configuration
 	Authorize() error
 	UpdateStatus(status string, conf url.Values) (*Tweet, error)
 	ReTweet(tw *Tweet, conf url.Values) error
@@ -57,17 +57,18 @@ type TwitterClient interface {
 	HomeTimeline(conf url.Values) ([]*Tweet, error)
 	UserTimeline(conf url.Values) ([]*Tweet, error)
 	SetPollerPaused(b bool)
+	StartPoller(tweetCh chan<- []*Tweet)
 	ScreenName() string
-	Shutdown() error
+	Shutdown()
 }
 
-type TwitterConfiguration struct {
+type Configuration struct {
 	PollTime   string `json:"pollTime"`
 	UserToken  string `json:"userToken"`
 	UserSecret string `json:"userSecret"`
 }
 
-func (t *TwitterConfiguration) PollTimeDuration() time.Duration {
+func (t *Configuration) PollTimeDuration() time.Duration {
 	dur, err := time.ParseDuration(t.PollTime)
 	if err != nil {
 		t.PollTime = "2m" // default to 2 min
@@ -76,10 +77,10 @@ func (t *TwitterConfiguration) PollTimeDuration() time.Duration {
 	return dur
 }
 
-var _ TwitterClient = &Twitter{}
+var _ Client = &DefaultClient{}
 
-type Twitter struct {
-	configuration   *TwitterConfiguration
+type DefaultClient struct {
+	configuration   *Configuration
 	accountSettings *AccountSettings
 	pollerPaused    bool
 	lastTweet       *Tweet
@@ -91,19 +92,19 @@ type Twitter struct {
 	debug           bool
 }
 
-func NewTwitter(conf *TwitterConfiguration) *Twitter {
+func NewDefaultClient(conf *Configuration) *DefaultClient {
 	ctx, done := context.WithCancel(context.Background())
 	oaconf := auth.OauthConfig{
-		TemporaryCredentialRequestURI: TwitterCredentialRequestURI,
-		TokenRequestURI:               TwitterTokenRequestURI,
-		ResourceOwnerAuthorizationURI: TwitterAuthorizeURI,
+		TemporaryCredentialRequestURI: CredentialRequestURI,
+		TokenRequestURI:               TokenRequestURI,
+		ResourceOwnerAuthorizationURI: AuthorizeURI,
 		AppToken:                      AppToken,
 		AppSecret:                     AppSecret,
 		UserAgent:                     "~TweetStreem~",
 		Token:                         conf.UserToken,
 		Secret:                        conf.UserSecret,
 	}
-	return &Twitter{
+	return &DefaultClient{
 		configuration: conf,
 		ctx:           ctx,
 		done:          done,
@@ -113,7 +114,7 @@ func NewTwitter(conf *TwitterConfiguration) *Twitter {
 
 var openBrowser = util.OpenBrowser
 
-func (t *Twitter) Configuration() TwitterConfiguration {
+func (t *DefaultClient) Configuration() Configuration {
 	return *t.configuration
 }
 
@@ -121,7 +122,7 @@ func (t *Twitter) Configuration() TwitterConfiguration {
 // ref: https://youtrack.jetbrains.com/issue/GO-7855 & https://github.com/golang/go/issues/23036
 var fmtPrint = fmt.Print
 
-func (t *Twitter) Authorize() error {
+func (t *DefaultClient) Authorize() error {
 	if t.configuration.UserToken != "" && t.configuration.UserSecret != "" {
 		if err := t.updateAccountSettings(); err == nil {
 			return nil
@@ -181,7 +182,7 @@ func (twe TwErrors) String() string {
 	return outstr
 }
 
-func (t *Twitter) UpdateStatus(status string, conf url.Values) (*Tweet, error) {
+func (t *DefaultClient) UpdateStatus(status string, conf url.Values) (*Tweet, error) {
 	conf.Set("status", status)
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, StatusesUpdateURI, conf)
 	if err != nil {
@@ -197,7 +198,7 @@ func (t *Twitter) UpdateStatus(status string, conf url.Values) (*Tweet, error) {
 	return tw, nil
 }
 
-func (t *Twitter) ReTweet(tw *Tweet, conf url.Values) error {
+func (t *DefaultClient) ReTweet(tw *Tweet, conf url.Values) error {
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, fmt.Sprintf(StatusesRetweetURITemplate, tw.IDStr), conf)
 	if err != nil {
 		return err
@@ -208,7 +209,7 @@ func (t *Twitter) ReTweet(tw *Tweet, conf url.Values) error {
 	return nil
 }
 
-func (t *Twitter) UnReTweet(tw *Tweet, conf url.Values) error {
+func (t *DefaultClient) UnReTweet(tw *Tweet, conf url.Values) error {
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, fmt.Sprintf(StatusesUnRetweetURITemplate, tw.IDStr), conf)
 	if err != nil {
 		return err
@@ -219,7 +220,7 @@ func (t *Twitter) UnReTweet(tw *Tweet, conf url.Values) error {
 	return nil
 }
 
-func (t *Twitter) Like(tw *Tweet, conf url.Values) error {
+func (t *DefaultClient) Like(tw *Tweet, conf url.Values) error {
 	conf.Set("id", tw.IDStr)
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, FavoritesCreateURI, conf)
 	if err != nil {
@@ -231,7 +232,7 @@ func (t *Twitter) Like(tw *Tweet, conf url.Values) error {
 	return nil
 }
 
-func (t *Twitter) UnLike(tw *Tweet, conf url.Values) error {
+func (t *DefaultClient) UnLike(tw *Tweet, conf url.Values) error {
 	conf.Set("id", tw.IDStr)
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, FavoritesDestroyURI, conf)
 	if err != nil {
@@ -251,7 +252,7 @@ type FollowerList struct {
 	PreviousCursorStr string `json:"previous_cursor_str"`
 }
 
-func (t *Twitter) ListFollowers(conf url.Values) ([]User, error) {
+func (t *DefaultClient) ListFollowers(conf url.Values) ([]User, error) {
 	data, err := t.oauthFacade.OaRequest(http.MethodGet, FollowersListURI, conf)
 	if err != nil {
 		return nil, err
@@ -266,7 +267,7 @@ func (t *Twitter) ListFollowers(conf url.Values) ([]User, error) {
 	return fl.Users, nil
 }
 
-func (t *Twitter) unmarshalError(data []byte) error {
+func (t *DefaultClient) unmarshalError(data []byte) error {
 	var errList TwErrors
 	_ = json.Unmarshal(data, &errList) // We dont' really care if this fails
 	if len(errList.Errors) > 0 {
@@ -275,14 +276,14 @@ func (t *Twitter) unmarshalError(data []byte) error {
 	return nil
 }
 
-func (t *Twitter) ScreenName() string {
+func (t *DefaultClient) ScreenName() string {
 	if t.accountSettings == nil {
 		return ""
 	}
 	return t.accountSettings.ScreenName
 }
 
-func (t *Twitter) updateAccountSettings() error {
+func (t *DefaultClient) updateAccountSettings() error {
 	raw, err := t.oauthFacade.OaRequest(http.MethodGet, AccountSettingsURI, url.Values{})
 	if err != nil {
 		return err
@@ -296,15 +297,15 @@ func (t *Twitter) updateAccountSettings() error {
 	return json.Unmarshal(raw, &t.accountSettings)
 }
 
-func (t *Twitter) HomeTimeline(conf url.Values) ([]*Tweet, error) {
+func (t *DefaultClient) HomeTimeline(conf url.Values) ([]*Tweet, error) {
 	return t.getTimeline(HomeTimelineURI, conf)
 }
 
-func (t *Twitter) UserTimeline(conf url.Values) ([]*Tweet, error) {
+func (t *DefaultClient) UserTimeline(conf url.Values) ([]*Tweet, error) {
 	return t.getTimeline(UserTimelineURI, conf)
 }
 
-func (t *Twitter) getTimeline(timelineUri string, conf url.Values) ([]*Tweet, error) {
+func (t *DefaultClient) getTimeline(timelineUri string, conf url.Values) ([]*Tweet, error) {
 	rawTweets, err := t.oauthFacade.OaRequest(http.MethodGet, timelineUri, conf)
 	if err != nil {
 		return nil, err
@@ -325,22 +326,25 @@ func (t *Twitter) getTimeline(timelineUri string, conf url.Values) ([]*Tweet, er
 	return timeLine, nil
 }
 
-func (t *Twitter) SetPollerPaused(b bool) {
+func (t *DefaultClient) SetPollerPaused(b bool) {
 	t.pollerPaused = b
 }
 
-func (t *Twitter) StartPoller() chan []*Tweet {
+// StartPoller will periodically poll and add resulting tweets to the given tweet channel
+// When the poller is done (twitter context cancelled) it will close the channel
+func (t *DefaultClient) StartPoller(tweetCh chan<- []*Tweet) {
 	if t.debug {
 		fmt.Println("Poller Started")
 	}
-	tweetCh := make(chan []*Tweet)
 	t.wg.Add(1)
-	go func() {
-		defer t.wg.Done()
+	go func(resultCh chan<- []*Tweet) {
+		defer func() {
+			close(resultCh)
+			t.wg.Done()
+		}()
 		for {
 			select {
 			case <-t.ctx.Done():
-				close(tweetCh)
 				return
 			case <-time.After(t.configuration.PollTimeDuration()):
 				if t.debug {
@@ -360,18 +364,14 @@ func (t *Twitter) StartPoller() chan []*Tweet {
 				if err != nil {
 					fmt.Println("Poll Failure:", err)
 				} else {
-					// get new tweets
-					tweetCh <- tweets
+					resultCh <- tweets
 				}
 			}
 		}
-	}()
-
-	return tweetCh
+	}(tweetCh)
 }
 
-func (t *Twitter) Shutdown() error {
+func (t *DefaultClient) Shutdown() {
 	t.done()
 	t.wg.Wait()
-	return nil
 }

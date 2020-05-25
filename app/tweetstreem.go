@@ -25,18 +25,18 @@ const (
 )
 
 type TweetStreem struct {
-	TwitterConfiguration *twitter.TwitterConfiguration `json:"twitterConfiguration"`
-	TweetTemplate        string                        `json:"tweetTemplate"`
-	TemplateOutputConfig twitter.OutputConfig          `json:"templateOutputConfig"`
-	EnableApi            bool                          `json:"enableApi"`
-	EnableClientLinks    bool                          `json:"enableClientLinks"`
-	ApiPort              int                           `json:"apiPort"`
-	ApiHost              string                        `json:"apiHost"`
-	AutoHome             bool                          `json:"autoHome"`
+	TwitterConfiguration *twitter.Configuration `json:"twitterConfiguration"`
+	TweetTemplate        string                 `json:"tweetTemplate"`
+	TemplateOutputConfig twitter.OutputConfig   `json:"templateOutputConfig"`
+	EnableApi            bool                   `json:"enableApi"`
+	EnableClientLinks    bool                   `json:"enableClientLinks"`
+	ApiPort              int                    `json:"apiPort"`
+	ApiHost              string                 `json:"apiHost"`
+	AutoHome             bool                   `json:"autoHome"`
 
 	api            *Api
 	tweetTemplate  *template.Template
-	twitter        *twitter.Twitter
+	twitter        twitter.Client
 	tweetHistory   map[int]*twitter.Tweet
 	histLock       sync.Mutex
 	lastTweetId    *int32
@@ -61,7 +61,7 @@ func NewTweetStreem(ctx context.Context) *TweetStreem {
 	twctx, cancel := context.WithCancel(ctx)
 	return &TweetStreem{
 		ApiPort:              DefaultPort,
-		TwitterConfiguration: &twitter.TwitterConfiguration{},
+		TwitterConfiguration: &twitter.Configuration{},
 		TemplateOutputConfig: twitter.OutputConfig{
 			MentionHighlightColor: DefaultMentionHighlightColor,
 			HashtagHighlightColor: DefaultHashtagHighlightColor,
@@ -113,7 +113,7 @@ func (t *TweetStreem) initTwitter() error {
 		return err
 	}
 	t.tweetTemplate = tpl
-	t.twitter = twitter.NewTwitter(t.TwitterConfiguration)
+	t.twitter = twitter.NewDefaultClient(t.TwitterConfiguration)
 	return t.twitter.Authorize()
 }
 
@@ -134,7 +134,9 @@ func (t *TweetStreem) signalWatcher() {
 }
 
 func (t *TweetStreem) echoOnPoll() {
-	for tweets := range t.twitter.StartPoller() {
+	tweetCh := make(chan []*twitter.Tweet)
+	t.twitter.StartPoller(tweetCh)
+	for tweets := range tweetCh {
 		t.echoTweets(tweets)
 	}
 }

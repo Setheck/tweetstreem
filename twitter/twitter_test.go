@@ -9,16 +9,15 @@ import (
 	"testing"
 	"time"
 
-	mocks2 "github.com/Setheck/tweetstreem/auth/mocks"
-
+	"github.com/Setheck/tweetstreem/auth/mocks"
 	"github.com/Setheck/tweetstreem/util"
 	"github.com/gomodule/oauth1/oauth"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
-func TestTwitter_ScreenName(t *testing.T) {
-	twitter := &Twitter{}
+func TestDefaultClient_ScreenName(t *testing.T) {
+	twitter := &DefaultClient{}
 	assert.Equal(t, "", twitter.ScreenName())
 
 	screenName := "some screen name"
@@ -26,8 +25,8 @@ func TestTwitter_ScreenName(t *testing.T) {
 	assert.Equal(t, screenName, twitter.ScreenName())
 }
 
-func TestTwitter_SetPollerPaused(t *testing.T) {
-	twitter := &Twitter{}
+func TestDefaultClient_SetPollerPaused(t *testing.T) {
+	twitter := &DefaultClient{}
 	assert.False(t, twitter.pollerPaused)
 
 	twitter.SetPollerPaused(true)
@@ -37,7 +36,41 @@ func TestTwitter_SetPollerPaused(t *testing.T) {
 	assert.False(t, twitter.pollerPaused)
 }
 
-func TestTwitterConfiguration_PollTimeDuration(t *testing.T) {
+func TestDefaultClient_StartPoller(t *testing.T) {
+	// TODO:(smt) complete test
+	pollDuration := 3 * time.Millisecond
+	tweetOutput := createTwitterResponseData(t, []*Tweet{{IDStr: "12345"}})
+	tests := []struct {
+		name  string
+		polls int
+	}{
+		//{"", 0},
+		{"", 1},
+		{"", 5},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			mockOauthFacade := new(mocks.OauthFacade)
+			mockOauthFacade.On("OaRequest",
+				http.MethodGet,
+				HomeTimelineURI,
+				mock.AnythingOfType("url.Values")).
+				Return(tweetOutput, nil)
+
+			duration := pollDuration * time.Duration(test.polls+1)
+			twitter := NewDefaultClient(&Configuration{PollTime: pollDuration.String()})
+			twitter.oauthFacade = mockOauthFacade
+			tweetCh := make(chan []*Tweet, 10)
+			twitter.StartPoller(tweetCh)
+			<-time.After(duration)
+			assert.Len(t, tweetCh, test.polls)
+			twitter.Shutdown()
+			mockOauthFacade.AssertNumberOfCalls(t, "OaRequest", test.polls)
+		})
+	}
+}
+
+func TestConfiguration_PollTimeDuration(t *testing.T) {
 	tests := []struct {
 		name             string
 		expectedDuration time.Duration
@@ -48,13 +81,13 @@ func TestTwitterConfiguration_PollTimeDuration(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			twcfg := &TwitterConfiguration{PollTime: test.name}
+			twcfg := &Configuration{PollTime: test.name}
 			assert.Equal(t, test.expectedDuration, twcfg.PollTimeDuration())
 		})
 	}
 }
 
-func TestTwitter_Authorize(t *testing.T) {
+func TestDefaultClient_Authorize(t *testing.T) {
 	// Replace fmtPrint, to prevent test result status parsing failure
 	fmtPrint = func(a ...interface{}) (n int, err error) { return 0, nil }
 
@@ -77,7 +110,7 @@ func TestTwitter_Authorize(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			mockOauth := new(mocks2.OauthFacade)
+			mockOauth := new(mocks.OauthFacade)
 			mockOauth.On("OaRequest",
 				mock.AnythingOfType("string"),
 				AccountSettingsURI,
@@ -116,7 +149,7 @@ func TestTwitter_Authorize(t *testing.T) {
 
 			util.Stdin = bytes.NewBuffer([]byte(codeInput))
 
-			twitter := NewTwitter(&TwitterConfiguration{})
+			twitter := NewDefaultClient(&Configuration{})
 			twitter.oauthFacade = mockOauth
 
 			err := twitter.Authorize()
@@ -131,17 +164,17 @@ func TestTwitter_Authorize(t *testing.T) {
 	}
 }
 
-func TestTwitter_AlreadyAuth(t *testing.T) {
+func TestDefaultClient_AlreadyAuth(t *testing.T) {
 	userToken, userSecret := "user token", "user secret"
 
-	mockOauth := new(mocks2.OauthFacade)
+	mockOauth := new(mocks.OauthFacade)
 	mockOauth.On("OaRequest",
 		mock.AnythingOfType("string"),
 		AccountSettingsURI,
 		mock.AnythingOfType("url.Values"),
 	).Return(createTwitterResponseData(t, &AccountSettings{}), nil)
 
-	twitter := NewTwitter(&TwitterConfiguration{
+	twitter := NewDefaultClient(&Configuration{
 		UserToken:  userToken,
 		UserSecret: userSecret})
 	twitter.oauthFacade = mockOauth
@@ -161,7 +194,7 @@ func TestNewUrlValues(t *testing.T) {
 	assert.Equal(t, uvs, defaultValues)
 }
 
-func TestTwitter_UpdateStatus(t *testing.T) {
+func TestDefaultClient_UpdateStatus(t *testing.T) {
 	status := "testing"
 	resultTweet := &Tweet{Text: status}
 
@@ -179,7 +212,7 @@ func TestTwitter_UpdateStatus(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 
-			mockOauth := new(mocks2.OauthFacade)
+			mockOauth := new(mocks.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodPost,
 				StatusesUpdateURI,
@@ -188,7 +221,7 @@ func TestTwitter_UpdateStatus(t *testing.T) {
 				}),
 			).Return(test.tweetData, test.tweetError)
 
-			twitter := &Twitter{}
+			twitter := &DefaultClient{}
 			twitter.oauthFacade = mockOauth
 			tweet, err := twitter.UpdateStatus(status, url.Values{})
 			if test.expectError {
@@ -201,7 +234,7 @@ func TestTwitter_UpdateStatus(t *testing.T) {
 	}
 }
 
-func TestTwitter_ReTweet(t *testing.T) {
+func TestDefaultClient_ReTweet(t *testing.T) {
 	tweet := &Tweet{IDStr: "123"}
 
 	tests := []struct {
@@ -216,7 +249,7 @@ func TestTwitter_ReTweet(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			mockOauth := new(mocks2.OauthFacade)
+			mockOauth := new(mocks.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodPost,
 				mock.MatchedBy(func(str string) bool {
@@ -225,7 +258,7 @@ func TestTwitter_ReTweet(t *testing.T) {
 				mock.AnythingOfType("url.Values"),
 			).Return(test.tweetData, test.tweetError)
 
-			twitter := &Twitter{}
+			twitter := &DefaultClient{}
 			twitter.oauthFacade = mockOauth
 			err := twitter.ReTweet(tweet, url.Values{})
 			if test.expectError {
@@ -237,7 +270,7 @@ func TestTwitter_ReTweet(t *testing.T) {
 	}
 }
 
-func TestTwitter_UnReTweet(t *testing.T) {
+func TestDefaultClient_UnReTweet(t *testing.T) {
 	tweet := &Tweet{IDStr: "123"}
 
 	tests := []struct {
@@ -252,7 +285,7 @@ func TestTwitter_UnReTweet(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			mockOauth := new(mocks2.OauthFacade)
+			mockOauth := new(mocks.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodPost,
 				mock.MatchedBy(func(str string) bool {
@@ -261,7 +294,7 @@ func TestTwitter_UnReTweet(t *testing.T) {
 				mock.AnythingOfType("url.Values"),
 			).Return(test.tweetData, test.tweetError)
 
-			twitter := &Twitter{}
+			twitter := &DefaultClient{}
 			twitter.oauthFacade = mockOauth
 			err := twitter.UnReTweet(tweet, url.Values{})
 			if test.expectError {
@@ -273,7 +306,7 @@ func TestTwitter_UnReTweet(t *testing.T) {
 	}
 }
 
-func TestTwitter_Like(t *testing.T) {
+func TestDefaultClient_Like(t *testing.T) {
 	tweet := &Tweet{IDStr: "123"}
 
 	tests := []struct {
@@ -288,14 +321,14 @@ func TestTwitter_Like(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			mockOauth := new(mocks2.OauthFacade)
+			mockOauth := new(mocks.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodPost,
 				FavoritesCreateURI,
 				mock.AnythingOfType("url.Values"),
 			).Return(test.tweetData, test.tweetError)
 
-			twitter := &Twitter{}
+			twitter := &DefaultClient{}
 			twitter.oauthFacade = mockOauth
 			err := twitter.Like(tweet, url.Values{})
 			if test.expectError {
@@ -307,7 +340,7 @@ func TestTwitter_Like(t *testing.T) {
 	}
 }
 
-func TestTwitter_UnLike(t *testing.T) {
+func TestDefaultClient_UnLike(t *testing.T) {
 	tweet := &Tweet{IDStr: "123"}
 
 	tests := []struct {
@@ -322,14 +355,14 @@ func TestTwitter_UnLike(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			mockOauth := new(mocks2.OauthFacade)
+			mockOauth := new(mocks.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodPost,
 				FavoritesDestroyURI,
 				mock.AnythingOfType("url.Values"),
 			).Return(test.tweetData, test.tweetError)
 
-			twitter := &Twitter{}
+			twitter := &DefaultClient{}
 			twitter.oauthFacade = mockOauth
 			err := twitter.UnLike(tweet, url.Values{})
 			if test.expectError {
@@ -341,7 +374,7 @@ func TestTwitter_UnLike(t *testing.T) {
 	}
 }
 
-func TestTwitter_ListFollowers(t *testing.T) {
+func TestDefaultClient_ListFollowers(t *testing.T) {
 	expectedFollowers := []User{{
 		Id:         123,
 		IdStr:      "123",
@@ -365,14 +398,14 @@ func TestTwitter_ListFollowers(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 
-			mockOauth := new(mocks2.OauthFacade)
+			mockOauth := new(mocks.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodGet,
 				FollowersListURI,
 				mock.AnythingOfType("url.Values"),
 			).Return(test.tweetData, test.tweetError)
 
-			twitter := &Twitter{}
+			twitter := &DefaultClient{}
 			twitter.oauthFacade = mockOauth
 			followers, err := twitter.ListFollowers(url.Values{})
 			if test.expectError {
@@ -385,7 +418,7 @@ func TestTwitter_ListFollowers(t *testing.T) {
 	}
 }
 
-func TestTwitter_UserTimeline(t *testing.T) {
+func TestDefaultClient_UserTimeline(t *testing.T) {
 	expectedTweets := []*Tweet{
 		{ID: 123, IDStr: "123"},
 		{ID: 1243, IDStr: "1243"},
@@ -407,14 +440,14 @@ func TestTwitter_UserTimeline(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 
-			mockOauth := new(mocks2.OauthFacade)
+			mockOauth := new(mocks.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodGet,
 				UserTimelineURI,
 				mock.AnythingOfType("url.Values"),
 			).Return(test.tweetData, test.tweetError)
 
-			twitter := &Twitter{}
+			twitter := &DefaultClient{}
 			twitter.oauthFacade = mockOauth
 			tweets, err := twitter.UserTimeline(url.Values{})
 			if test.expectError {
@@ -428,7 +461,7 @@ func TestTwitter_UserTimeline(t *testing.T) {
 	}
 }
 
-func TestTwitter_HomeTimeline(t *testing.T) {
+func TestDefaultClient_HomeTimeline(t *testing.T) {
 	expectedTweets := []*Tweet{
 		{ID: 123, IDStr: "123"},
 		{ID: 1243, IDStr: "1243"},
@@ -450,14 +483,14 @@ func TestTwitter_HomeTimeline(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 
-			mockOauth := new(mocks2.OauthFacade)
+			mockOauth := new(mocks.OauthFacade)
 			mockOauth.On("OaRequest",
 				http.MethodGet,
 				HomeTimelineURI,
 				mock.AnythingOfType("url.Values"),
 			).Return(test.tweetData, test.tweetError)
 
-			twitter := &Twitter{}
+			twitter := &DefaultClient{}
 			twitter.oauthFacade = mockOauth
 			tweets, err := twitter.HomeTimeline(url.Values{})
 			if test.expectError {
