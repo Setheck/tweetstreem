@@ -35,10 +35,7 @@ type ClientProvider interface {
 	DialHTTP(string, string) (RpcClient, error)
 }
 
-var rpcDialHTTP = func(network, address string) (RpcClient, error) {
-	return rpc.DialHTTP(network, address)
-}
-
+var rpcDialHTTP = func(network, address string) (RpcClient, error) { return rpc.DialHTTP(network, address) }
 var openUrlLocal = util.OpenBrowser
 
 func (t RemoteClient) RpcCall(str string) error {
