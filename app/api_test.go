@@ -7,9 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/mock"
-
 	"github.com/Setheck/tweetstreem/app/mocks"
+	"github.com/stretchr/testify/mock"
 )
 
 type TestReceiver struct {

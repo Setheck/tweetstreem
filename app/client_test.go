@@ -3,24 +3,10 @@ package app
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/Setheck/tweetstreem/app/mocks"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
-
-func Test(t *testing.T) {
-	tests := []struct {
-		name string
-	}{
-		// TODO: test cases
-	}
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-
-		})
-	}
-}
 
 func TestRemoteClient_RpcCall(t *testing.T) {
 	tests := []struct {
