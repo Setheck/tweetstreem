@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"runtime"
+	"sort"
 	"strings"
 )
 
@@ -38,4 +39,38 @@ func (c terminalColors) Code(color string) string {
 
 func (c terminalColors) Colorize(color, str string) string {
 	return fmt.Sprint(c.Code(color), str, c.Code("reset"))
+}
+
+type HighlightEntity struct {
+	StartIdx int
+	EndIdx   int
+	Color    string
+}
+
+type HighlightEntityList []HighlightEntity
+
+func (l HighlightEntityList) Len() int {
+	return len(l)
+}
+func (l HighlightEntityList) Swap(i, j int) {
+	l[i], l[j] = l[j], l[i]
+}
+func (l HighlightEntityList) Less(i, j int) bool {
+	return l[i].StartIdx < l[j].StartIdx
+}
+
+func HighlightEntities(text string, hlist HighlightEntityList) string {
+	sort.Sort(hlist)
+	rtext := []rune(text)
+	resultText := ""
+	curIdx := 0
+	for _, entry := range hlist {
+		if entry.StartIdx >= curIdx && entry.EndIdx <= len(text) && entry.StartIdx <= entry.EndIdx {
+			resultText += string(rtext[curIdx:entry.StartIdx])
+			resultText += Colors.Colorize(entry.Color, string(rtext[entry.StartIdx:entry.EndIdx]))
+			curIdx = entry.EndIdx
+		}
+	}
+	resultText += string(rtext[curIdx:])
+	return resultText
 }

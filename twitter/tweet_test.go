@@ -157,28 +157,90 @@ func TestTweet_RelativeTweetTime(t *testing.T) {
 }
 
 func TestTweet_TweetText(t *testing.T) {
-	highLight := OutputConfig{MentionHighlightColor: "blue", HashtagHighlightColor: "blue"}
+	highLight := OutputConfig{MentionHighlightColor: "blue", HashtagHighlightColor: "blue", Highlight: true}
 	noHighLight := OutputConfig{}
+	expectedTweetText := "this #is some @User tweet text"
+	expectedHighlightedTweetText := "this \x1b[34m#is\x1b[0m some \x1b[34m@User\x1b[0m tweet text"
+	hashTag := HashTag{
+		Indices: []int{5, 8},
+		Text:    "is",
+	}
+	userMention := UserMention{
+		Name:       "UserName",
+		Indices:    []int{14, 19},
+		ScreenName: "User",
+	}
 
 	tests := []struct {
 		name       string
-		text       string
 		outputConf OutputConfig
-		highlight  bool
 	}{
-		{"no colors", "", noHighLight, false},
-		{"no colors", "", highLight, true},
+		{"no highlight", noHighLight},
+		{"highlight", highLight},
+		{"retweet no highlight", noHighLight},
+		{"retweet highlight", highLight},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			tweet := &Tweet{}
-			tweet.Text = test.text
+			tweet := createTweetWithEntities(t, []HashTag{hashTag}, []UserMention{userMention})
+			tweet.Text = expectedTweetText
 			twText := tweet.TweetText(test.outputConf)
-			assert.Equal(t, "", twText)
+			if test.outputConf.Highlight {
+				assert.Equal(t, expectedHighlightedTweetText, twText)
+			} else {
+				assert.Equal(t, expectedTweetText, twText)
+			}
 
-			tweet.FullText = test.text
+			tweet.FullText = expectedTweetText
 			twText = tweet.TweetText(test.outputConf)
-			assert.Equal(t, "", twText)
+			if test.outputConf.Highlight {
+				assert.Equal(t, expectedHighlightedTweetText, twText)
+			} else {
+				assert.Equal(t, expectedTweetText, twText)
+			}
 		})
 	}
+
+	retweetPrefix := "RT @"
+	expectedReTweetTweetText := "this #is some @User tweet text"
+	expectedReTweetHighlightedTweetText := "this \x1b[34m#is\x1b[0m some \x1b[34m@User\x1b[0m tweet text"
+	retweetTests := []struct {
+		name      string
+		highlight bool
+	}{
+		{"retweet no highlight", false},
+		{"retweet highlight", true},
+	}
+	for _, test := range retweetTests {
+		t.Run(test.name, func(t *testing.T) {
+			parentTweet := &Tweet{}
+			tweet := createTweetWithEntities(t, []HashTag{hashTag}, []UserMention{userMention})
+			tweet.User = User{Name: "testUser"}
+			parentTweet.ReTweetedStatus = tweet
+
+			if test.highlight {
+				twText := parentTweet.TweetText(highLight)
+				assert.Equal(t, expectedHighlightedTweetText, twText)
+
+				tweet.FullText = expectedTweetText
+				twText = parentTweet.TweetText(highLight)
+				assert.Equal(t, expectedHighlightedTweetText, twText)
+			} else {
+				twText := parentTweet.TweetText(noHighLight)
+				assert.Equal(t, expectedTweetText, twText)
+
+				tweet.FullText = expectedTweetText
+				twText = parentTweet.TweetText(noHighLight)
+				assert.Equal(t, expectedTweetText, twText)
+			}
+		})
+	}
+}
+
+func createTweetWithEntities(t *testing.T, hashtags []HashTag, userMentions []UserMention) *Tweet {
+	t.Helper()
+	entities := Entities{}
+	entities.HashTags = hashtags
+	entities.UserMention = userMentions
+	return &Tweet{Entities: entities}
 }

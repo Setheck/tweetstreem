@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"runtime"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTerminalColors_Code(t *testing.T) {
@@ -67,6 +69,65 @@ func TestTerminalColors_Colorize(t *testing.T) {
 					t.Fail()
 				}
 			}
+		})
+	}
+}
+
+func TestHighlightEntities(t *testing.T) {
+	tests := []struct {
+		name     string
+		text     string
+		entities HighlightEntityList
+		want     string
+	}{
+		{
+			"invalid  entity startidx",
+			"test one two three",
+			[]HighlightEntity{{-1, 0, "blue"}},
+			"test one two three",
+		},
+		{
+			"invalid  entity endidx",
+			"test one two three",
+			[]HighlightEntity{{2, 1, "blue"}},
+			"test one two three",
+		},
+		{
+			"no entity highlight",
+			"test one two three",
+			[]HighlightEntity{},
+			"test one two three",
+		},
+		{
+			"single entity highlight",
+			"test one two three",
+			[]HighlightEntity{{5, 8, "red"}},
+			fmt.Sprint("test ", Colors.Colorize("red", "one"), " two three"),
+		},
+		{
+			"multi entity highlight",
+			"test one two three",
+			[]HighlightEntity{
+				{5, 8, "red"},
+				{9, 12, "blue"},
+			},
+			fmt.Sprint("test ",
+				Colors.Colorize("red", "one"),
+				" ",
+				Colors.Colorize("blue", "two"),
+				" three"),
+		},
+		{
+			"whole text highlight",
+			"test one two three",
+			[]HighlightEntity{{0, 18, "red"}},
+			Colors.Colorize("red", "test one two three"),
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got := HighlightEntities(test.text, test.entities)
+			assert.Equal(t, test.want, got)
 		})
 	}
 }
