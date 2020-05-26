@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"runtime"
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -130,4 +131,23 @@ func TestHighlightEntities(t *testing.T) {
 			assert.Equal(t, test.want, got)
 		})
 	}
+}
+
+func TestHighlightEntityList_Sortable(t *testing.T) {
+	first := HighlightEntity{StartIdx: 0}
+	second := HighlightEntity{StartIdx: 5}
+	third := HighlightEntity{StartIdx: 10}
+	sortedExpectation := HighlightEntityList{first, second, third}
+
+	inOrder := HighlightEntityList{first, second, third}
+	sort.Sort(inOrder)
+	assert.Equal(t, sortedExpectation, inOrder)
+
+	outOfOrder := HighlightEntityList{second, third, first}
+	sort.Sort(outOfOrder)
+	assert.Equal(t, sortedExpectation, outOfOrder)
+
+	reversed := HighlightEntityList{third, second, first}
+	sort.Sort(reversed)
+	assert.Equal(t, sortedExpectation, reversed)
 }

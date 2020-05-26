@@ -201,9 +201,9 @@ func TestTweet_TweetText(t *testing.T) {
 		})
 	}
 
-	retweetPrefix := "RT @"
-	expectedReTweetTweetText := "this #is some @User tweet text"
-	expectedReTweetHighlightedTweetText := "this \x1b[34m#is\x1b[0m some \x1b[34m@User\x1b[0m tweet text"
+	testUserScreenName := "testUser"
+	expectedReTweetTweetText := "RT @testUser: this #is some @User tweet text"
+	expectedReTweetHighlightedTweetText := "RT \x1b[34m@testUser\x1b[0m: this \x1b[34m#is\x1b[0m some \x1b[34m@User\x1b[0m tweet text"
 	retweetTests := []struct {
 		name      string
 		highlight bool
@@ -215,23 +215,24 @@ func TestTweet_TweetText(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			parentTweet := &Tweet{}
 			tweet := createTweetWithEntities(t, []HashTag{hashTag}, []UserMention{userMention})
-			tweet.User = User{Name: "testUser"}
+			tweet.User = User{ScreenName: testUserScreenName}
+			tweet.Text = expectedTweetText
 			parentTweet.ReTweetedStatus = tweet
 
 			if test.highlight {
 				twText := parentTweet.TweetText(highLight)
-				assert.Equal(t, expectedHighlightedTweetText, twText)
+				assert.Equal(t, expectedReTweetHighlightedTweetText, twText)
 
 				tweet.FullText = expectedTweetText
 				twText = parentTweet.TweetText(highLight)
-				assert.Equal(t, expectedHighlightedTweetText, twText)
+				assert.Equal(t, expectedReTweetHighlightedTweetText, twText)
 			} else {
 				twText := parentTweet.TweetText(noHighLight)
-				assert.Equal(t, expectedTweetText, twText)
+				assert.Equal(t, expectedReTweetTweetText, twText)
 
 				tweet.FullText = expectedTweetText
 				twText = parentTweet.TweetText(noHighLight)
-				assert.Equal(t, expectedTweetText, twText)
+				assert.Equal(t, expectedReTweetTweetText, twText)
 			}
 		})
 	}

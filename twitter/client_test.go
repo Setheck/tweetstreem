@@ -25,6 +25,19 @@ func TestDefaultClient_ScreenName(t *testing.T) {
 	assert.Equal(t, screenName, twitter.ScreenName())
 }
 
+func TestDefaultClient_Configuration(t *testing.T) {
+	twitter := &DefaultClient{}
+	assert.Equal(t, Configuration{}, twitter.Configuration())
+
+	config := Configuration{
+		PollTime:   "",
+		UserToken:  "a token",
+		UserSecret: "a secret",
+	}
+	twitter = NewDefaultClient(config)
+	assert.Equal(t, config, twitter.Configuration())
+}
+
 func TestDefaultClient_SetPollerPaused(t *testing.T) {
 	twitter := &DefaultClient{}
 	assert.False(t, twitter.pollerPaused)
@@ -37,16 +50,15 @@ func TestDefaultClient_SetPollerPaused(t *testing.T) {
 }
 
 func TestDefaultClient_StartPoller(t *testing.T) {
-	// TODO:(smt) complete test
-	pollDuration := 3 * time.Millisecond
+	pollDuration := 5 * time.Millisecond
 	tweetOutput := createTwitterResponseData(t, []*Tweet{{IDStr: "12345"}})
+	sinceId := ""
 	tests := []struct {
 		name  string
 		polls int
 	}{
-		//{"", 0},
-		{"", 1},
-		{"", 5},
+		{"single poll", 1},
+		{"5x polls", 5},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -55,16 +67,26 @@ func TestDefaultClient_StartPoller(t *testing.T) {
 				http.MethodGet,
 				HomeTimelineURI,
 				mock.AnythingOfType("url.Values")).
-				Return(tweetOutput, nil)
+				Return(tweetOutput, nil).
+				Run(func(args mock.Arguments) {
+					values := args.Get(2).(url.Values)
+					sinceId = values.Get("since_id")
+				})
 
-			duration := pollDuration * time.Duration(test.polls+1)
-			twitter := NewDefaultClient(&Configuration{PollTime: pollDuration.String()})
+			duration := pollDuration * time.Duration(test.polls)
+			twitter := NewDefaultClient(Configuration{PollTime: pollDuration.String()})
 			twitter.oauthFacade = mockOauthFacade
+
 			tweetCh := make(chan []*Tweet, 10)
 			twitter.StartPoller(tweetCh)
-			<-time.After(duration)
-			assert.Len(t, tweetCh, test.polls)
+
+			<-time.After(duration + pollDuration)
 			twitter.Shutdown()
+
+			if test.polls > 1 {
+				assert.Equal(t, "12345", sinceId)
+			}
+			assert.Len(t, tweetCh, test.polls)
 			mockOauthFacade.AssertNumberOfCalls(t, "OaRequest", test.polls)
 		})
 	}
@@ -149,7 +171,7 @@ func TestDefaultClient_Authorize(t *testing.T) {
 
 			util.Stdin = bytes.NewBuffer([]byte(codeInput))
 
-			twitter := NewDefaultClient(&Configuration{})
+			twitter := NewDefaultClient(Configuration{})
 			twitter.oauthFacade = mockOauth
 
 			err := twitter.Authorize()
@@ -174,7 +196,7 @@ func TestDefaultClient_AlreadyAuth(t *testing.T) {
 		mock.AnythingOfType("url.Values"),
 	).Return(createTwitterResponseData(t, &AccountSettings{}), nil)
 
-	twitter := NewDefaultClient(&Configuration{
+	twitter := NewDefaultClient(Configuration{
 		UserToken:  userToken,
 		UserSecret: userSecret})
 	twitter.oauthFacade = mockOauth

@@ -71,6 +71,8 @@ func Run() int {
 		_ = ts.homeTimeline()
 	}
 	<-ts.ctx.Done()
+	conf := ts.twitter.Configuration()
+	ts.TwitterConfiguration = &conf
 	saveConfig(ts)
 	fmt.Println("\n'till next time o/ ")
 	return 0

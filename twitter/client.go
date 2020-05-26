@@ -92,7 +92,7 @@ type DefaultClient struct {
 	debug           bool
 }
 
-func NewDefaultClient(conf *Configuration) *DefaultClient {
+func NewDefaultClient(conf Configuration) *DefaultClient {
 	ctx, done := context.WithCancel(context.Background())
 	oaconf := auth.OauthConfig{
 		TemporaryCredentialRequestURI: CredentialRequestURI,
@@ -105,7 +105,7 @@ func NewDefaultClient(conf *Configuration) *DefaultClient {
 		Secret:                        conf.UserSecret,
 	}
 	return &DefaultClient{
-		configuration: conf,
+		configuration: &conf,
 		ctx:           ctx,
 		done:          done,
 		oauthFacade:   auth.NewDefaultOaFacade(oaconf),
@@ -115,7 +115,10 @@ func NewDefaultClient(conf *Configuration) *DefaultClient {
 var openBrowser = util.OpenBrowser
 
 func (t *DefaultClient) Configuration() Configuration {
-	return *t.configuration
+	if t.configuration != nil {
+		return *t.configuration
+	}
+	return Configuration{}
 }
 
 // replace fmt.Print here because it breaks parsing of test status output

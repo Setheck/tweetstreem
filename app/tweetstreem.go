@@ -113,7 +113,7 @@ func (t *TweetStreem) initTwitter() error {
 		return err
 	}
 	t.tweetTemplate = tpl
-	t.twitter = twitter.NewDefaultClient(t.TwitterConfiguration)
+	t.twitter = twitter.NewDefaultClient(*t.TwitterConfiguration)
 	return t.twitter.Authorize()
 }
 
