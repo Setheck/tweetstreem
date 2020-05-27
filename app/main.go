@@ -62,10 +62,10 @@ func Run() int {
 	}
 
 	go ts.watchTerminalInput()
-	go ts.echoOnPoll()
+	go ts.pollAndEcho()
 	go ts.consumeInput()
 	go ts.outputPrinter()
-	go ts.signalWatcher()
+	go ts.waitForDone()
 
 	if ts.AutoHome {
 		_ = ts.homeTimeline()

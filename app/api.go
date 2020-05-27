@@ -13,6 +13,11 @@ import (
 	_ "net/http/pprof"
 )
 
+type Api interface {
+	Start(rcvr interface{}) error
+	Stop()
+}
+
 type Server interface {
 	ListenAndServe() error
 	Shutdown(ctx context.Context) error
@@ -20,7 +25,7 @@ type Server interface {
 
 var _ Server = &http.Server{}
 
-type Api struct {
+type DefaultApi struct {
 	Port int
 
 	server Server
@@ -32,7 +37,7 @@ type Api struct {
 	errorCount uint64
 }
 
-func NewApi(ctx context.Context, port int, logging bool) *Api {
+func NewApi(ctx context.Context, port int, logging bool) *DefaultApi {
 	server := &http.Server{
 		Addr: fmt.Sprintf(":%d", port),
 		// Good practice to set timeouts to avoid Slowloris attacks.
@@ -45,7 +50,7 @@ func NewApi(ctx context.Context, port int, logging bool) *Api {
 		ctx = context.Background()
 	}
 	ctx, cancel := context.WithCancel(ctx)
-	api := &Api{
+	api := &DefaultApi{
 		Port: port,
 
 		server:  server,
@@ -63,7 +68,7 @@ type RpcServer interface {
 	HandleHTTP(string, string)
 }
 
-func (a *Api) Start(rcvr interface{}) error {
+func (a *DefaultApi) Start(rcvr interface{}) error {
 	if err := rpcServer.Register(rcvr); err != nil {
 		return err
 	}
@@ -73,12 +78,12 @@ func (a *Api) Start(rcvr interface{}) error {
 	return nil
 }
 
-func (a *Api) Stop() {
+func (a *DefaultApi) Stop() {
 	a.cancel()
 	a.wg.Wait()
 }
 
-func (a *Api) handleShutdown() {
+func (a *DefaultApi) handleShutdown() {
 	a.wg.Add(1)
 	defer a.wg.Done()
 	<-a.ctx.Done()
@@ -90,7 +95,7 @@ func (a *Api) handleShutdown() {
 	}
 }
 
-func (a *Api) listenAndServe() {
+func (a *DefaultApi) listenAndServe() {
 	a.log(nil, fmt.Sprint("server active on port:", a.Port))
 	err := a.server.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
@@ -101,7 +106,7 @@ func (a *Api) listenAndServe() {
 
 var Println = log.Println
 
-func (a *Api) log(err error, msg ...string) {
+func (a *DefaultApi) log(err error, msg ...string) {
 	if !a.logging {
 		return
 	}

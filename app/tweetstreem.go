@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"sync"
-	"sync/atomic"
 	"text/template"
 	"time"
 
@@ -17,8 +15,6 @@ import (
 )
 
 const (
-	TweetHistorySize = 100
-
 	DefaultPort                  = 8080
 	DefaultMentionHighlightColor = "blue"
 	DefaultHashtagHighlightColor = "magenta"
@@ -34,12 +30,10 @@ type TweetStreem struct {
 	ApiHost              string                 `json:"apiHost"`
 	AutoHome             bool                   `json:"autoHome"`
 
-	api            *Api
+	api            Api
 	tweetTemplate  *template.Template
 	twitter        twitter.Client
-	tweetHistory   map[int]*twitter.Tweet
-	histLock       sync.Mutex
-	lastTweetId    *int32
+	tweetHistory   *History
 	inputCh        chan string
 	printCh        chan string
 	rpcCh          chan string
@@ -68,8 +62,7 @@ func NewTweetStreem(ctx context.Context) *TweetStreem {
 			Highlight:             true,
 		},
 		TweetTemplate: DefaultTweetTemplate,
-		tweetHistory:  make(map[int]*twitter.Tweet),
-		lastTweetId:   new(int32),
+		tweetHistory:  NewHistory(),
 		inputCh:       make(chan string),
 		printCh:       make(chan string, 5),
 		rpcCh:         make(chan string, 5),
@@ -78,26 +71,11 @@ func NewTweetStreem(ctx context.Context) *TweetStreem {
 	}
 }
 
-func (t *TweetStreem) logTweet(id int, tweet *twitter.Tweet) {
-	t.histLock.Lock()
-	defer t.histLock.Unlock()
-	if id > TweetHistorySize {
-		delete(t.tweetHistory, id-TweetHistorySize)
-	}
-	t.tweetHistory[id] = tweet
-}
-
 func (t *TweetStreem) getHistoryTweet(id int) *twitter.Tweet {
-	t.histLock.Lock()
-	defer t.histLock.Unlock()
-	return t.tweetHistory[id]
-}
-
-func (t *TweetStreem) clearHistory() {
-	t.histLock.Lock()
-	defer t.histLock.Unlock()
-	t.tweetHistory = make(map[int]*twitter.Tweet)
-	atomic.StoreInt32(t.lastTweetId, 0)
+	if tw, ok := t.tweetHistory.Last(id); ok {
+		return tw.(*twitter.Tweet)
+	}
+	return nil
 }
 
 func (t *TweetStreem) initTwitter() error {
@@ -125,7 +103,7 @@ func (t *TweetStreem) initApi() {
 	}
 }
 
-func (t *TweetStreem) signalWatcher() {
+func (t *TweetStreem) waitForDone() {
 	select {
 	case <-t.ctx.Done():
 	case <-util.Signal():
@@ -133,11 +111,11 @@ func (t *TweetStreem) signalWatcher() {
 	}
 }
 
-func (t *TweetStreem) echoOnPoll() {
+func (t *TweetStreem) pollAndEcho() {
 	tweetCh := make(chan []*twitter.Tweet)
 	t.twitter.StartPoller(tweetCh)
 	for tweets := range tweetCh {
-		t.echoTweets(tweets)
+		t.displayTweets(tweets)
 	}
 }
 
@@ -365,8 +343,8 @@ func (t *TweetStreem) timeLine(screenName string) error {
 	if err != nil {
 		return err
 	}
-	t.clearHistory()
-	t.echoTweets(tweets)
+	t.tweetHistory.Clear()
+	t.displayTweets(tweets)
 	return nil
 }
 
@@ -375,8 +353,8 @@ func (t *TweetStreem) homeTimeline() error {
 	if err != nil {
 		return err
 	}
-	t.clearHistory()
-	t.echoTweets(tweets)
+	t.tweetHistory.Clear()
+	t.displayTweets(tweets)
 	return nil
 }
 
@@ -387,8 +365,8 @@ func (t *TweetStreem) userTimeline(screenName string) error {
 	if err != nil {
 		return err
 	}
-	t.clearHistory()
-	t.echoTweets(tweets)
+	t.tweetHistory.Clear()
+	t.displayTweets(tweets)
 	return nil
 }
 
@@ -444,7 +422,7 @@ func (t *TweetStreem) open(isRpc bool, tw *twitter.Tweet, linkIdx int) error {
 
 func (t *TweetStreem) tweet(msg string) string {
 	if len(msg) < 1 {
-		return fmt.Sprintln("Some text is required to tweet")
+		return fmt.Sprintln("some text is required to tweet")
 	}
 	if tw, err := t.twitter.UpdateStatus(msg, twitter.NewUrlValues()); err != nil {
 		return fmt.Sprintln("Error:", err)
@@ -519,16 +497,17 @@ func (t *TweetStreem) unLike(id int) string {
 	}
 }
 
-func (t *TweetStreem) echoTweets(tweets []*twitter.Tweet) {
+var Stdout = os.Stdout
+
+func (t *TweetStreem) displayTweets(tweets []*twitter.Tweet) {
 	for i := len(tweets) - 1; i >= 0; i-- {
 		tweet := tweets[i]
-		atomic.AddInt32(t.lastTweetId, 1)
-		t.logTweet(int(*t.lastTweetId), tweet)
-		if err := t.tweetTemplate.Execute(os.Stdout, struct {
+		t.tweetHistory.Log(tweet)
+		if err := t.tweetTemplate.Execute(Stdout, struct {
 			Id int
 			twitter.TweetTemplateOutput
 		}{
-			Id:                  int(*t.lastTweetId),
+			Id:                  t.tweetHistory.LastIdx(),
 			TweetTemplateOutput: tweet.TemplateOutput(t.TemplateOutputConfig),
 		}); err != nil {
 			t.print(fmt.Sprintln("Error:", err))

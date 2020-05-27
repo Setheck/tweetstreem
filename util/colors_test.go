@@ -24,6 +24,7 @@ func TestTerminalColors_Code(t *testing.T) {
 		{"cyan", "\033[36m"},
 		{"gray", "\033[37m"},
 		{"white", "\033[97m"},
+		{"", ""},
 	}
 	for _, test := range tests {
 		t.Run(test.color, func(t *testing.T) {

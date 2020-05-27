@@ -17,9 +17,7 @@ import (
 var ErrUnsupportedPlatform = fmt.Errorf("unsupported platform")
 
 var GOOS = runtime.GOOS
-var startCommand = func(name string, args ...string) error {
-	return exec.Command(name, args...).Start()
-}
+var startCommand = func(name string, args ...string) error { return exec.Command(name, args...).Start() }
 
 // OpenBrowser opens the given url in a web browser.
 // supports linux, windows, and darwin.
