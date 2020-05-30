@@ -88,3 +88,10 @@ func SplitCommand(str string) (string, []string) {
 	}
 	return strings.ToLower(str), nil
 }
+
+func MustString(s string, err error) string {
+	if err != nil {
+		panic(err)
+	}
+	return s
+}

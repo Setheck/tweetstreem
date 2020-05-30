@@ -186,3 +186,16 @@ func TestOpenBrowser(t *testing.T) {
 		})
 	}
 }
+
+func TestMustString(t *testing.T) {
+	t.Run("panic if err", func(t *testing.T) {
+		assert.Panics(t, func() {
+			MustString("", assert.AnError)
+		})
+	})
+
+	t.Run("returns string when no error", func(t *testing.T) {
+		assert.Equal(t, "", MustString("", nil))
+		assert.Equal(t, "testing", MustString("testing", nil))
+	})
+}

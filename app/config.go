@@ -2,9 +2,10 @@ package app
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/Setheck/tweetstreem/util"
 
 	"github.com/spf13/viper"
 )
@@ -18,33 +19,43 @@ var (
 	ConfigFile = ".tweetstreem"
 )
 
+type Viper interface {
+	SetConfigName(string)
+	SetConfigType(string)
+	AddConfigPath(string)
+	ReadInConfig() error
+	UnmarshalKey(string, interface{}, ...viper.DecoderConfigOption) error
+	WriteConfigAs(string) error
+	Set(string, interface{})
+}
+
+var tsViper Viper = viper.New()
+
 func init() {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		panic(err)
-	}
+	home := util.MustString(os.UserHomeDir())
 	if ConfigPath == "" {
 		ConfigPath = home
 	}
-	viper.SetConfigName(ConfigFile)
-	viper.SetConfigType(ConfigFormat)
-	viper.AddConfigPath(ConfigPath)
+	tsViper.SetConfigName(ConfigFile)
+	tsViper.SetConfigType(ConfigFormat)
+	tsViper.AddConfigPath(ConfigPath)
 }
 
-func loadConfig(obj interface{}) {
-	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println("failed to read config file:", err)
-		return
+func LoadConfig(obj interface{}) error {
+	if err := tsViper.ReadInConfig(); err != nil {
+		return fmt.Errorf("failed to read config file: %w", err)
 	}
-	if err := viper.UnmarshalKey("config", &obj); err != nil {
-		fmt.Println("unmarshalling config failed:", err)
+	if err := tsViper.UnmarshalKey("config", obj); err != nil {
+		return fmt.Errorf("unmarshalling config failed: %w", err)
 	}
+	return nil
 }
 
-func saveConfig(obj interface{}) {
-	viper.Set("config", obj)
+func SaveConfig(obj interface{}) error {
+	tsViper.Set("config", obj)
 	savePath := filepath.Join(ConfigPath, fmt.Sprint(ConfigFile, ".", ConfigFormat))
-	if err := viper.WriteConfigAs(savePath); err != nil {
-		log.Println("saving config to", savePath, "failed:", err)
+	if err := tsViper.WriteConfigAs(savePath); err != nil {
+		return fmt.Errorf("saving config to %q failed: %w", savePath, err)
 	}
+	return nil
 }

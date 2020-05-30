@@ -83,16 +83,14 @@ func (t *TweetStreem) initTwitter() error {
 		"color": util.Colors.Colorize,
 	}
 
-	tpl, err := template.New("").
-		Funcs(templateHelpers).
-		Parse(t.TweetTemplate)
-
-	if err != nil {
+	if tpl, err := template.New("").Funcs(templateHelpers).Parse(t.TweetTemplate); err != nil {
 		return err
+	} else {
+		t.tweetTemplate = tpl
 	}
-	t.tweetTemplate = tpl
+
 	t.twitter = twitter.NewDefaultClient(*t.TwitterConfiguration)
-	return t.twitter.Authorize()
+	return nil
 }
 
 func (t *TweetStreem) initApi() {
@@ -135,7 +133,7 @@ func (t *TweetStreem) watchTerminalInput() {
 	}
 }
 
-func (t *TweetStreem) confirmation(msg, abort string, defaultYes bool) bool {
+func (t *TweetStreem) userConfirmation(msg, abort string, defaultYes bool) bool {
 	if t.nonInteractive {
 		return true
 	}
@@ -165,6 +163,10 @@ func (t *TweetStreem) RpcProcessCommand(args *Arguments, out *Output) error {
 		// no output
 	}
 	return err
+}
+
+func (t *TweetStreem) ProcessCommand(input string) error {
+	return t.processCommand(false, input)
 }
 
 func (t *TweetStreem) processCommand(isRpc bool, input string) error {
@@ -202,7 +204,7 @@ func (t *TweetStreem) processCommand(isRpc bool, input string) error {
 		message := strings.Join(args, " ")
 		confirmMsg := fmt.Sprintln("tweet:", message)
 		abortMsg := "tweet aborted\n"
-		if t.confirmation(confirmMsg, abortMsg, true) {
+		if t.userConfirmation(confirmMsg, abortMsg, true) {
 			msg := t.tweet(message)
 			t.print(msg)
 		}
@@ -211,7 +213,7 @@ func (t *TweetStreem) processCommand(isRpc bool, input string) error {
 			msg := strings.Join(args[1:], " ")
 			confirmMsg := fmt.Sprintf("reply to %d: %s", n, msg)
 			abortMsg := "reply aborted"
-			if t.confirmation(confirmMsg, abortMsg, true) {
+			if t.userConfirmation(confirmMsg, abortMsg, true) {
 				m := t.reply(n, msg)
 				t.print(m)
 			}
@@ -223,7 +225,7 @@ func (t *TweetStreem) processCommand(isRpc bool, input string) error {
 			} else {
 				confirmMsg := fmt.Sprintf("reply to %d: %s", n, msg)
 				abortMsg := "reply aborted"
-				if t.confirmation(confirmMsg, abortMsg, true) {
+				if t.userConfirmation(confirmMsg, abortMsg, true) {
 					m := t.reply(n, msg)
 					t.print(m)
 				}
@@ -273,7 +275,7 @@ func (t *TweetStreem) consumeInput() {
 		case <-t.ctx.Done():
 			return
 		case input := <-t.inputCh:
-			if err := t.processCommand(false, input); err != nil {
+			if err := t.ProcessCommand(input); err != nil {
 				t.print(fmt.Sprintln("Error:", err))
 			}
 		}
@@ -289,6 +291,7 @@ func (t *TweetStreem) rpcResponse(msg string) {
 func (t *TweetStreem) print(msg string) {
 	go func() { t.printCh <- msg }()
 }
+
 func (t *TweetStreem) outputPrinter() {
 	for m := range t.printCh {
 		fmt.Print(m)

@@ -46,13 +46,19 @@ func ParseFlags(ts *TweetStreem) {
 // Run is the main entry point, returns result code
 func Run() int {
 	ts := NewTweetStreem(context.Background())
-	loadConfig(ts)
+	if err := LoadConfig(ts); err != nil {
+		fmt.Println(err)
+	}
 	ParseFlags(ts)
 
 	fmt.Println(Banner)
 	fmt.Println("polling every:", ts.TwitterConfiguration.PollTimeDuration())
 
 	if err := ts.initTwitter(); err != nil {
+		fmt.Println("Error:", err)
+		return 1
+	}
+	if err := ts.twitter.Authorize(); err != nil {
 		fmt.Println("Error:", err)
 		return 1
 	}
@@ -73,7 +79,9 @@ func Run() int {
 	<-ts.ctx.Done()
 	conf := ts.twitter.Configuration()
 	ts.TwitterConfiguration = &conf
-	saveConfig(ts)
+	if err := SaveConfig(ts); err != nil {
+		fmt.Println(err)
+	}
 	fmt.Println("\n'till next time o/ ")
 	return 0
 }
