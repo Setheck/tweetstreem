@@ -78,18 +78,16 @@ func (t *TweetStreem) getHistoryTweet(id int) *twitter.Tweet {
 	return nil
 }
 
-func (t *TweetStreem) initTwitter() error {
+func (t *TweetStreem) ParseTemplate() error {
 	templateHelpers := map[string]interface{}{
 		"color": util.Colors.Colorize,
 	}
-
-	if tpl, err := template.New("").Funcs(templateHelpers).Parse(t.TweetTemplate); err != nil {
+	tpl, err := template.New("").Funcs(templateHelpers).Parse(t.TweetTemplate)
+	if err != nil {
 		return err
-	} else {
-		t.tweetTemplate = tpl
 	}
 
-	t.twitter = twitter.NewDefaultClient(*t.TwitterConfiguration)
+	t.tweetTemplate = tpl
 	return nil
 }
 
@@ -195,7 +193,7 @@ func (t *TweetStreem) processCommand(isRpc bool, input string) error {
 	case "b", "browse":
 		if n, ok := util.FirstNumber(args...); ok {
 			if tw, err := t.findTweet(n); err != nil {
-				fmt.Sprintln(err)
+				t.print(fmt.Sprintln(err))
 			} else {
 				topErr = t.browse(isRpc, tw)
 			}
@@ -407,7 +405,7 @@ func (t *TweetStreem) open(isRpc bool, tw *twitter.Tweet, linkIdx int) error {
 	}
 	var u string
 	ulist := tw.Links()
-	if len(ulist) >= 0 && linkIdx < len(ulist) { // TODO: select url
+	if len(ulist) > 0 && linkIdx < len(ulist) { // TODO: select url
 		u = ulist[linkIdx]
 	} else {
 		return fmt.Errorf("could not find link for index: %d", linkIdx)

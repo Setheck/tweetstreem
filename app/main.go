@@ -7,6 +7,8 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	"github.com/Setheck/tweetstreem/twitter"
 )
 
 var (
@@ -53,15 +55,16 @@ func Run() int {
 
 	fmt.Println(Banner)
 	fmt.Println("polling every:", ts.TwitterConfiguration.PollTimeDuration())
-
-	if err := ts.initTwitter(); err != nil {
-		fmt.Println("Error:", err)
-		return 1
+	if err := ts.ParseTemplate(); err != nil {
+		fmt.Println(err)
 	}
+
+	ts.twitter = twitter.NewDefaultClient(*ts.TwitterConfiguration)
 	if err := ts.twitter.Authorize(); err != nil {
 		fmt.Println("Error:", err)
 		return 1
 	}
+
 	if ts.EnableApi {
 		fmt.Println("api server enabled on port:", ts.ApiPort)
 		ts.initApi()
