@@ -13,10 +13,22 @@ import (
 	_ "net/http/pprof"
 )
 
-type Api struct {
+type Api interface {
+	Start(rcvr interface{}) error
+	Stop()
+}
+
+type Server interface {
+	ListenAndServe() error
+	Shutdown(ctx context.Context) error
+}
+
+var _ Server = &http.Server{}
+
+type DefaultApi struct {
 	Port int
 
-	server *http.Server
+	server Server
 	ctx    context.Context
 	cancel context.CancelFunc
 	wg     sync.WaitGroup
@@ -25,7 +37,7 @@ type Api struct {
 	errorCount uint64
 }
 
-func NewApi(ctx context.Context, port int, logging bool) *Api {
+func NewApi(ctx context.Context, port int, logging bool) *DefaultApi {
 	server := &http.Server{
 		Addr: fmt.Sprintf(":%d", port),
 		// Good practice to set timeouts to avoid Slowloris attacks.
@@ -38,7 +50,7 @@ func NewApi(ctx context.Context, port int, logging bool) *Api {
 		ctx = context.Background()
 	}
 	ctx, cancel := context.WithCancel(ctx)
-	api := &Api{
+	api := &DefaultApi{
 		Port: port,
 
 		server:  server,
@@ -49,21 +61,29 @@ func NewApi(ctx context.Context, port int, logging bool) *Api {
 	return api
 }
 
-func (a *Api) Start(rcvr interface{}) error {
-	if err := rpc.Register(rcvr); err != nil {
+var rpcServer RpcServer = rpc.DefaultServer
+
+type RpcServer interface {
+	Register(interface{}) error
+	HandleHTTP(string, string)
+}
+
+func (a *DefaultApi) Start(rcvr interface{}) error {
+	if err := rpcServer.Register(rcvr); err != nil {
 		return err
 	}
-	rpc.HandleHTTP()
+	rpcServer.HandleHTTP(rpc.DefaultRPCPath, rpc.DefaultDebugPath)
 	go a.handleShutdown()
 	go a.listenAndServe()
 	return nil
 }
 
-func (a *Api) Stop() {
+func (a *DefaultApi) Stop() {
 	a.cancel()
+	a.wg.Wait()
 }
 
-func (a *Api) handleShutdown() {
+func (a *DefaultApi) handleShutdown() {
 	a.wg.Add(1)
 	defer a.wg.Done()
 	<-a.ctx.Done()
@@ -75,8 +95,8 @@ func (a *Api) handleShutdown() {
 	}
 }
 
-func (a *Api) listenAndServe() {
-	a.log(nil, "server active on:", a.server.Addr)
+func (a *DefaultApi) listenAndServe() {
+	a.log(nil, fmt.Sprint("server active on port:", a.Port))
 	err := a.server.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		a.log(err)
@@ -84,14 +104,16 @@ func (a *Api) listenAndServe() {
 	}
 }
 
-func (a *Api) log(err error, msg ...string) {
+var Println = log.Println
+
+func (a *DefaultApi) log(err error, msg ...string) {
 	if !a.logging {
 		return
 	}
 	if err == nil {
-		log.Println(msg)
+		Println(msg)
 	} else {
 		atomic.AddUint64(&a.errorCount, 1)
-		log.Println("[ERROR]", msg, "err:", err)
+		Println("[ERROR]", msg, "err:", err)
 	}
 }

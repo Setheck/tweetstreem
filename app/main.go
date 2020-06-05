@@ -1,11 +1,14 @@
 package app
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/Setheck/tweetstreem/twitter"
 )
 
 var (
@@ -44,33 +47,44 @@ func ParseFlags(ts *TweetStreem) {
 
 // Run is the main entry point, returns result code
 func Run() int {
-	ts := NewTweetStreem(nil)
-	loadConfig(ts)
+	ts := NewTweetStreem(context.Background())
+	if err := LoadConfig(ts); err != nil {
+		fmt.Println(err)
+	}
 	ParseFlags(ts)
 
 	fmt.Println(Banner)
 	fmt.Println("polling every:", ts.TwitterConfiguration.PollTimeDuration())
+	if err := ts.ParseTemplate(); err != nil {
+		fmt.Println(err)
+	}
 
-	if err := ts.initTwitter(); err != nil {
+	ts.twitter = twitter.NewDefaultClient(*ts.TwitterConfiguration)
+	if err := ts.twitter.Authorize(); err != nil {
 		fmt.Println("Error:", err)
 		return 1
 	}
+
 	if ts.EnableApi {
 		fmt.Println("api server enabled on port:", ts.ApiPort)
 		ts.initApi()
 	}
 
 	go ts.watchTerminalInput()
-	go ts.echoOnPoll()
+	go ts.pollAndEcho()
 	go ts.consumeInput()
 	go ts.outputPrinter()
-	go ts.signalWatcher()
+	go ts.waitForDone()
 
 	if ts.AutoHome {
 		_ = ts.homeTimeline()
 	}
 	<-ts.ctx.Done()
-	saveConfig(ts)
+	conf := ts.twitter.Configuration()
+	ts.TwitterConfiguration = &conf
+	if err := SaveConfig(ts); err != nil {
+		fmt.Println(err)
+	}
 	fmt.Println("\n'till next time o/ ")
 	return 0
 }

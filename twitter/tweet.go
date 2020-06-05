@@ -1,11 +1,17 @@
-package app
+package twitter
 
 import (
 	"fmt"
 	"html"
-	"sort"
 	"strconv"
 	"time"
+
+	"github.com/Setheck/tweetstreem/util"
+)
+
+const (
+	CreatedAtTimeLayout           = "Mon Jan 2 15:04:05 -0700 2006"
+	RelativeTweetTimeOutputLayout = "01/02/2006 15:04:05"
 )
 
 type HashTag struct {
@@ -164,6 +170,7 @@ type TweetTemplateOutput struct {
 type OutputConfig struct {
 	MentionHighlightColor string
 	HashtagHighlightColor string
+	Highlight             bool
 }
 
 func (t *Tweet) TemplateOutput(config OutputConfig) TweetTemplateOutput {
@@ -173,93 +180,63 @@ func (t *Tweet) TemplateOutput(config OutputConfig) TweetTemplateOutput {
 		RelativeTweetTime: t.RelativeTweetTime(),
 		ReTweetCount:      strconv.Itoa(t.ReTweetCount),
 		FavoriteCount:     strconv.Itoa(t.FavoriteCount),
-		App:               ExtractAnchorText(t.Source),
-		TweetText:         t.TweetText(config, true),
+		App:               util.ExtractAnchorText(t.Source),
+		TweetText:         t.TweetText(config),
 	}
 }
 
 func (t *Tweet) RelativeTweetTime() string {
 	tstr := t.CreatedAt
-	tm, err := time.Parse("Mon Jan 2 15:04:05 -0700 2006", t.CreatedAt)
+	tm, err := time.Parse(CreatedAtTimeLayout, t.CreatedAt)
 	if err == nil {
 		since := time.Since(tm)
 		if since < time.Hour*24 {
 			tstr = since.Truncate(time.Second).String() + " ago"
 		} else {
-			tstr = tm.Format("01/02/2006 15:04:05")
+			tstr = tm.Format(RelativeTweetTimeOutputLayout)
 		}
 	}
 	return tstr
 }
 
-func (t *Tweet) highlightEntities(config OutputConfig) HighlightEntityList {
-	var hlents HighlightEntityList
-	for _, ht := range t.Entities.HashTags {
-		start, end := ht.Indices[0], ht.Indices[1]
-		hlents = append(hlents, HighlightEntity{
-			startIdx: start,
-			endIdx:   end,
-			color:    config.HashtagHighlightColor})
+func (t *Tweet) formatRetweetText(config OutputConfig) string {
+	text := t.ReTweetedStatus.TweetText(config)
+	screenName := fmt.Sprint("@", t.ReTweetedStatus.User.ScreenName)
+	if config.Highlight {
+		screenName = util.Colors.Colorize(config.MentionHighlightColor, screenName)
 	}
-	for _, um := range t.Entities.UserMention {
-		start, end := um.Indices[0], um.Indices[1]
-		hlents = append(hlents, HighlightEntity{
-			startIdx: start,
-			endIdx:   end,
-			color:    config.MentionHighlightColor})
-	}
-	return hlents
+	return fmt.Sprintf("RT %s: %s", screenName, text)
 }
 
-func (t *Tweet) TweetText(config OutputConfig, highlight bool) string {
-	text := ""
+func (t *Tweet) TweetText(config OutputConfig) string {
 	if t.ReTweetedStatus != nil {
-		text = t.ReTweetedStatus.TweetText(config, highlight)
-		screenName := Colors.Colorize(config.MentionHighlightColor, "@"+t.ReTweetedStatus.User.ScreenName)
-		return fmt.Sprintf("RT %s: %s", screenName, text)
+		return t.formatRetweetText(config)
 	}
+
+	text := t.Text
 	if len(t.FullText) > 0 {
 		text = t.FullText
-	} else {
-		text = t.Text
 	}
-	if highlight {
-		list := t.highlightEntities(config)
-		text = highlightEntries(text, list)
+	if config.Highlight {
+		var hlents util.HighlightEntityList
+		for _, ht := range t.Entities.HashTags {
+			start, end := ht.Indices[0], ht.Indices[1]
+			hlents = append(hlents, util.HighlightEntity{
+				StartIdx: start,
+				EndIdx:   end,
+				Color:    config.HashtagHighlightColor})
+		}
+
+		for _, um := range t.Entities.UserMention {
+			start, end := um.Indices[0], um.Indices[1]
+			hlents = append(hlents, util.HighlightEntity{
+				StartIdx: start,
+				EndIdx:   end,
+				Color:    config.MentionHighlightColor})
+		}
+		text = util.HighlightEntities(text, hlents)
 	}
 	return html.UnescapeString(text)
-}
-
-type HighlightEntity struct {
-	startIdx int
-	endIdx   int
-	color    string
-}
-
-type HighlightEntityList []HighlightEntity
-
-func (l HighlightEntityList) Len() int {
-	return len(l)
-}
-func (l HighlightEntityList) Swap(i, j int) {
-	l[i], l[j] = l[j], l[i]
-}
-func (l HighlightEntityList) Less(i, j int) bool {
-	return l[i].startIdx < l[j].startIdx
-}
-
-func highlightEntries(text string, hlist HighlightEntityList) string {
-	sort.Sort(hlist)
-	rtext := []rune(text)
-	resultText := ""
-	position := 0
-	for _, entry := range hlist {
-		resultText += string(rtext[position:entry.startIdx])
-		resultText += Colors.Colorize(entry.color, string(rtext[entry.startIdx:entry.endIdx]))
-		position = entry.endIdx
-	}
-	resultText += string(rtext[position:])
-	return resultText
 }
 
 type SleepTime struct {

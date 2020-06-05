@@ -1,12 +1,15 @@
-package app
+package util
 
 import (
+	"fmt"
 	"os"
 	"reflect"
 	"strings"
 	"syscall"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestExtractAnchorText(t *testing.T) {
@@ -62,6 +65,10 @@ func TestSplitCommand(t *testing.T) {
 		args  []string
 	}{
 		{"happy", "help test", "help", []string{"test"}},
+		{"single word", "oneword", "oneword", nil},
+		{"single word uppercase", "ONEWORD", "oneword", nil},                       // BUG #18
+		{"single all uppercase", "ONE TWO THREE", "one", []string{"TWO", "THREE"}}, // BUG #18
+		{"empty", "", "", nil},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -129,4 +136,66 @@ func TestSingleWordInput(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestOpenBrowser(t *testing.T) {
+	testUrl := fmt.Sprintf("https://some.example.com?dt=%d", time.Now().Unix())
+	tests := []struct {
+		name string
+		os   string
+		url  string
+	}{
+		{"linux open", "linux", testUrl},
+		{"windows open", "windows", testUrl},
+		{"darwin open", "darwin", testUrl},
+		{"unsupported platform", "bsd", testUrl},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			GOOS = test.os
+			var expectedError error
+			switch GOOS {
+			case "linux":
+				startCommand = func(name string, args ...string) error {
+					assert.Equal(t, name, "xdg-open")
+					assert.Equal(t, args, []string{test.url})
+					return nil
+				}
+			case "windows":
+				startCommand = func(name string, args ...string) error {
+					assert.Equal(t, name, "rundll32")
+					assert.Equal(t, args, []string{"url.dll,FileProtocolHandler", test.url})
+					return nil
+				}
+			case "darwin":
+				startCommand = func(name string, args ...string) error {
+					assert.Equal(t, name, "open")
+					assert.Equal(t, args, []string{test.url})
+					return nil
+				}
+			default:
+				startCommand = func(name string, args ...string) error {
+					return nil
+				}
+				expectedError = ErrUnsupportedPlatform
+			}
+			err := OpenBrowser(test.url)
+			if err != nil {
+				assert.Equal(t, err, expectedError)
+			}
+		})
+	}
+}
+
+func TestMustString(t *testing.T) {
+	t.Run("panic if err", func(t *testing.T) {
+		assert.Panics(t, func() {
+			MustString("", assert.AnError)
+		})
+	})
+
+	t.Run("returns string when no error", func(t *testing.T) {
+		assert.Equal(t, "", MustString("", nil))
+		assert.Equal(t, "testing", MustString("testing", nil))
+	})
 }
