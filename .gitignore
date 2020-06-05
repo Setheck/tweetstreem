@@ -1,9 +1,18 @@
+# config files
 .tweetstreem*
-tweetstreem*
-.idea
-tweetstreem
 config.json
 .tweetstreem.json
-setup.sh
+
+# binaries
+tweetstreem*
+tweetstreem
 deploy/
+
+# ide settings
+.idea
+
+# build env
 env.conf
+
+# coverage reports
+coverage.*

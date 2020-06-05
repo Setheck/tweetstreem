@@ -17,6 +17,10 @@ LDFLAGS=-ldflags "-w -s \
 test:
 	go test ./... -cover -race
 
+coverage:
+	go test ./... -coverprofile=coverage.out
+	go tool cover -html=coverage.out -o coverage.html
+
 build: tokencheck test
 	go build ${LDFLAGS} -o tweetstreem
 

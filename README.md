@@ -1,5 +1,7 @@
 TweetStreem
 ---
+![Build - Go](https://github.com/Setheck/tweetstreem/workflows/Build%20-%20Go/badge.svg?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/setheck/tweetstreem)](https://goreportcard.com/report/github.com/setheck/tweetstreem)
+
 A cross platform twitter client for the terminal. 
 Inspired heavily by [rainbowstream](https://github.com/orakaro/rainbowstream)
 
