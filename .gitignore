@@ -3,8 +3,10 @@
 config.json
 .tweetstreem.json
 
+#go exclusion
+!*.go
+
 # binaries
-tweetstreem*
 tweetstreem
 deploy/
 
