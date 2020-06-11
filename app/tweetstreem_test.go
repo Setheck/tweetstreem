@@ -51,16 +51,15 @@ func TestTweetStreem_ProcessCommand_Help(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
-		isRpc bool
 		error bool
 	}{
-		{"help", "help", false, false},
-		{"h", "h", false, false},
+		{"help", "help", false},
+		{"h", "h", false},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			tw := NewTweetStreem(context.TODO())
-			err := tw.processCommand(test.isRpc, test.input)
+			err := tw.ProcessCommand(test.input)
 			if test.error {
 				assert.Error(t, err)
 			} else {
@@ -75,11 +74,10 @@ func TestTweetStreem_ProcessCommand_Pause(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
-		isRpc bool
 		error bool
 	}{
-		{"pause", "pause", false, false},
-		{"p", "p", false, false},
+		{"pause", "pause", false},
+		{"p", "p", false},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -87,7 +85,7 @@ func TestTweetStreem_ProcessCommand_Pause(t *testing.T) {
 			twitterMock.On("SetPollerPaused", mock.AnythingOfType("bool")).Return()
 			tw := NewTweetStreem(context.TODO())
 			tw.twitter = twitterMock
-			err := tw.processCommand(test.isRpc, test.input)
+			err := tw.ProcessCommand(test.input)
 			if test.error {
 				assert.Error(t, err)
 			} else {
@@ -102,11 +100,10 @@ func TestTweetStreem_ProcessCommand_Resume(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
-		isRpc bool
 		error bool
 	}{
-		{"resume", "resume", false, false},
-		{"r", "r", false, false},
+		{"resume", "resume", false},
+		{"r", "r", false},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -114,7 +111,7 @@ func TestTweetStreem_ProcessCommand_Resume(t *testing.T) {
 			twitterMock.On("SetPollerPaused", mock.AnythingOfType("bool")).Return()
 			tw := NewTweetStreem(context.TODO())
 			tw.twitter = twitterMock
-			err := tw.processCommand(test.isRpc, test.input)
+			err := tw.ProcessCommand(test.input)
 			if test.error {
 				assert.Error(t, err)
 			} else {
@@ -129,16 +126,15 @@ func TestTweetStreem_ProcessCommand_Version(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
-		isRpc bool
 		error bool
 	}{
-		{"version", "version", false, false},
-		{"v", "v", false, false},
+		{"version", "version", false},
+		{"v", "v", false},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			tw := NewTweetStreem(context.TODO())
-			err := tw.processCommand(test.isRpc, test.input)
+			err := tw.ProcessCommand(test.input)
 			if test.error {
 				assert.Error(t, err)
 			} else {
@@ -156,11 +152,10 @@ func TestTweetStreem_ProcessCommand_Open(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
-		isRpc bool
 		error bool
 	}{
-		{"open", "open 1", false, false},
-		{"o", "o 1", false, false},
+		{"open", "open 1", false},
+		{"o", "o 1", false},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -176,7 +171,7 @@ func TestTweetStreem_ProcessCommand_Open(t *testing.T) {
 			}
 			tw := NewTweetStreem(context.TODO())
 			tw.tweetHistory.Log(tweet)
-			err := tw.processCommand(test.isRpc, test.input)
+			err := tw.ProcessCommand(test.input)
 			if test.error {
 				assert.Error(t, err)
 			} else {
@@ -194,11 +189,10 @@ func TestTweetStreem_ProcessCommand_Browse(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
-		isRpc bool
 		error bool
 	}{
-		{"browse", "browse 1", false, false},
-		{"b", "b 1", false, false},
+		{"browse", "browse 1", false},
+		{"b", "b 1", false},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -214,7 +208,7 @@ func TestTweetStreem_ProcessCommand_Browse(t *testing.T) {
 			}
 			tw := NewTweetStreem(context.TODO())
 			tw.tweetHistory.Log(tweet)
-			err := tw.processCommand(test.isRpc, test.input)
+			err := tw.ProcessCommand(test.input)
 			if test.error {
 				assert.Error(t, err)
 			} else {
@@ -225,14 +219,14 @@ func TestTweetStreem_ProcessCommand_Browse(t *testing.T) {
 	}
 }
 
-func TestTweetStreem_ProcessCommand_Reply(t *testing.T) {
+func TestTweetStreem_ProcessCommand_Tweet(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
-		isRpc bool
 		error bool
 	}{
-		{"reply", "reply 1 test hello", false, false},
+		{"tweet", "tweet test hello", false},
+		{"t", "t test hello", false},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -251,7 +245,45 @@ func TestTweetStreem_ProcessCommand_Reply(t *testing.T) {
 			tw.twitter = twitterMock
 			tw.tweetHistory.Log(tweet)
 			sendConfirmation(t, tw, true)
-			err := tw.processCommand(test.isRpc, test.input)
+			err := tw.ProcessCommand(test.input)
+			if test.error {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+			verifyPrint(t, tw, "tweet: test hello\n\n")
+			verifyPrint(t, tw, "please confirm (Y/n):")
+			verifyPrint(t, tw, "tweet success! [0000]\n")
+		})
+	}
+}
+
+func TestTweetStreem_ProcessCommand_Reply(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		error bool
+	}{
+		{"reply", "reply 1 test hello", false},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			tweet := &twitter.Tweet{
+				IDStr: "123",
+				User:  twitter.User{ScreenName: "test"},
+			}
+
+			twitterMock := new(mocks.Client)
+			twitterMock.On("UpdateStatus",
+				mock.AnythingOfType("string"),
+				mock.AnythingOfType("url.Values")).
+				Return(&twitter.Tweet{IDStr: "0000"}, nil)
+
+			tw := NewTweetStreem(context.TODO())
+			tw.twitter = twitterMock
+			tw.tweetHistory.Log(tweet)
+			sendConfirmation(t, tw, true)
+			err := tw.ProcessCommand(test.input)
 			if test.error {
 				assert.Error(t, err)
 			} else {
@@ -275,10 +307,9 @@ func TestTweetStreem_ProcessCommand_CBReply(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
-		isRpc bool
 		error bool
 	}{
-		{"cbreply", "cbreply 1", false, false},
+		{"cbreply", "cbreply 1", false},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -297,7 +328,7 @@ func TestTweetStreem_ProcessCommand_CBReply(t *testing.T) {
 			tw.twitter = twitterMock
 			tw.tweetHistory.Log(tweet)
 			sendConfirmation(t, tw, true)
-			err := tw.processCommand(test.isRpc, test.input)
+			err := tw.ProcessCommand(test.input)
 			if test.error {
 				assert.Error(t, err)
 			} else {
@@ -306,6 +337,287 @@ func TestTweetStreem_ProcessCommand_CBReply(t *testing.T) {
 			verifyPrint(t, tw, "reply to 1: test hello\n")
 			verifyPrint(t, tw, "please confirm (Y/n):")
 			verifyPrint(t, tw, "tweet success! [0000]\n")
+		})
+	}
+}
+
+func TestTweetStreem_ProcessCommand_UnRetweet(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		error bool
+	}{
+		{"unretweet", "unretweet 1", false},
+		{"urt", "urt 1", false},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			tweet := &twitter.Tweet{
+				IDStr: "123",
+				User:  twitter.User{ScreenName: "test"},
+			}
+
+			twitterMock := new(mocks.Client)
+			twitterMock.On("UnReTweet",
+				tweet,
+				mock.AnythingOfType("url.Values")).
+				Return(nil)
+
+			tw := NewTweetStreem(context.TODO())
+			tw.twitter = twitterMock
+			tw.tweetHistory.Log(tweet)
+			err := tw.ProcessCommand(test.input)
+			if test.error {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+			verifyPrint(t, tw, "tweet by @test unretweeted\n")
+		})
+	}
+}
+
+func TestTweetStreem_ProcessCommand_ReTweet(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		error bool
+	}{
+		{"retweet", "retweet 1", false},
+		{"rt", "rt 1", false},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			tweet := &twitter.Tweet{
+				IDStr: "123",
+				User:  twitter.User{ScreenName: "test"},
+			}
+
+			twitterMock := new(mocks.Client)
+			twitterMock.On("ReTweet",
+				tweet,
+				mock.AnythingOfType("url.Values")).
+				Return(nil)
+
+			tw := NewTweetStreem(context.TODO())
+			tw.twitter = twitterMock
+			tw.tweetHistory.Log(tweet)
+			sendConfirmation(t, tw, true)
+			err := tw.ProcessCommand(test.input)
+			if test.error {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+			verifyPrint(t, tw, "tweet by @test retweeted\n")
+		})
+	}
+}
+
+func TestTweetStreem_ProcessCommand_UnLike(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		error bool
+	}{
+		{"unlike", "unlike 1", false},
+		{"ul", "ul 1", false},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			tweet := &twitter.Tweet{
+				IDStr: "123",
+				User:  twitter.User{ScreenName: "test"},
+			}
+
+			twitterMock := new(mocks.Client)
+			twitterMock.On("UnLike",
+				tweet,
+				mock.AnythingOfType("url.Values")).
+				Return(nil)
+
+			tw := NewTweetStreem(context.TODO())
+			tw.twitter = twitterMock
+			tw.tweetHistory.Log(tweet)
+			err := tw.ProcessCommand(test.input)
+			if test.error {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+			verifyPrint(t, tw, "tweet by @test unliked\n")
+		})
+	}
+}
+
+func TestTweetStreem_ProcessCommand_Like(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		error bool
+	}{
+		{"like", "like 1", false},
+		{"li", "li 1", false},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			tweet := &twitter.Tweet{
+				IDStr: "123",
+				User:  twitter.User{ScreenName: "test"},
+			}
+
+			twitterMock := new(mocks.Client)
+			twitterMock.On("Like",
+				tweet,
+				mock.AnythingOfType("url.Values")).
+				Return(nil)
+
+			tw := NewTweetStreem(context.TODO())
+			tw.twitter = twitterMock
+			tw.tweetHistory.Log(tweet)
+			err := tw.ProcessCommand(test.input)
+			if test.error {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+			verifyPrint(t, tw, "tweet by @test liked\n")
+		})
+	}
+}
+
+func TestTweetStreem_ProcessCommand_Config(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		error bool
+	}{
+		{"config", "config", false},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			tw := NewTweetStreem(context.TODO())
+			err := tw.ProcessCommand(test.input)
+			if test.error {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+			verifyPrint(t, tw, tw.config())
+		})
+	}
+}
+
+func TestTweetStreem_ProcessCommand_Me(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		error bool
+	}{
+		{"me", "me", false},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			tweet := &twitter.Tweet{
+				IDStr: "123",
+				User:  twitter.User{ScreenName: "test"},
+				Text:  "something",
+			}
+
+			twitterMock := new(mocks.Client)
+			twitterMock.On("UserTimeline",
+				mock.AnythingOfType("url.Values")).
+				Return([]*twitter.Tweet{tweet}, nil)
+
+			twitterMock.On("ScreenName").
+				Return("test")
+
+			tw := NewTweetStreem(context.TODO())
+			if err := tw.ParseTemplate(); err != nil {
+				assert.NoError(t, err)
+			}
+			tw.twitter = twitterMock
+
+			err := tw.ProcessCommand(test.input)
+			if test.error {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+			verifyPrint(t, tw, "\n\x1b[36m\x1b[0m \x1b[32m@\x1b[0m\x1b[32mtest\x1b[0m \x1b[35m\x1b[0m\n"+
+				"id:1 \x1b[36mrt:\x1b[0m\x1b[36m0\x1b[0m \x1b[31m♥:\x1b[0m\x1b[31m0\x1b[0m via \x1b[34m\x1b[0m\n"+
+				"something\n")
+		})
+	}
+}
+
+func TestTweetStreem_ProcessCommand_Home(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		error bool
+	}{
+		{"home", "home", false},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			tweet := &twitter.Tweet{
+				IDStr: "123",
+				User:  twitter.User{ScreenName: "test"},
+				Text:  "something",
+			}
+
+			twitterMock := new(mocks.Client)
+			twitterMock.On("HomeTimeline",
+				mock.AnythingOfType("url.Values")).
+				Return([]*twitter.Tweet{tweet}, nil)
+
+			twitterMock.On("ScreenName").
+				Return("test")
+
+			tw := NewTweetStreem(context.TODO())
+			if err := tw.ParseTemplate(); err != nil {
+				assert.NoError(t, err)
+			}
+			tw.twitter = twitterMock
+
+			err := tw.ProcessCommand(test.input)
+			if test.error {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+			verifyPrint(t, tw, "\n\x1b[36m\x1b[0m \x1b[32m@\x1b[0m\x1b[32mtest\x1b[0m \x1b[35m\x1b[0m\n"+
+				"id:1 \x1b[36mrt:\x1b[0m\x1b[36m0\x1b[0m \x1b[31m♥:\x1b[0m\x1b[31m0\x1b[0m via \x1b[34m\x1b[0m\n"+
+				"something\n")
+		})
+	}
+}
+
+func TestTweetStreem_ProcessCommand_Quit(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		error bool
+	}{
+		{"quit", "quit", false},
+		{"q", "q", false},
+		{"exit", "exit", false},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			tw := NewTweetStreem(context.TODO())
+			err := tw.ProcessCommand(test.input)
+			if test.error {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+			select {
+			case <-tw.ctx.Done():
+			case <-time.After(time.Millisecond * 10):
+				t.Fail()
+			}
 		})
 	}
 }

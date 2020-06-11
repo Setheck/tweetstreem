@@ -2,6 +2,7 @@ package app
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -546,7 +547,8 @@ func (t *TweetStreem) displayTweets(tweets []*twitter.Tweet) {
 	for i := len(tweets) - 1; i >= 0; i-- {
 		tweet := tweets[i]
 		t.tweetHistory.Log(tweet)
-		if err := t.tweetTemplate.Execute(Stdout, struct {
+		buf := new(bytes.Buffer)
+		if err := t.tweetTemplate.Execute(buf, struct {
 			Id int
 			twitter.TweetTemplateOutput
 		}{
@@ -554,6 +556,8 @@ func (t *TweetStreem) displayTweets(tweets []*twitter.Tweet) {
 			TweetTemplateOutput: tweet.TemplateOutput(t.TemplateOutputConfig),
 		}); err != nil {
 			t.print(fmt.Sprintln("Error:", err))
+		} else {
+			t.print(buf.String())
 		}
 	}
 }
