@@ -182,13 +182,13 @@ func (t *TweetStreem) processCommand(isRpc bool, input string) error {
 	case "o", "open":
 		return t.commandOpen(isRpc, args...)
 	case "b", "browse":
-		return t.commandOpen(isRpc, args...)
+		return t.commandBrowse(isRpc, args...)
 	case "t", "tweet":
 		t.commandTweet(isRpc, args...)
 	case "reply":
 		t.commandReply(args...)
 	case "cbreply":
-		t.clipBoardReply()
+		t.clipBoardReply(args...)
 	case "urt", "unretweet":
 		t.commandUnReTweet(args...)
 	case "rt", "retweet":
@@ -233,7 +233,11 @@ func (t *TweetStreem) rpcResponse(msg string) {
 }
 
 func (t *TweetStreem) print(msg string) {
-	go func() { t.printCh <- msg }()
+	select {
+	case t.printCh <- msg:
+	case <-time.After(time.Millisecond * 500):
+		fmt.Println("Error dropped print: ", msg)
+	}
 }
 
 func (t *TweetStreem) outputPrinter() {
@@ -336,6 +340,9 @@ func (t *TweetStreem) commandBrowse(isRpc bool, args ...string) error {
 	return fmt.Errorf("invalid tweet id")
 }
 
+// test point
+var openBrowser = util.OpenBrowser
+
 func (t *TweetStreem) browse(isRpc bool, tw *twitter.Tweet) error {
 	if tw == nil {
 		return fmt.Errorf("invalit tweet")
@@ -345,7 +352,7 @@ func (t *TweetStreem) browse(isRpc bool, tw *twitter.Tweet) error {
 		t.rpcResponse(u)
 	} else {
 		t.print(fmt.Sprintln("opening in browser:", u))
-		if err := util.OpenBrowser(u); err != nil {
+		if err := openBrowser(u); err != nil {
 			return fmt.Errorf("failed to open %q in browser: %w", u, err)
 		}
 	}
@@ -375,18 +382,16 @@ func (t *TweetStreem) open(isRpc bool, tw *twitter.Tweet, linkIdx int) error {
 	if linkIdx < 1 {
 		linkIdx = 0
 	}
-	var u string
 	ulist := tw.Links()
-	if len(ulist) > 0 && linkIdx < len(ulist) { // TODO: select url
-		u = ulist[linkIdx]
-	} else {
+	if linkIdx >= len(ulist) {
 		return fmt.Errorf("could not find link for index: %d", linkIdx)
 	}
+	u := ulist[linkIdx]
 	if t.EnableClientLinks && t.EnableApi && isRpc {
 		t.rpcResponse(u)
 	} else {
 		t.print(fmt.Sprintln("opening in browser:", u))
-		if err := util.OpenBrowser(u); err != nil {
+		if err := openBrowser(u); err != nil {
 			return fmt.Errorf("failed to open %q in browser: %w", u, err)
 		}
 	}
