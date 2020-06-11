@@ -7,7 +7,7 @@ config.json
 !*.go
 
 # binaries
-tweetstreem
+tweetstreem*
 deploy/
 
 # ide settings
