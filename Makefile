@@ -15,20 +15,28 @@ LDFLAGS=-ldflags "-w -s \
 	-X ${BASE_PKG}/twitter.AppSecret=${APP_SECRET}"
 
 test:
-	go test ./... -cover -race
+	go test ./... -cover -v -race
 
 coverage:
 	go test ./... -coverprofile=coverage.out
 	go tool cover -html=coverage.out -o coverage.html
 
+build: GOOS=linux
 build: tokencheck test
-	go build ${LDFLAGS} -o tweetstreem
+	GOOS=$(GOOS) go build ${LDFLAGS} -o tweetstreem
 
+buildwin: GOOS=windows
+buildwin: tokencheck test
+	GOOS=$(GOOS) go build ${LDFLAGS} -o tweetstreem_win.exe
+
+buildmac: GOOS=darwin
 buildmac: tokencheck test
-	GOOS=darwin go build ${LDFLAGS} -o tweetstreem_mac
+	GOOS=$(GOOS) go build ${LDFLAGS} -o tweetstreem_mac
 
+buildarm: GOOS=linux
+buildarm: GOARCH=arm
 buildarm: tokencheck test
-	GOOS=linux GOARCH=arm go build ${LDFLAGS} -o tweetstreem_arm
+	GOOS=$(GOOS) go build ${LDFLAGS} -o tweetstreem_arm
 
 tokencheck:
 	@if [ -z "${APP_TOKEN}" ]; then echo "APP_TOKEN Not Set"; exit 1; fi
