@@ -1,9 +1,20 @@
+# config files
 .tweetstreem*
-tweetstreem*
-.idea
-tweetstreem
 config.json
 .tweetstreem.json
-setup.sh
+
+#go exclusion
+!*.go
+
+# binaries
+tweetstreem*
 deploy/
+
+# ide settings
+.idea
+
+# build env
 env.conf
+
+# coverage reports
+coverage.*
