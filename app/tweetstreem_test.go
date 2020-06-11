@@ -257,8 +257,8 @@ func TestTweetStreem_ProcessCommand_Reply(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 			}
-			verifyPrint(t, tw, "please confirm (Y/n):")
 			verifyPrint(t, tw, "reply to 1: test hello\n")
+			verifyPrint(t, tw, "please confirm (Y/n):")
 			verifyPrint(t, tw, "tweet success! [0000]\n")
 		})
 	}
