@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 )
@@ -19,6 +20,28 @@ func appInfo() string {
 		"~~~~~~~~~~~~~~~" + fmt.Sprintln(" built:   ", Built)
 }
 
+type RunMode string
+
+const (
+	version RunMode = "version"
+	client  RunMode = "client"
+	normal  RunMode = "normal"
+)
+
+func ParseFlags() RunMode {
+	verFlg := flag.Bool("v", false, "version")
+	clientFlg := flag.Bool("c", false, "client input")
+	flag.Parse()
+
+	switch {
+	case *verFlg:
+		return version
+	case *clientFlg:
+		return client
+	}
+	return normal
+}
+
 // Run is the main entry point, returns result code
 func Run() int {
 	fmt.Println(appInfo())
@@ -28,8 +51,14 @@ func Run() int {
 		fmt.Println(err)
 	}
 
-	if err := ts.ParseFlags(); err != nil {
-		log.Fatal(err)
+	switch ParseFlags() {
+	case version:
+		return 0
+	case client:
+		if err := ts.RemoteCall(); err != nil {
+			log.Fatal(err)
+		}
+		return 0
 	}
 
 	// print pertinent config on start

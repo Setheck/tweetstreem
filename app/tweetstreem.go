@@ -82,16 +82,11 @@ func (t *TweetStreem) getHistoryTweet(id int) (*twitter.Tweet, error) {
 	return nil, fmt.Errorf("unknown tweet - id:%d", id)
 }
 
-func (t *TweetStreem) ParseFlags() error {
-	clientMode := flag.Bool("c", false, "client input")
-	flag.Parse()
-
-	if *clientMode {
-		client := NewRemoteClient(t, fmt.Sprintf("%s:%d", t.ApiHost, t.ApiPort))
-		input := strings.Join(flag.Args(), " ")
-		if err := client.RpcCall(input); err != nil {
-			return err
-		}
+func (t *TweetStreem) RemoteCall() error {
+	client := NewRemoteClient(t, fmt.Sprintf("%s:%d", t.ApiHost, t.ApiPort))
+	input := strings.Join(flag.Args(), " ")
+	if err := client.RpcCall(input); err != nil {
+		return err
 	}
 	return nil
 }
