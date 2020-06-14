@@ -1,0 +1,20 @@
+{
+  "config": {
+    "twitterConfiguration": {
+      "pollTime": "2m",
+      "userToken": "**********",
+      "userSecret": "**********"
+    },
+    "tweetTemplate": "\n{{ .UserName | color \"cyan\" }} {{ \"@\" | color \"green\" }}{{ .ScreenName | color \"green\" }} {{ .RelativeTweetTime | color \"magenta\" }}\nid:{{ .Id }} {{ \"rt:\" | color \"cyan\" }}{{ .ReTweetCount | color \"cyan\" }} {{ \"♥:\" | color \"red\" }}{{ .FavoriteCount | color \"red\" }} via {{ .App | color \"blue\" }}\n{{ .TweetText }}\n",
+    "templateOutputConfig": {
+      "MentionHighlightColor": "blue",
+      "HashtagHighlightColor": "magenta",
+      "Highlight": true
+    },
+    "enableApi": false,
+    "enableClientLinks": false,
+    "apiPort": 8080,
+    "apiHost": "",
+    "autoHome": false
+  }
+}

@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	"github.com/Setheck/tweetstreem/util"
-
 	"github.com/spf13/viper"
 )
 
@@ -41,18 +40,26 @@ func init() {
 	tsViper.AddConfigPath(ConfigPath)
 }
 
-func LoadConfig(obj interface{}) error {
+func (t *TweetStreem) LoadConfig() error {
 	if err := tsViper.ReadInConfig(); err != nil {
 		return fmt.Errorf("failed to read config file: %w", err)
 	}
-	if err := tsViper.UnmarshalKey("config", obj); err != nil {
+	if err := tsViper.UnmarshalKey("config", t); err != nil {
 		return fmt.Errorf("unmarshalling config failed: %w", err)
+	}
+	if err := t.ParseTemplate(); err != nil {
+		return err
 	}
 	return nil
 }
 
-func SaveConfig(obj interface{}) error {
-	tsViper.Set("config", obj)
+func (t *TweetStreem) SaveConfig() error {
+	if t.twitter != nil {
+		cfg := t.twitter.Configuration()
+		t.TwitterConfiguration = &cfg
+	}
+
+	tsViper.Set("config", t)
 	savePath := filepath.Join(ConfigPath, fmt.Sprint(ConfigFile, ".", ConfigFormat))
 	if err := tsViper.WriteConfigAs(savePath); err != nil {
 		return fmt.Errorf("saving config to %q failed: %w", savePath, err)
