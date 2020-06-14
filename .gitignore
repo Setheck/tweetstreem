@@ -2,6 +2,7 @@
 .tweetstreem*
 config.json
 .tweetstreem.json
+!.tweetstreem.json.example
 
 #go exclusion
 !*.go

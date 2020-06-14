@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"testing"
@@ -130,6 +131,7 @@ func TestTweetStreem_ProcessCommand_Version(t *testing.T) {
 	}{
 		{"version", "version", false},
 		{"v", "v", false},
+		{"info", "info", false},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -140,7 +142,7 @@ func TestTweetStreem_ProcessCommand_Version(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 			}
-			verifyPrint(t, tw, version())
+			verifyPrint(t, tw, appInfo())
 		})
 	}
 }
@@ -622,6 +624,38 @@ func TestTweetStreem_ProcessCommand_Quit(t *testing.T) {
 	}
 }
 
+func TestTweetStreem_InitApi(t *testing.T) {
+	ts := NewTweetStreem(context.TODO())
+	ts.testMode = true
+	err := ts.InitApi()
+	assert.NoError(t, err)
+	assert.NotNil(t, ts.api)
+	assert.True(t, ts.nonInteractive)
+}
+
+func TestTweetStreem_InitTwitter(t *testing.T) {
+	ts := NewTweetStreem(context.TODO())
+	ts.testMode = true
+	err := ts.InitTwitter()
+	assert.NoError(t, err)
+	assert.NotNil(t, ts.twitter)
+}
+
+func TestTweetStreem_StartSubsystems(t *testing.T) {
+	ts := NewTweetStreem(context.Background())
+	ts.testMode = true
+
+	buf := &bytes.Buffer{}
+	Stdin = buf
+	buf.Write([]byte("v\n"))
+	err := ts.StartSubsystems()
+	assert.NoError(t, err)
+	time.AfterFunc(time.Millisecond*20, ts.cancel)
+	verifyPrint(t, ts, "\x1b[31m[@] \x1b[0m")
+	<-ts.ctx.Done()
+	verifyPrint(t, ts, appInfo())
+}
+
 func sendConfirmation(t *testing.T, tw *TweetStreem, confirm bool) {
 	t.Helper()
 	confirmation := "n"
@@ -643,9 +677,21 @@ func verifyResumed(t *testing.T, tw *TweetStreem, twitterMock *mocks.Client) {
 	twitterMock.AssertCalled(t, "SetPollerPaused", false)
 }
 
+var outputCh = make(chan string, 5)
+
+func init() {
+	// overwrite the output writer for test, this allows verifyPrint to work
+	// in both situations, where the output printer is started, and when not.
+	outputWriter = func(s string) {
+		outputCh <- s
+	}
+}
+
 func verifyPrint(t *testing.T, tw *TweetStreem, expected string) {
 	t.Helper()
 	select {
+	case printed := <-outputCh:
+		assert.Equal(t, expected, printed)
 	case printed := <-tw.printCh:
 		assert.Equal(t, expected, printed)
 	case <-time.After(time.Millisecond * 10):

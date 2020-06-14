@@ -17,16 +17,16 @@ func TestLoadConfig_Success(t *testing.T) {
 	viperMock.On("ReadInConfig").
 		Return(nil)
 
-	testObject := &TestObject{"testing"}
+	ts := &TweetStreem{}
 	viperMock.On("UnmarshalKey",
 		"config",
-		mock.MatchedBy(func(input *TestObject) bool {
-			return assert.Equal(t, input, testObject)
+		mock.MatchedBy(func(input *TweetStreem) bool {
+			return assert.Equal(t, input, ts)
 		})).
 		Return(nil)
 	tsViper = viperMock
 
-	err := LoadConfig(testObject)
+	err := ts.LoadConfig()
 	assert.NoError(t, err)
 	viperMock.AssertExpectations(t)
 }
@@ -37,8 +37,8 @@ func TestLoadConfig_ReadConfigFailure(t *testing.T) {
 		Return(assert.AnError)
 	tsViper = viperMock
 
-	testObject := &TestObject{"testing"}
-	err := LoadConfig(testObject)
+	ts := &TweetStreem{}
+	err := ts.LoadConfig()
 	assert.Error(t, err)
 	viperMock.AssertExpectations(t)
 }
@@ -49,15 +49,15 @@ func TestLoadConfig_UnmarshalKeyFailure(t *testing.T) {
 		Return(nil)
 	tsViper = viperMock
 
-	testObject := &TestObject{"testing"}
+	ts := &TweetStreem{}
 	viperMock.On("UnmarshalKey",
 		"config",
-		mock.MatchedBy(func(input *TestObject) bool {
-			return assert.Equal(t, input, testObject)
+		mock.MatchedBy(func(input *TweetStreem) bool {
+			return assert.Equal(t, input, ts)
 		})).
 		Return(assert.AnError)
 
-	err := LoadConfig(testObject)
+	err := ts.LoadConfig()
 	assert.Error(t, err)
 	viperMock.AssertExpectations(t)
 }
@@ -65,12 +65,12 @@ func TestLoadConfig_UnmarshalKeyFailure(t *testing.T) {
 func TestSaveConfig_Success(t *testing.T) {
 	ConfigPath, ConfigFile = "testConfigPath", "testConfigFile"
 	wantPath := "testConfigPath/testConfigFile.json"
-	testObject := &TestObject{"Testing"}
 
+	ts := &TweetStreem{}
 	viperMock := new(mocks.Viper)
 	viperMock.On("Set",
 		"config",
-		testObject).Return()
+		ts).Return()
 
 	viperMock.On("WriteConfigAs",
 		mock.MatchedBy(func(str string) bool {
@@ -78,7 +78,7 @@ func TestSaveConfig_Success(t *testing.T) {
 		})).Return(nil)
 	tsViper = viperMock
 
-	err := SaveConfig(testObject)
+	err := ts.SaveConfig()
 	assert.NoError(t, err)
 	viperMock.AssertExpectations(t)
 }
@@ -86,12 +86,12 @@ func TestSaveConfig_Success(t *testing.T) {
 func TestSaveConfig_WriteConfigAsFailure(t *testing.T) {
 	ConfigPath, ConfigFile = "testConfigPath", "testConfigFile"
 	wantPath := "testConfigPath/testConfigFile.json"
-	testObject := &TestObject{"Testing"}
 
+	ts := &TweetStreem{}
 	viperMock := new(mocks.Viper)
 	viperMock.On("Set",
 		"config",
-		testObject).Return()
+		ts).Return()
 
 	viperMock.On("WriteConfigAs",
 		mock.MatchedBy(func(str string) bool {
@@ -99,7 +99,7 @@ func TestSaveConfig_WriteConfigAsFailure(t *testing.T) {
 		})).Return(assert.AnError)
 	tsViper = viperMock
 
-	err := SaveConfig(testObject)
+	err := ts.SaveConfig()
 	assert.Error(t, err)
 	viperMock.AssertExpectations(t)
 }
