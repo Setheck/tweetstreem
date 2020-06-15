@@ -44,7 +44,7 @@ func ParseFlags() RunMode {
 
 // Run is the main entry point, returns result code
 func Run() int {
-	fmt.Println(appInfo())
+	fmt.Print(appInfo())
 
 	ts := NewTweetStreem(context.Background())
 	if err := ts.LoadConfig(); err != nil {
