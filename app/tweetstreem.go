@@ -345,7 +345,7 @@ func (t *TweetStreem) pause() {
 }
 
 func (t *TweetStreem) timeLine(screenName string) error {
-	conf := twitter.NewUrlValues()
+	conf := twitter.NewURLValues()
 	conf.Set("screen_name", screenName)
 	tweets, err := t.twitter.UserTimeline(conf)
 	if err != nil {
@@ -357,7 +357,7 @@ func (t *TweetStreem) timeLine(screenName string) error {
 }
 
 func (t *TweetStreem) homeTimeline() error {
-	tweets, err := t.twitter.HomeTimeline(twitter.NewUrlValues())
+	tweets, err := t.twitter.HomeTimeline(twitter.NewURLValues())
 	if err != nil {
 		return err
 	}
@@ -367,7 +367,7 @@ func (t *TweetStreem) homeTimeline() error {
 }
 
 func (t *TweetStreem) userTimeline(screenName string) error {
-	cfg := twitter.NewUrlValues()
+	cfg := twitter.NewURLValues()
 	cfg.Set("screen_name", screenName)
 	tweets, err := t.twitter.UserTimeline(cfg)
 	if err != nil {
@@ -404,7 +404,7 @@ func (t *TweetStreem) browse(isRpc bool, tw *twitter.Tweet) error {
 	if tw == nil {
 		return fmt.Errorf("invalit tweet")
 	}
-	u := tw.HtmlLink()
+	u := tw.HTMLLink()
 	if t.EnableClientLinks && t.EnableApi && isRpc {
 		t.rpcResponse(u)
 	} else {
@@ -469,7 +469,7 @@ func (t *TweetStreem) tweet(msg string) string {
 	if len(msg) < 1 {
 		return fmt.Sprintln("some text is required to tweet")
 	}
-	if tw, err := t.twitter.UpdateStatus(msg, twitter.NewUrlValues()); err != nil {
+	if tw, err := t.twitter.UpdateStatus(msg, twitter.NewURLValues()); err != nil {
 		return fmt.Sprintln("Error:", err)
 	} else {
 		return fmt.Sprintf("tweet success! [%s]\n", tw.IDStr)
@@ -512,7 +512,7 @@ func (t *TweetStreem) reply(id int, msg string) string {
 		return fmt.Sprintf("reply must contain the original screen name [%s]\n", tw.User.ScreenName)
 	}
 
-	conf := twitter.NewUrlValues()
+	conf := twitter.NewURLValues()
 	conf.Set("in_reply_to_status_id", tw.IDStr)
 	if tw, err := t.twitter.UpdateStatus(msg, conf); err != nil {
 		return fmt.Sprintln("Error:", err)
@@ -533,7 +533,7 @@ func (t *TweetStreem) reTweet(id int) string {
 	if err != nil {
 		return err.Error()
 	}
-	if err := t.twitter.ReTweet(tw, twitter.NewUrlValues()); err != nil {
+	if err := t.twitter.ReTweet(tw, twitter.NewURLValues()); err != nil {
 		return fmt.Sprintln("Error:", err)
 	} else {
 		return fmt.Sprintf("tweet by @%s retweeted\n", tw.User.ScreenName)
@@ -552,7 +552,7 @@ func (t *TweetStreem) unReTweet(id int) string {
 	if err != nil {
 		return err.Error()
 	}
-	if err := t.twitter.UnReTweet(tw, twitter.NewUrlValues()); err != nil {
+	if err := t.twitter.UnReTweet(tw, twitter.NewURLValues()); err != nil {
 		return fmt.Sprintln("Error:", err)
 	} else {
 		return fmt.Sprintf("tweet by @%s unretweeted\n", tw.User.ScreenName)
@@ -571,7 +571,7 @@ func (t *TweetStreem) like(id int) string {
 	if err != nil {
 		return err.Error()
 	}
-	if err := t.twitter.Like(tw, twitter.NewUrlValues()); err != nil {
+	if err := t.twitter.Like(tw, twitter.NewURLValues()); err != nil {
 		return fmt.Sprintln("Error:", err)
 	} else {
 		return fmt.Sprintf("tweet by @%s liked\n", tw.User.ScreenName)
@@ -590,7 +590,7 @@ func (t *TweetStreem) unLike(id int) string {
 	if err != nil {
 		return err.Error()
 	}
-	if err := t.twitter.UnLike(tw, twitter.NewUrlValues()); err != nil {
+	if err := t.twitter.UnLike(tw, twitter.NewURLValues()); err != nil {
 		return fmt.Sprintln("Error:", err)
 	} else {
 		return fmt.Sprintf("tweet by @%s unliked\n", tw.User.ScreenName)

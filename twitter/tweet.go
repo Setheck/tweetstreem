@@ -10,67 +10,75 @@ import (
 )
 
 const (
-	CreatedAtTimeLayout           = "Mon Jan 2 15:04:05 -0700 2006"
-	RelativeTweetTimeOutputLayout = "01/02/2006 15:04:05"
+	createdAtTimeLayout           = "Mon Jan 2 15:04:05 -0700 2006"
+	relativeTweetTimeOutputLayout = "01/02/2006 15:04:05"
 )
 
+// HashTag - from the twitter api
 type HashTag struct {
 	Indices []int  `json:"indices"`
 	Text    string `json:"text"`
 }
 
+// UserMention - from the twitter api
 type UserMention struct {
 	Name       string `json:"name"`
 	Indices    []int  `json:"indices"`
 	ScreenName string `json:"screen_name"`
-	Id         int64  `json:"id"`
-	IdStr      string `json:"id_str"`
+	ID         int64  `json:"id"`
+	IDStr      string `json:"id_str"`
 }
 
+// Symbol - from the twitter api
 type Symbol struct {
 	// TODO
 }
 
-type Url struct {
-	DisplayUrl  string `json:"display_url"`
-	ExpandedUrl string `json:"expanded_url"`
+// URL - from the twitter api
+type URL struct {
+	DisplayURL  string `json:"display_url"`
+	ExpandedURL string `json:"expanded_url"`
 	Indices     []int  `json:"indices"`
-	Url         string `json:"url"`
+	URL         string `json:"url"`
 }
 
+// Media - from the twitter api
 type Media struct {
-	DisplayUrl    string `json:"display_url"`
-	ExpandedUrl   string `json:"expanded_url"`
-	Id            int64  `json:"id"`
-	IdStr         string `json:"id_str"`
+	DisplayURL    string `json:"display_url"`
+	ExpandedURL   string `json:"expanded_url"`
+	ID            int64  `json:"id"`
+	IDStr         string `json:"id_str"`
 	Indices       []int  `json:"indices"`
-	MediaUrl      string `json:"media_url"`
-	MediaUrlHttps string `json:"media_url_https"`
+	MediaURL      string `json:"media_url"`
+	MediaURLHTTPS string `json:"media_url_https"`
 	//Sizes - TODO
 	Type string `json:"photo"`
-	Url  string `json:"url"`
+	URL  string `json:"url"`
 }
 
+// Entities - from the twitter api
 type Entities struct {
 	HashTags    []HashTag     `json:"hashtags"`
-	Urls        []Url         `json:"urls"`
+	Urls        []URL         `json:"urls"`
 	UserMention []UserMention `json:"user_mentions"`
 	Symbol      []Symbol      `json:"symbols"`
 	Media       []Media       `json:"media"`
 }
 
+// Enrichment - from the twitter api
 type Enrichment struct {
 	// TODO:
 }
 
+// User - from the twitter api
 type User struct {
-	Id                   int64        `json:"id"`
-	IdStr                string       `json:"id_str"`
+	ID                   int64        `json:"id"`
+	IDStr                string       `json:"id_str"`
 	Name                 string       `json:"name"`
 	ScreenName           string       `json:"screen_name"`
 	Location             *string      `json:"location"`
 	Derived              []Enrichment `json:"derived"`
-	Url                  *string      `json:"url"`
+	URL                  *string      `json:"url"`
 	Description          *string      `json:"description"`
 	Protected            bool         `json:"protected"`
 	Verified             bool         `json:"verified"`
@@ -80,30 +88,35 @@ type User struct {
 	FavouritesCount      int          `json:"favourites_count"`
 	StatusesCount        int          `json:"statuses_count"`
 	CreatedAt            string       `json:"created_at"`
-	ProfileBannerUrl     string       `json:"profile_banner_url"`
-	ProfileImageUrlHttps string       `json:"profile_image_url_https"`
+	ProfileBannerURL     string       `json:"profile_banner_url"`
+	ProfileImageURLHTTPS string       `json:"profile_image_url_https"`
 	DefaultProfile       bool         `json:"default_profile"`
 	DefaultProfileImage  bool         `json:"default_profile_image"`
 	WithheldInCountries  []string     `json:"withheld_in_countries"`
 	WithheldScope        []string     `json:"withheld_scope"`
 }
 
+// ReTweetedStatus - from the twitter api
 type ReTweetedStatus struct {
 	// TODO:
 }
 
+// Coordinates - from the twitter api
 type Coordinates struct {
 	// TODO:
 }
 
+// Place - from the twitter api
 type Place struct {
 	// TODO:
 }
 
+// Rule - from the twitter api
 type Rule struct {
 	// TODO:
 }
 
+// Tweet - from the twitter api
 type Tweet struct {
 	CreatedAt            string       `json:"created_at"`
 	ID                   int64        `json:"id"`
@@ -112,16 +125,16 @@ type Tweet struct {
 	FullText             string       `json:"full_text"`
 	Source               string       `json:"source"`
 	Truncated            bool         `json:"truncated"`
-	InReplyToStatusId    *int64       `json:"in_reply_to_status_id"`
-	InReplyToStatusIdStr *string      `json:"in_reply_to_status_id_str"`
-	InReplyToUserId      *int64       `json:"in_reply_to_user_id"`
-	InReplyToUserIdStr   *string      `json:"in_reply_to_user_id_str"`
+	InReplyToStatusID    *int64       `json:"in_reply_to_status_id"`
+	InReplyToStatusIDStr *string      `json:"in_reply_to_status_id_str"`
+	InReplyToUserID      *int64       `json:"in_reply_to_user_id"`
+	InReplyToUserIDStr   *string      `json:"in_reply_to_user_id_str"`
 	InReplyToScreenName  *string      `json:"in_reply_to_screen_name"`
 	User                 User         `json:"user"`
 	Coordinates          *Coordinates `json:"coordinates"`
 	Place                *Place       `json:"place"`
-	QuotedStatusId       int64        `json:"quoted_status_id"`
-	QuotedStatusIdStr    string       `json:"quoted_status_id_str"`
+	QuotedStatusID       int64        `json:"quoted_status_id"`
+	QuotedStatusIDStr    string       `json:"quoted_status_id_str"`
 	IsQuoteStatus        bool         `json:"is_quote_status"`
 	QuotedStatus         *Tweet       `json:"quoted_status"`
 	ReTweetedStatus      *Tweet       `json:"retweeted_status"`
@@ -142,21 +155,24 @@ type Tweet struct {
 	// https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object
 }
 
-func (t *Tweet) HtmlLink() string {
+// HTMLLink returns the link to the tweet itself
+func (t *Tweet) HTMLLink() string {
 	return fmt.Sprintf(TweetLinkUriTemplate, t.User.ScreenName, t.IDStr)
 }
 
+// Links returns relevant links from a tweet
 func (t *Tweet) Links() []string {
 	ulist := make([]string, 0)
 	for _, u := range t.Entities.Urls {
-		ulist = append(ulist, u.ExpandedUrl)
+		ulist = append(ulist, u.ExpandedURL)
 	}
 	for _, u := range t.Entities.Media {
-		ulist = append(ulist, u.MediaUrl)
+		ulist = append(ulist, u.MediaURL)
 	}
 	return ulist
 }
 
+// TweetTemplateOutput is the processed object for use with template execution
 type TweetTemplateOutput struct {
 	UserName          string
 	ScreenName        string
@@ -167,12 +183,15 @@ type TweetTemplateOutput struct {
 	TweetText         string
 }
 
+// OutputConfig is the configuration for outputting text from a tweet
 type OutputConfig struct {
 	MentionHighlightColor string
 	HashtagHighlightColor string
 	Highlight             bool
 }
 
+// TemplateOutput returns a TweetTemplateOutput based on the given tweet,
+// this object should be used with the template library as an object for execution
 func (t *Tweet) TemplateOutput(config OutputConfig) TweetTemplateOutput {
 	return TweetTemplateOutput{
 		UserName:          t.User.Name,
@@ -185,15 +204,18 @@ func (t *Tweet) TemplateOutput(config OutputConfig) TweetTemplateOutput {
 	}
 }
 
+// RelativeTweetTime returns a string output for display
+//  if the tweet happened < 24 hours ago, then the relative time is 'XhYmZs ago'
+//  otherwise the relativeTweetTimeOutputLayout is used for time formatting.
 func (t *Tweet) RelativeTweetTime() string {
 	tstr := t.CreatedAt
-	tm, err := time.Parse(CreatedAtTimeLayout, t.CreatedAt)
+	tm, err := time.Parse(createdAtTimeLayout, t.CreatedAt)
 	if err == nil {
 		since := time.Since(tm)
 		if since < time.Hour*24 {
 			tstr = since.Truncate(time.Second).String() + " ago"
 		} else {
-			tstr = tm.Format(RelativeTweetTimeOutputLayout)
+			tstr = tm.Format(relativeTweetTimeOutputLayout)
 		}
 	}
 	return tstr
@@ -208,6 +230,7 @@ func (t *Tweet) formatRetweetText(config OutputConfig) string {
 	return fmt.Sprintf("RT %s: %s", screenName, text)
 }
 
+// TweetText returns the text of the tweet based on the given configuration
 func (t *Tweet) TweetText(config OutputConfig) string {
 	if t.ReTweetedStatus != nil {
 		return t.formatRetweetText(config)
@@ -239,35 +262,40 @@ func (t *Tweet) TweetText(config OutputConfig) string {
 	return html.UnescapeString(text)
 }
 
+// SleepTime - from the twitter api
 type SleepTime struct {
 	Enabled   bool   `json:"enabled"`
 	EndTime   *int64 `json:"end_time"`
 	StartTime *int64 `json:"start_time"`
 }
 
+// TimeZone - from the twitter api
 type TimeZone struct {
 	Name       string `json:"name"`
 	TzinfoName string `json:"tzinfo_name"`
 	UtcOffset  int64  `json:"utc_offset"`
 }
 
+// PlaceType - from the twitter api
 type PlaceType struct {
 	Code int    `json:"code"`
 	Name string `json:"name"`
 }
 
+// TrendLocation - from the twitter api
 type TrendLocation struct {
 	Country     string `json:"country"`
 	CountryCode string `json:"countryCode"`
 	Name        string `json:"name"`
-	ParentId    int64  `json:"parentid"`
+	ParentID    int64  `json:"parentid"`
 	PlaceType   `json:"placeType"`
-	Url         string `json:"url"`
+	URL         string `json:"url"`
 	Woeid       int64  `json:"woeid"`
 }
 
+// AccountSettings - from the twitter api
 type AccountSettings struct {
-	AlwaysUseHttps           bool   `json:"always_use_https"`
+	AlwaysUseHTTPS           bool   `json:"always_use_https"`
 	DiscoverableByEmail      bool   `json:"discoverable_by_email"`
 	GeoEnabled               bool   `json:"geo_enabled"`
 	Language                 string `json:"language"`

@@ -14,9 +14,9 @@ import (
 	"syscall"
 )
 
-var ErrUnsupportedPlatform = fmt.Errorf("unsupported platform")
+var errUnsupportedPlatform = fmt.Errorf("unsupported platform")
 
-var GOOS = runtime.GOOS
+var goos = runtime.GOOS
 var startCommand = func(name string, args ...string) error { return exec.Command(name, args...).Start() }
 
 // OpenBrowser opens the given url in a web browser.
@@ -24,7 +24,7 @@ var startCommand = func(name string, args ...string) error { return exec.Command
 func OpenBrowser(url string) error {
 	var name string
 	var args []string
-	switch GOOS {
+	switch goos {
 	case "linux":
 		name, args = "xdg-open", []string{url}
 	case "windows":
@@ -32,21 +32,23 @@ func OpenBrowser(url string) error {
 	case "darwin":
 		name, args = "open", []string{url}
 	default:
-		return ErrUnsupportedPlatform
+		return errUnsupportedPlatform
 	}
 	return startCommand(name, args...)
 }
 
-var Notifier = signal.Notify // break out notifier for test
+var notifier = signal.Notify // break out notifier for test
 
+// Signal waits for os.Interrupt or syscall.SIGINT
 func Signal() <-chan os.Signal {
 	ch := make(chan os.Signal, 1)
-	Notifier(ch, os.Interrupt, syscall.SIGINT)
+	notifier(ch, os.Interrupt, syscall.SIGINT)
 	return ch
 }
 
 var anchorTextFind = regexp.MustCompile(`>(.+)<`)
 
+// ExtractAnchorText extracts the node text from an html anchor element
 func ExtractAnchorText(anchor string) string {
 	found := anchorTextFind.FindStringSubmatch(anchor)
 	if len(found) > 0 {
@@ -55,6 +57,7 @@ func ExtractAnchorText(anchor string) string {
 	return ""
 }
 
+// Stdin for testing TODO:(smt) need this?
 var Stdin io.Reader = os.Stdin // replacable for testing
 
 // SingleWordInput will scan Stdin and return the first word, discarding the rest of the input
@@ -70,6 +73,7 @@ func SingleWordInput() string {
 	return ""
 }
 
+// FirstNumber return the first integer from the given list
 func FirstNumber(args ...string) (int, bool) {
 	for _, a := range args {
 		if n, err := strconv.Atoi(a); err == nil {
@@ -89,6 +93,7 @@ func SplitCommand(str string) (string, []string) {
 	return strings.ToLower(str), nil
 }
 
+// MustString panic on error
 func MustString(s string, err error) string {
 	if err != nil {
 		panic(err)

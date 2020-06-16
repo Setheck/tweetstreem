@@ -163,7 +163,7 @@ func TestTweetStreem_ProcessCommand_Open(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			tweet := &twitter.Tweet{
 				Entities: twitter.Entities{
-					Urls: []twitter.Url{{ExpandedUrl: "http://example.com"}},
+					Urls: []twitter.URL{{ExpandedURL: "http://example.com"}},
 				},
 			}
 			openBrowser = func(url string) error {

@@ -52,7 +52,7 @@ func TestDefaultClient_SetPollerPaused(t *testing.T) {
 func TestDefaultClient_StartPoller(t *testing.T) {
 	pollDuration := 10 * time.Millisecond
 	tweetOutput := createTwitterResponseData(t, []*Tweet{{IDStr: "12345"}})
-	sinceId := ""
+	sinceID := ""
 	tests := []struct {
 		name  string
 		polls int
@@ -70,7 +70,7 @@ func TestDefaultClient_StartPoller(t *testing.T) {
 				Return(tweetOutput, nil).
 				Run(func(args mock.Arguments) {
 					values := args.Get(2).(url.Values)
-					sinceId = values.Get("since_id")
+					sinceID = values.Get("since_id")
 				})
 
 			duration := pollDuration * time.Duration(test.polls)
@@ -84,7 +84,7 @@ func TestDefaultClient_StartPoller(t *testing.T) {
 			twitter.Shutdown()
 
 			if test.polls > 1 {
-				assert.Equal(t, "12345", sinceId)
+				assert.Equal(t, "12345", sinceID)
 			}
 			assert.Len(t, tweetCh, test.polls)
 			mockOauthFacade.AssertNumberOfCalls(t, "OaRequest", test.polls)
@@ -207,7 +207,7 @@ func TestDefaultClient_AlreadyAuth(t *testing.T) {
 }
 
 func TestNewUrlValues(t *testing.T) {
-	uvs := NewUrlValues()
+	uvs := NewURLValues()
 
 	defaultValues := url.Values{
 		"tweet_mode": []string{"extended"},
@@ -398,8 +398,8 @@ func TestDefaultClient_UnLike(t *testing.T) {
 
 func TestDefaultClient_ListFollowers(t *testing.T) {
 	expectedFollowers := []User{{
-		Id:         123,
-		IdStr:      "123",
+		ID:         123,
+		IDStr:      "123",
 		Name:       "TestUser",
 		ScreenName: "TestUser",
 	}}

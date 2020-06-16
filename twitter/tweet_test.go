@@ -35,7 +35,7 @@ func TestTweet_HtmlLink(t *testing.T) {
 	}
 
 	want := "https://twitter.com/test_user/status/12345"
-	got := tweet.HtmlLink()
+	got := tweet.HTMLLink()
 	if want != got {
 		t.Fail()
 	}
@@ -44,17 +44,17 @@ func TestTweet_HtmlLink(t *testing.T) {
 func TestTweet_Links(t *testing.T) {
 	tests := []struct {
 		name  string
-		urls  []Url
+		urls  []URL
 		media []Media
 	}{
 		{
 			"retrieve urls",
-			[]Url{{ExpandedUrl: "https://url1.com"}},
-			[]Media{{MediaUrl: "https://url2.com"}},
+			[]URL{{ExpandedURL: "https://url1.com"}},
+			[]Media{{MediaURL: "https://url2.com"}},
 		},
 		{
 			"nothing to retrieve",
-			[]Url{},
+			[]URL{},
 			[]Media{},
 		},
 	}
@@ -73,10 +73,10 @@ func TestTweet_Links(t *testing.T) {
 				assert.Empty(t, test.media)
 			}
 			for _, u := range test.urls {
-				assert.Contains(t, links, u.ExpandedUrl)
+				assert.Contains(t, links, u.ExpandedURL)
 			}
 			for _, u := range test.media {
-				assert.Contains(t, links, u.MediaUrl)
+				assert.Contains(t, links, u.MediaURL)
 			}
 		})
 	}
@@ -145,11 +145,11 @@ func TestTweet_RelativeTweetTime(t *testing.T) {
 		{"five min ago", fiveMinPast, "5m0s ago"},
 		{"10m30s min ago", tenMinThirtySecPast, "10m30s ago"},
 		{"24 hours ago", twentyThreeHoursPast, "23h0m0s ago"},
-		{"24 hours ago", twentyFourHoursPast, twentyFourHoursPast.Format(RelativeTweetTimeOutputLayout)},
+		{"24 hours ago", twentyFourHoursPast, twentyFourHoursPast.Format(relativeTweetTimeOutputLayout)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			tweet := &Tweet{CreatedAt: test.createdAt.Format(CreatedAtTimeLayout)}
+			tweet := &Tweet{CreatedAt: test.createdAt.Format(createdAtTimeLayout)}
 			got := tweet.RelativeTweetTime()
 			assert.Equal(t, test.want, got)
 		})
