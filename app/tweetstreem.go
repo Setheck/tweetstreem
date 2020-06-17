@@ -91,7 +91,7 @@ func (t *TweetStreem) RemoteCall() error {
 	return nil
 }
 
-func (t *TweetStreem) ParseTemplate() error {
+func (t *TweetStreem) parseTemplate() error {
 	templateHelpers := map[string]interface{}{
 		"color": util.Colors.Colorize,
 	}
@@ -129,7 +129,7 @@ func (t *TweetStreem) InitTwitter() error {
 	return nil
 }
 
-func (t *TweetStreem) waitForDone() {
+func (t *TweetStreem) WaitForDone() {
 	select {
 	case <-t.ctx.Done():
 	case <-util.Signal():
@@ -246,7 +246,6 @@ func (t *TweetStreem) StartSubsystems() error {
 
 	go t.consumeInput()
 	go t.outputPrinter()
-	go t.waitForDone()
 	go t.pollAndEcho()
 	go t.watchStdin()
 

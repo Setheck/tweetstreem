@@ -42,6 +42,14 @@ func ParseFlags() RunMode {
 	return normal
 }
 
+func failOnErr(args ...interface{}) {
+	for _, arg := range args {
+		if err, ok := arg.(error); ok && err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
 // Run is the main entry point, returns result code
 func Run() int {
 	fmt.Print(appInfo())
@@ -55,9 +63,7 @@ func Run() int {
 	case version:
 		return 0
 	case client:
-		if err := ts.RemoteCall(); err != nil {
-			log.Fatal(err)
-		}
+		failOnErr(ts.RemoteCall())
 		return 0
 	}
 
@@ -65,16 +71,13 @@ func Run() int {
 	fmt.Printf("| auto-update | %s |\n",
 		ts.TwitterConfiguration.PollTimeDuration())
 
-	if err := ts.StartSubsystems(); err != nil {
-		log.Fatal(err)
-	}
+	failOnErr(ts.StartSubsystems())
 
-	<-ts.ctx.Done()
+	ts.WaitForDone()
 
 	// Shutdown Sequence
-	if err := ts.SaveConfig(); err != nil {
-		fmt.Println(err)
-	}
+	failOnErr(ts.SaveConfig())
+
 	fmt.Println("\n'till next time o/ ")
 	return 0
 }

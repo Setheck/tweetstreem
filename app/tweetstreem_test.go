@@ -40,7 +40,7 @@ func TestNewTweetStreem(t *testing.T) {
 func TestTweetStreem_ParseTemplate(t *testing.T) {
 	tw := NewTweetStreem(context.TODO())
 	assert.Nil(t, tw.tweetTemplate)
-	err := tw.ParseTemplate()
+	err := tw.parseTemplate()
 	if err != nil {
 		t.Error(err)
 	}
@@ -535,7 +535,7 @@ func TestTweetStreem_ProcessCommand_Me(t *testing.T) {
 				Return("test")
 
 			tw := NewTweetStreem(context.TODO())
-			if err := tw.ParseTemplate(); err != nil {
+			if err := tw.parseTemplate(); err != nil {
 				assert.NoError(t, err)
 			}
 			tw.twitter = twitterMock
@@ -578,7 +578,7 @@ func TestTweetStreem_ProcessCommand_Home(t *testing.T) {
 				Return("test")
 
 			tw := NewTweetStreem(context.TODO())
-			if err := tw.ParseTemplate(); err != nil {
+			if err := tw.parseTemplate(); err != nil {
 				assert.NoError(t, err)
 			}
 			tw.twitter = twitterMock
