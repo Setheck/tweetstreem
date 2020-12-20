@@ -596,14 +596,14 @@ func (t *TweetStreem) unLike(id int) string {
 	}
 }
 
-var Stdout = os.Stdout
-
 func (t *TweetStreem) PrintTweets(tweets []*twitter.Tweet) {
 	for i := len(tweets) - 1; i >= 0; i-- {
 		tweet := tweets[i]
 		t.tweetHistory.Log(tweet)
 		buf := new(bytes.Buffer)
-		if err := t.tweetTemplate.Execute(buf, struct {
+		if err := t.tweetTemplate.Funcs(map[string]interface{}{
+			"format": formatCreatedAt,
+		}).Execute(buf, struct {
 			Id int
 			twitter.TweetTemplateOutput
 		}{
@@ -615,4 +615,13 @@ func (t *TweetStreem) PrintTweets(tweets []*twitter.Tweet) {
 			t.print(buf.String())
 		}
 	}
+}
+
+func formatCreatedAt(in, format string) string {
+	createdTime, err := time.Parse(twitter.CreatedAtTimeLayout, in)
+	if err != nil {
+		// debug: fmt.Printf("time format: %s failed to parse: %s", in, format),
+		return in
+	}
+	return createdTime.Format(format)
 }

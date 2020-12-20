@@ -26,6 +26,7 @@ var (
 	FavoritesCreateURI  = "https://api.twitter.com/1.1/favorites/create.json"
 	FavoritesDestroyURI = "https://api.twitter.com/1.1/favorites/destroy.json"
 	FollowersListURI    = "https://api.twitter.com/1.1/followers/list.json"
+	TrendsPlaceURI      = "https://api.twitter.com/1.1/trends/place.json"
 
 	StatusesRetweetURITemplate   = "https://api.twitter.com/1.1/statuses/retweet/%s.json"
 	StatusesUnRetweetURITemplate = "https://api.twitter.com/1.1/statuses/unretweet/%s.json"

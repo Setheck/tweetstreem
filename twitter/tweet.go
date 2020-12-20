@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	createdAtTimeLayout           = "Mon Jan 2 15:04:05 -0700 2006"
-	relativeTweetTimeOutputLayout = "01/02/2006 15:04:05"
+	CreatedAtTimeLayout           = "Mon Jan 2 15:04:05 -0700 2006"
+	RelativeTweetTimeOutputLayout = "01/02/2006 15:04:05"
 )
 
 // HashTag - from the twitter api
@@ -174,6 +174,7 @@ func (t *Tweet) Links() []string {
 
 // TweetTemplateOutput is the processed object for use with template execution
 type TweetTemplateOutput struct {
+	CreatedAt         string
 	UserName          string
 	ScreenName        string
 	RelativeTweetTime string
@@ -194,6 +195,7 @@ type OutputConfig struct {
 // this object should be used with the template library as an object for execution
 func (t *Tweet) TemplateOutput(config OutputConfig) TweetTemplateOutput {
 	return TweetTemplateOutput{
+		CreatedAt:         t.CreatedAt,
 		UserName:          t.User.Name,
 		ScreenName:        t.User.ScreenName,
 		RelativeTweetTime: t.RelativeTweetTime(),
@@ -206,16 +208,16 @@ func (t *Tweet) TemplateOutput(config OutputConfig) TweetTemplateOutput {
 
 // RelativeTweetTime returns a string output for display
 //  if the tweet happened < 24 hours ago, then the relative time is 'XhYmZs ago'
-//  otherwise the relativeTweetTimeOutputLayout is used for time formatting.
+//  otherwise the RelativeTweetTimeOutputLayout is used for time formatting.
 func (t *Tweet) RelativeTweetTime() string {
 	tstr := t.CreatedAt
-	tm, err := time.Parse(createdAtTimeLayout, t.CreatedAt)
+	tm, err := time.Parse(CreatedAtTimeLayout, t.CreatedAt)
 	if err == nil {
 		since := time.Since(tm)
 		if since < time.Hour*24 {
 			tstr = since.Truncate(time.Second).String() + " ago"
 		} else {
-			tstr = tm.Format(relativeTweetTimeOutputLayout)
+			tstr = tm.Format(RelativeTweetTimeOutputLayout)
 		}
 	}
 	return tstr

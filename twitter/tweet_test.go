@@ -145,11 +145,11 @@ func TestTweet_RelativeTweetTime(t *testing.T) {
 		{"five min ago", fiveMinPast, "5m0s ago"},
 		{"10m30s min ago", tenMinThirtySecPast, "10m30s ago"},
 		{"24 hours ago", twentyThreeHoursPast, "23h0m0s ago"},
-		{"24 hours ago", twentyFourHoursPast, twentyFourHoursPast.Format(relativeTweetTimeOutputLayout)},
+		{"24 hours ago", twentyFourHoursPast, twentyFourHoursPast.Format(RelativeTweetTimeOutputLayout)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			tweet := &Tweet{CreatedAt: test.createdAt.Format(createdAtTimeLayout)}
+			tweet := &Tweet{CreatedAt: test.createdAt.Format(CreatedAtTimeLayout)}
 			got := tweet.RelativeTweetTime()
 			assert.Equal(t, test.want, got)
 		})
