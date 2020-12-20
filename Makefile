@@ -24,7 +24,6 @@ coverage:
 build: GOOS=linux
 build: tokencheck test
 	GOOS=$(GOOS) go build ${LDFLAGS} -o tweetstreem
-	./tweetstreem -v
 
 buildwin: GOOS=windows
 buildwin: tokencheck test
