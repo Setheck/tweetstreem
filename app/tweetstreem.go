@@ -93,7 +93,8 @@ func (t *TweetStreem) RemoteCall() error {
 
 func (t *TweetStreem) parseTemplate() error {
 	templateHelpers := map[string]interface{}{
-		"color": util.Colors.Colorize,
+		"color":  util.Colors.Colorize,
+		"format": formatCreatedAt,
 	}
 	tpl, err := template.New("tweetstreem").
 		Funcs(templateHelpers).
@@ -601,9 +602,7 @@ func (t *TweetStreem) PrintTweets(tweets []*twitter.Tweet) {
 		tweet := tweets[i]
 		t.tweetHistory.Log(tweet)
 		buf := new(bytes.Buffer)
-		if err := t.tweetTemplate.Funcs(map[string]interface{}{
-			"format": formatCreatedAt,
-		}).Execute(buf, struct {
+		if err := t.tweetTemplate.Execute(buf, struct {
 			Id int
 			twitter.TweetTemplateOutput
 		}{
