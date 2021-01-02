@@ -12,7 +12,7 @@ type History struct {
 
 func NewHistory() *History {
 	h := &History{}
-	var li int32 = 0
+	li := int32(0)
 	h.lastIdx = &li
 	return h
 }

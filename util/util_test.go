@@ -84,7 +84,7 @@ func TestSignal(t *testing.T) {
 	sendCh := make(chan os.Signal, 1)
 
 	// Replace the notifier to what we think it does very naively
-	Notifier = func(c chan<- os.Signal, sig ...os.Signal) {
+	notifier = func(c chan<- os.Signal, sig ...os.Signal) {
 		x := <-sendCh
 		if x == os.Interrupt || x == syscall.SIGINT {
 			c <- x
@@ -139,22 +139,22 @@ func TestSingleWordInput(t *testing.T) {
 }
 
 func TestOpenBrowser(t *testing.T) {
-	testUrl := fmt.Sprintf("https://some.example.com?dt=%d", time.Now().Unix())
+	testURL := fmt.Sprintf("https://some.example.com?dt=%d", time.Now().Unix())
 	tests := []struct {
 		name string
 		os   string
 		url  string
 	}{
-		{"linux open", "linux", testUrl},
-		{"windows open", "windows", testUrl},
-		{"darwin open", "darwin", testUrl},
-		{"unsupported platform", "bsd", testUrl},
+		{"linux open", "linux", testURL},
+		{"windows open", "windows", testURL},
+		{"darwin open", "darwin", testURL},
+		{"unsupported platform", "bsd", testURL},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			GOOS = test.os
+			goos = test.os
 			var expectedError error
-			switch GOOS {
+			switch goos {
 			case "linux":
 				startCommand = func(name string, args ...string) error {
 					assert.Equal(t, name, "xdg-open")
@@ -177,7 +177,7 @@ func TestOpenBrowser(t *testing.T) {
 				startCommand = func(name string, args ...string) error {
 					return nil
 				}
-				expectedError = ErrUnsupportedPlatform
+				expectedError = errUnsupportedPlatform
 			}
 			err := OpenBrowser(test.url)
 			if err != nil {

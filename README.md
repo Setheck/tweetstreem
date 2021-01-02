@@ -71,6 +71,7 @@ which results in the following
 ![](./img/display_example.png)
 
 Template Fields that exist are
+* CreatedAt         - The time in string format when the tweet was created.
 * UserName          - The twitter user name who created the tweet
 * ScreenName        - The twitter handle who created the tweet
 * RelativeTweetTime - When the tweet occurred (ex: `1h37m19s ago` if < 24 hours ago, `03/25/2020 01:07:21` otherwise) 
@@ -81,6 +82,7 @@ Template Fields that exist are
 
 Template Helpers that exist are
 * `color <colorstr> <text to colorize>`
+* `format <createdAtstr> <go time format>`
 
 *Note Windows terminal does not support colors*
 

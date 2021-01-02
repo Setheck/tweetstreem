@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 )
@@ -19,33 +20,64 @@ func appInfo() string {
 		"~~~~~~~~~~~~~~~" + fmt.Sprintln(" built:   ", Built)
 }
 
+type RunMode string
+
+const (
+	version RunMode = "version"
+	client  RunMode = "client"
+	normal  RunMode = "normal"
+)
+
+func ParseFlags() RunMode {
+	verFlg := flag.Bool("v", false, "version")
+	clientFlg := flag.Bool("c", false, "client input")
+	flag.Parse()
+
+	switch {
+	case *verFlg:
+		return version
+	case *clientFlg:
+		return client
+	}
+	return normal
+}
+
+func failOnErr(args ...interface{}) {
+	for _, arg := range args {
+		if err, ok := arg.(error); ok && err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
 // Run is the main entry point, returns result code
 func Run() int {
-	fmt.Println(appInfo())
+	fmt.Print(appInfo())
 
 	ts := NewTweetStreem(context.Background())
 	if err := ts.LoadConfig(); err != nil {
 		fmt.Println(err)
 	}
 
-	if err := ts.ParseFlags(); err != nil {
-		log.Fatal(err)
+	switch ParseFlags() {
+	case version:
+		return 0
+	case client:
+		failOnErr(ts.RemoteCall())
+		return 0
 	}
 
 	// print pertinent config on start
 	fmt.Printf("| auto-update | %s |\n",
 		ts.TwitterConfiguration.PollTimeDuration())
 
-	if err := ts.StartSubsystems(); err != nil {
-		log.Fatal(err)
-	}
+	failOnErr(ts.StartSubsystems())
 
-	<-ts.ctx.Done()
+	ts.WaitForDone()
 
 	// Shutdown Sequence
-	if err := ts.SaveConfig(); err != nil {
-		fmt.Println(err)
-	}
+	failOnErr(ts.SaveConfig())
+
 	fmt.Println("\n'till next time o/ ")
 	return 0
 }

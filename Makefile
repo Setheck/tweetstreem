@@ -54,7 +54,7 @@ dbuild:
 	docker run --rm ${IMAGE}:latest -version
 
 tag: MAJOR=0
-tag: MINOR=2
+tag: MINOR=3
 tag: PATCH=0
 tag:
 	git tag "v${MAJOR}.${MINOR}.${PATCH}"

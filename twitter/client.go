@@ -26,6 +26,7 @@ var (
 	FavoritesCreateURI  = "https://api.twitter.com/1.1/favorites/create.json"
 	FavoritesDestroyURI = "https://api.twitter.com/1.1/favorites/destroy.json"
 	FollowersListURI    = "https://api.twitter.com/1.1/followers/list.json"
+	TrendsPlaceURI      = "https://api.twitter.com/1.1/trends/place.json"
 
 	StatusesRetweetURITemplate   = "https://api.twitter.com/1.1/statuses/retweet/%s.json"
 	StatusesUnRetweetURITemplate = "https://api.twitter.com/1.1/statuses/unretweet/%s.json"
@@ -46,6 +47,7 @@ func init() {
 	}
 }
 
+// Client is the twitter client interface
 type Client interface {
 	Configuration() Configuration
 	Authorize() error
@@ -62,12 +64,14 @@ type Client interface {
 	Shutdown()
 }
 
+// Configuration is the twitter configuration
 type Configuration struct {
 	PollTime   string `json:"pollTime"`
 	UserToken  string `json:"userToken"`
 	UserSecret string `json:"userSecret"`
 }
 
+// PollTimeDuration parses the string poll time and returns the duration value
 func (t *Configuration) PollTimeDuration() time.Duration {
 	dur, err := time.ParseDuration(t.PollTime)
 	if err != nil {
@@ -79,6 +83,7 @@ func (t *Configuration) PollTimeDuration() time.Duration {
 
 var _ Client = &DefaultClient{}
 
+// DefaultClient is the twitter client
 type DefaultClient struct {
 	configuration   *Configuration
 	accountSettings *AccountSettings
@@ -92,6 +97,7 @@ type DefaultClient struct {
 	debug           bool
 }
 
+// NewDefaultClient returns a new default twitter client
 func NewDefaultClient(conf Configuration) *DefaultClient {
 	ctx, done := context.WithCancel(context.Background())
 	oaconf := auth.OauthConfig{
@@ -114,6 +120,7 @@ func NewDefaultClient(conf Configuration) *DefaultClient {
 
 var openBrowser = util.OpenBrowser
 
+// Configuration returns the current twitter configuration
 func (t *DefaultClient) Configuration() Configuration {
 	if t.configuration != nil {
 		return *t.configuration
@@ -125,6 +132,7 @@ func (t *DefaultClient) Configuration() Configuration {
 // ref: https://youtrack.jetbrains.com/issue/GO-7855 & https://github.com/golang/go/issues/23036
 var fmtPrint = fmt.Print
 
+// Authorize attempts to request oauth login and prompts the user to enter a second factor
 func (t *DefaultClient) Authorize() error {
 	if t.configuration.UserToken != "" && t.configuration.UserSecret != "" {
 		if err := t.updateAccountSettings(); err == nil {
@@ -159,7 +167,8 @@ func (t *DefaultClient) Authorize() error {
 	return nil
 }
 
-func NewUrlValues() url.Values {
+// NewURLValues sets the default url values for this twitter client
+func NewURLValues() url.Values {
 	orc := make(url.Values)
 
 	// defaults
@@ -168,15 +177,18 @@ func NewUrlValues() url.Values {
 	return orc
 }
 
+// TwError is some twitter error stuff
 type TwError struct {
 	Code    int
 	Message string
 }
 
+// TwErrors a list of twitter errors
 type TwErrors struct {
 	Errors []TwError
 }
 
+// String returns the string form of a twitter error
 func (twe TwErrors) String() string {
 	outstr := ""
 	for _, e := range twe.Errors {
@@ -185,6 +197,7 @@ func (twe TwErrors) String() string {
 	return outstr
 }
 
+// UpdateStatus sets the status for the current user (aka tweet)
 func (t *DefaultClient) UpdateStatus(status string, conf url.Values) (*Tweet, error) {
 	conf.Set("status", status)
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, StatusesUpdateURI, conf)
@@ -201,6 +214,7 @@ func (t *DefaultClient) UpdateStatus(status string, conf url.Values) (*Tweet, er
 	return tw, nil
 }
 
+// ReTweet marks the given tweet as ReTweeted by the current user
 func (t *DefaultClient) ReTweet(tw *Tweet, conf url.Values) error {
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, fmt.Sprintf(StatusesRetweetURITemplate, tw.IDStr), conf)
 	if err != nil {
@@ -212,6 +226,7 @@ func (t *DefaultClient) ReTweet(tw *Tweet, conf url.Values) error {
 	return nil
 }
 
+// UnReTweet mark the given tweet as unretweeted by the current user
 func (t *DefaultClient) UnReTweet(tw *Tweet, conf url.Values) error {
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, fmt.Sprintf(StatusesUnRetweetURITemplate, tw.IDStr), conf)
 	if err != nil {
@@ -223,6 +238,7 @@ func (t *DefaultClient) UnReTweet(tw *Tweet, conf url.Values) error {
 	return nil
 }
 
+// Like mark the given tweet as liked by the current user
 func (t *DefaultClient) Like(tw *Tweet, conf url.Values) error {
 	conf.Set("id", tw.IDStr)
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, FavoritesCreateURI, conf)
@@ -235,6 +251,7 @@ func (t *DefaultClient) Like(tw *Tweet, conf url.Values) error {
 	return nil
 }
 
+// UnLike mark the given tweet as unliked by the current user
 func (t *DefaultClient) UnLike(tw *Tweet, conf url.Values) error {
 	conf.Set("id", tw.IDStr)
 	data, err := t.oauthFacade.OaRequest(http.MethodPost, FavoritesDestroyURI, conf)
@@ -247,6 +264,7 @@ func (t *DefaultClient) UnLike(tw *Tweet, conf url.Values) error {
 	return nil
 }
 
+// FollowerList - from the twitter api
 type FollowerList struct {
 	Users             []User `json:"users"`
 	NextCursor        uint64 `json:"next_cursor"`
@@ -255,6 +273,7 @@ type FollowerList struct {
 	PreviousCursorStr string `json:"previous_cursor_str"`
 }
 
+// ListFollowers returns a list of the current user's followers
 func (t *DefaultClient) ListFollowers(conf url.Values) ([]User, error) {
 	data, err := t.oauthFacade.OaRequest(http.MethodGet, FollowersListURI, conf)
 	if err != nil {
@@ -279,6 +298,7 @@ func (t *DefaultClient) unmarshalError(data []byte) error {
 	return nil
 }
 
+// ScreenName returns the current user's screen name
 func (t *DefaultClient) ScreenName() string {
 	if t.accountSettings == nil {
 		return ""
@@ -300,16 +320,18 @@ func (t *DefaultClient) updateAccountSettings() error {
 	return json.Unmarshal(raw, &t.accountSettings)
 }
 
+// HomeTimeline retrieve the current user's home timeline
 func (t *DefaultClient) HomeTimeline(conf url.Values) ([]*Tweet, error) {
 	return t.getTimeline(HomeTimelineURI, conf)
 }
 
+// UserTimeline retrieve a user timeline, specified by "screen_name" config value
 func (t *DefaultClient) UserTimeline(conf url.Values) ([]*Tweet, error) {
 	return t.getTimeline(UserTimelineURI, conf)
 }
 
-func (t *DefaultClient) getTimeline(timelineUri string, conf url.Values) ([]*Tweet, error) {
-	rawTweets, err := t.oauthFacade.OaRequest(http.MethodGet, timelineUri, conf)
+func (t *DefaultClient) getTimeline(timelineURI string, conf url.Values) ([]*Tweet, error) {
+	rawTweets, err := t.oauthFacade.OaRequest(http.MethodGet, timelineURI, conf)
 	if err != nil {
 		return nil, err
 	}
@@ -329,6 +351,7 @@ func (t *DefaultClient) getTimeline(timelineUri string, conf url.Values) ([]*Twe
 	return timeLine, nil
 }
 
+// SetPollerPaused set the internal poller paused state
 func (t *DefaultClient) SetPollerPaused(b bool) {
 	t.pollerPaused = b
 }
@@ -356,7 +379,7 @@ func (t *DefaultClient) StartPoller(tweetCh chan<- []*Tweet) {
 				if t.pollerPaused {
 					continue
 				}
-				cfg := NewUrlValues()
+				cfg := NewURLValues()
 				cfg.Set("include_entities", "true")
 				if t.lastTweet != nil {
 					t.lock.Lock()
@@ -374,6 +397,7 @@ func (t *DefaultClient) StartPoller(tweetCh chan<- []*Tweet) {
 	}(tweetCh)
 }
 
+// Shutdown block and wait for the client to shut down
 func (t *DefaultClient) Shutdown() {
 	t.done()
 	t.wg.Wait()

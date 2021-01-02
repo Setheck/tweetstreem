@@ -47,7 +47,7 @@ func (t *TweetStreem) LoadConfig() error {
 	if err := tsViper.UnmarshalKey("config", t); err != nil {
 		return fmt.Errorf("unmarshalling config failed: %w", err)
 	}
-	if err := t.ParseTemplate(); err != nil {
+	if err := t.parseTemplate(); err != nil {
 		return err
 	}
 	return nil
