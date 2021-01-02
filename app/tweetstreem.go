@@ -236,6 +236,8 @@ func (t *TweetStreem) processCommand(isRpc bool, input string) error {
 		t.print(t.help())
 	case "q", "quit", "exit":
 		t.cancel()
+	default:
+		t.println("unknown command:", command)
 	}
 	return nil
 }
@@ -285,6 +287,11 @@ func (t *TweetStreem) rpcResponse(msg string) {
 			fmt.Println("error dropped rpcResponse:", msg)
 		}
 	}
+}
+
+func (t *TweetStreem) println(a ...interface{}) {
+	msg := fmt.Sprintln(a...)
+	t.print(msg)
 }
 
 func (t *TweetStreem) print(msg string) {
