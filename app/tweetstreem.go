@@ -33,7 +33,7 @@ type TweetStreem struct {
 	ApiHost              string                 `json:"apiHost"`
 	AutoHome             bool                   `json:"autoHome"`
 
-	api            Api
+	rpcListener    RPCListener
 	tweetTemplate  *template.Template
 	twitter        twitter.Client
 	tweetHistory   *History
@@ -113,9 +113,9 @@ func (t *TweetStreem) SetNonInteractive(b bool) {
 
 func (t *TweetStreem) InitApi() error {
 	t.SetNonInteractive(true)
-	t.api = NewApi(t.ctx, t.ApiPort, false)
+	t.rpcListener = NewHttpRPCListener(t.ctx, t.ApiPort, false)
 	if !t.testMode {
-		return t.api.Start(t) // pass in context so there is no need to call api.Stop()
+		return t.rpcListener.Start(t) // pass in context so there is no need to call rpcListener.Stop()
 	}
 	return nil
 }
@@ -146,10 +146,10 @@ func (t *TweetStreem) pollAndEcho() {
 	}
 }
 
-var Stdin io.Reader = os.Stdin
+var stdin io.Reader = os.Stdin
 
 func (t *TweetStreem) watchStdin() {
-	in := bufio.NewScanner(Stdin)
+	in := bufio.NewScanner(stdin)
 	for {
 		select {
 		case <-t.ctx.Done():
@@ -253,7 +253,7 @@ func (t *TweetStreem) StartSubsystems() error {
 	go t.watchStdin()
 
 	if t.EnableApi {
-		fmt.Println("api server enabled on port:", t.ApiPort)
+		fmt.Println("rpc listener enabled on port:", t.ApiPort)
 		if err := t.InitApi(); err != nil {
 			return err
 		}
@@ -334,11 +334,11 @@ func (t *TweetStreem) help() string {
 }
 
 func (t *TweetStreem) config() string {
-	if b, err := json.Marshal(t); err != nil {
+	b, err := json.Marshal(t)
+	if err != nil {
 		return fmt.Sprintln("Error:", err)
-	} else {
-		return fmt.Sprintln(string(b))
 	}
+	return fmt.Sprintln(string(b))
 }
 
 func (t *TweetStreem) resume() {
@@ -441,11 +441,11 @@ func (t *TweetStreem) open(isRpc bool, tw *twitter.Tweet, linkIdx int) error {
 	u := ulist[linkIdx]
 	if t.EnableClientLinks && t.EnableApi && isRpc {
 		t.rpcResponse(u)
-	} else {
-		t.print(fmt.Sprintln("opening in browser:", u))
-		if err := openBrowser(u); err != nil {
-			return fmt.Errorf("failed to open %q in browser: %w", u, err)
-		}
+		return nil
+	}
+	t.print(fmt.Sprintln("opening in browser:", u))
+	if err := openBrowser(u); err != nil {
+		return fmt.Errorf("failed to open %q in browser: %w", u, err)
 	}
 	return nil
 }
@@ -464,11 +464,11 @@ func (t *TweetStreem) tweet(msg string) string {
 	if len(msg) < 1 {
 		return fmt.Sprintln("some text is required to tweet")
 	}
-	if tw, err := t.twitter.UpdateStatus(msg, twitter.NewURLValues()); err != nil {
+	tw, err := t.twitter.UpdateStatus(msg, twitter.NewURLValues())
+	if err != nil {
 		return fmt.Sprintln("Error:", err)
-	} else {
-		return fmt.Sprintf("tweet success! [%s]\n", tw.IDStr)
 	}
+	return fmt.Sprintf("tweet success! [%s]\n", tw.IDStr)
 }
 
 func (t *TweetStreem) commandReply(args ...string) {
@@ -530,9 +530,8 @@ func (t *TweetStreem) reTweet(id int) string {
 	}
 	if err := t.twitter.ReTweet(tw, twitter.NewURLValues()); err != nil {
 		return fmt.Sprintln("Error:", err)
-	} else {
-		return fmt.Sprintf("tweet by @%s retweeted\n", tw.User.ScreenName)
 	}
+	return fmt.Sprintf("tweet by @%s retweeted\n", tw.User.ScreenName)
 }
 
 func (t *TweetStreem) commandUnReTweet(args ...string) {
@@ -568,9 +567,8 @@ func (t *TweetStreem) like(id int) string {
 	}
 	if err := t.twitter.Like(tw, twitter.NewURLValues()); err != nil {
 		return fmt.Sprintln("Error:", err)
-	} else {
-		return fmt.Sprintf("tweet by @%s liked\n", tw.User.ScreenName)
 	}
+	return fmt.Sprintf("tweet by @%s liked\n", tw.User.ScreenName)
 }
 
 func (t *TweetStreem) commandUnLike(args ...string) {
@@ -587,11 +585,11 @@ func (t *TweetStreem) unLike(id int) string {
 	}
 	if err := t.twitter.UnLike(tw, twitter.NewURLValues()); err != nil {
 		return fmt.Sprintln("Error:", err)
-	} else {
-		return fmt.Sprintf("tweet by @%s unliked\n", tw.User.ScreenName)
 	}
+	return fmt.Sprintf("tweet by @%s unliked\n", tw.User.ScreenName)
 }
 
+// PrintTweets iterates over the given list of tweets and sends them to the output.
 func (t *TweetStreem) PrintTweets(tweets []*twitter.Tweet) {
 	for i := len(tweets) - 1; i >= 0; i-- {
 		tweet := tweets[i]

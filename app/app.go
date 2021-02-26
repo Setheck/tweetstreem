@@ -8,9 +8,14 @@ import (
 )
 
 var (
+	// Version is the version stamped at build time
 	Version = "0.0.1"
-	Commit  = "dev"
-	Built   = "0"
+
+	// Commit is the commit hash stamped at build time
+	Commit = "dev"
+
+	// Built is the build date version stamped at build time
+	Built = "0"
 )
 
 func appInfo() string {

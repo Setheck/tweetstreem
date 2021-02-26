@@ -629,7 +629,7 @@ func TestTweetStreem_InitApi(t *testing.T) {
 	ts.testMode = true
 	err := ts.InitApi()
 	assert.NoError(t, err)
-	assert.NotNil(t, ts.api)
+	assert.NotNil(t, ts.rpcListener)
 	assert.True(t, ts.nonInteractive)
 }
 
@@ -646,7 +646,7 @@ func TestTweetStreem_StartSubsystems(t *testing.T) {
 	ts.testMode = true
 
 	buf := &bytes.Buffer{}
-	Stdin = buf
+	stdin = buf
 	buf.Write([]byte("v\n"))
 	err := ts.StartSubsystems()
 	assert.NoError(t, err)

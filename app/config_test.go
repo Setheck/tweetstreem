@@ -63,7 +63,7 @@ func TestLoadConfig_UnmarshalKeyFailure(t *testing.T) {
 }
 
 func TestSaveConfig_Success(t *testing.T) {
-	ConfigPath, ConfigFile = "testConfigPath", "testConfigFile"
+	configPath, configFile = "testConfigPath", "testConfigFile"
 	wantPath := "testConfigPath/testConfigFile.json"
 
 	ts := &TweetStreem{}
@@ -84,7 +84,7 @@ func TestSaveConfig_Success(t *testing.T) {
 }
 
 func TestSaveConfig_WriteConfigAsFailure(t *testing.T) {
-	ConfigPath, ConfigFile = "testConfigPath", "testConfigFile"
+	configPath, configFile = "testConfigPath", "testConfigFile"
 	wantPath := "testConfigPath/testConfigFile.json"
 
 	ts := &TweetStreem{}
