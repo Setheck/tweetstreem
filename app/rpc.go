@@ -92,7 +92,7 @@ func (a *HttpRPCListener) handleShutdown() {
 	defer a.wg.Done()
 	<-a.ctx.Done()
 	a.log(nil, "server shutting down")
-	ctx, cancel := context.WithTimeout(a.ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := a.server.Shutdown(ctx); err != nil {
 		a.log(err, "server shutdown failed:")
