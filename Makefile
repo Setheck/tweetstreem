@@ -22,20 +22,20 @@ coverage:
 	go tool cover -html=coverage.out -o coverage.html
 
 build: GOOS=linux
-build: tokencheck test
+build: tokencheck
 	GOOS=$(GOOS) go build ${LDFLAGS} -o tweetstreem
 
 buildwin: GOOS=windows
-buildwin: tokencheck test
+buildwin: tokencheck
 	GOOS=$(GOOS) go build ${LDFLAGS} -o tweetstreem_win.exe
 
 buildmac: GOOS=darwin
-buildmac: tokencheck test
+buildmac: tokencheck
 	GOOS=$(GOOS) go build ${LDFLAGS} -o tweetstreem_mac
 
 buildarm: GOOS=linux
 buildarm: GOARCH=arm
-buildarm: tokencheck test
+buildarm: tokencheck
 	GOOS=$(GOOS) go build ${LDFLAGS} -o tweetstreem_arm
 
 tokencheck:
