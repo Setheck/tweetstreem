@@ -25,6 +25,9 @@ jobs:
       - name: Test
         run: make test
 
+      - name: Ensure Tokens
+        run: make tokencheck
+
       - name: Build Linux
         env:
           APP_TOKEN: ${{ secrets.AppToken }}
