@@ -1,6 +1,8 @@
 package app
 
 import (
+	"fmt"
+	"path/filepath"
 	"testing"
 
 	"github.com/Setheck/tweetstreem/app/mocks"
@@ -64,7 +66,7 @@ func TestLoadConfig_UnmarshalKeyFailure(t *testing.T) {
 
 func TestSaveConfig_Success(t *testing.T) {
 	configPath, configFile = "testConfigPath", "testConfigFile"
-	wantPath := "testConfigPath/testConfigFile.json"
+	wantPath := fmt.Sprint(filepath.Join(configPath, configFile), ".", configFormat)
 
 	ts := &TweetStreem{}
 	viperMock := new(mocks.Viper)
@@ -85,7 +87,7 @@ func TestSaveConfig_Success(t *testing.T) {
 
 func TestSaveConfig_WriteConfigAsFailure(t *testing.T) {
 	configPath, configFile = "testConfigPath", "testConfigFile"
-	wantPath := "testConfigPath/testConfigFile.json"
+	wantPath := fmt.Sprint(filepath.Join(configPath, configFile), ".", configFormat)
 
 	ts := &TweetStreem{}
 	viperMock := new(mocks.Viper)
