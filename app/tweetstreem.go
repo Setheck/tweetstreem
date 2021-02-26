@@ -351,18 +351,6 @@ func (t *TweetStreem) pause() {
 	t.twitter.SetPollerPaused(true)
 }
 
-func (t *TweetStreem) timeLine(screenName string) error {
-	conf := twitter.NewURLValues()
-	conf.Set("screen_name", screenName)
-	tweets, err := t.twitter.UserTimeline(conf)
-	if err != nil {
-		return err
-	}
-	t.tweetHistory.Clear()
-	t.PrintTweets(tweets)
-	return nil
-}
-
 func (t *TweetStreem) homeTimeline() error {
 	tweets, err := t.twitter.HomeTimeline(twitter.NewURLValues())
 	if err != nil {
