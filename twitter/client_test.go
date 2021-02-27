@@ -50,7 +50,7 @@ func TestDefaultClient_SetPollerPaused(t *testing.T) {
 }
 
 func TestDefaultClient_StartPoller(t *testing.T) {
-	pollDuration := 10 * time.Millisecond
+	pollDuration := 50 * time.Millisecond
 	tweetOutput := createTwitterResponseData(t, []*Tweet{{IDStr: "12345"}})
 	sinceID := ""
 	tests := []struct {
