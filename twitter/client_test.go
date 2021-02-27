@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -50,7 +51,7 @@ func TestDefaultClient_SetPollerPaused(t *testing.T) {
 }
 
 func TestDefaultClient_StartPoller(t *testing.T) {
-	pollDuration := 50 * time.Millisecond
+	pollDuration := 20 * time.Millisecond
 	tweetOutput := createTwitterResponseData(t, []*Tweet{{IDStr: "12345"}})
 	sinceID := ""
 	tests := []struct {
@@ -62,6 +63,10 @@ func TestDefaultClient_StartPoller(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
+			duration := pollDuration * time.Duration(test.polls)
+			twitter := NewDefaultClient(Configuration{PollTime: pollDuration.String()})
+
+			OAuthRequestCount := int32(0)
 			mockOauthFacade := new(mocks.OauthFacade)
 			mockOauthFacade.On("OaRequest",
 				http.MethodGet,
@@ -69,18 +74,20 @@ func TestDefaultClient_StartPoller(t *testing.T) {
 				mock.AnythingOfType("url.Values")).
 				Return(tweetOutput, nil).
 				Run(func(args mock.Arguments) {
+					atomic.AddInt32(&OAuthRequestCount, 1)
 					values := args.Get(2).(url.Values)
 					sinceID = values.Get("since_id")
+					if atomic.LoadInt32(&OAuthRequestCount) >= int32(test.polls) {
+						twitter.pollerPaused = true
+					}
 				})
 
-			duration := pollDuration * time.Duration(test.polls)
-			twitter := NewDefaultClient(Configuration{PollTime: pollDuration.String()})
 			twitter.oauthFacade = mockOauthFacade
 
 			tweetCh := make(chan []*Tweet, 10)
 			twitter.StartPoller(tweetCh)
 
-			<-time.After(duration + pollDuration)
+			<-time.After(duration * time.Duration(test.polls))
 			twitter.Shutdown()
 
 			if test.polls > 1 {

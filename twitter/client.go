@@ -364,35 +364,39 @@ func (t *DefaultClient) StartPoller(tweetCh chan<- []*Tweet) {
 	}
 	t.wg.Add(1)
 	go func(resultCh chan<- []*Tweet) {
+		timer := time.NewTimer(t.configuration.PollTimeDuration())
+
 		defer func() {
+			timer.Stop()
 			close(resultCh)
 			t.wg.Done()
 		}()
+
 		for {
 			select {
 			case <-t.ctx.Done():
 				return
-			case <-time.After(t.configuration.PollTimeDuration()):
+			case <-timer.C:
 				if t.debug {
 					fmt.Println("Poll happened")
 				}
-				if t.pollerPaused {
-					continue
-				}
-				cfg := NewURLValues()
-				cfg.Set("include_entities", "true")
-				if t.lastTweet != nil {
-					t.lock.Lock()
-					cfg.Set("since_id", t.lastTweet.IDStr)
-					t.lock.Unlock()
-				}
-				tweets, err := t.HomeTimeline(cfg)
-				if err != nil {
-					fmt.Println("Poll Failure:", err)
-				} else {
-					resultCh <- tweets
+				if !t.pollerPaused {
+					cfg := NewURLValues()
+					cfg.Set("include_entities", "true")
+					if t.lastTweet != nil {
+						t.lock.Lock()
+						cfg.Set("since_id", t.lastTweet.IDStr)
+						t.lock.Unlock()
+					}
+					tweets, err := t.HomeTimeline(cfg)
+					if err != nil {
+						fmt.Println("Poll Failure:", err)
+					} else {
+						resultCh <- tweets
+					}
 				}
 			}
+			timer.Reset(t.configuration.PollTimeDuration())
 		}
 	}(tweetCh)
 }
