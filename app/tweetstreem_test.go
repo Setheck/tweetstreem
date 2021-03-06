@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"runtime"
 	"testing"
 	"time"
 
@@ -546,9 +547,14 @@ func TestTweetStreem_ProcessCommand_Me(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 			}
-			verifyPrint(t, tw, "\n\x1b[36m\x1b[0m \x1b[32m@\x1b[0m\x1b[32mtest\x1b[0m \x1b[35m\x1b[0m\n"+
-				"id:1 \x1b[36mrt:\x1b[0m\x1b[36m0\x1b[0m \x1b[31m♥:\x1b[0m\x1b[31m0\x1b[0m via \x1b[34m\x1b[0m\n"+
-				"something\n")
+
+			expectedTwwet := "\n\x1b[36m\x1b[0m \x1b[32m@\x1b[0m\x1b[32mtest\x1b[0m \x1b[35m\x1b[0m\n" +
+				"id:1 \x1b[36mrt:\x1b[0m\x1b[36m0\x1b[0m \x1b[31m♥:\x1b[0m\x1b[31m0\x1b[0m via \x1b[34m\x1b[0m\n" +
+				"something\n"
+			if runtime.GOOS == "windows" {
+				expectedTwwet = "\n @test \nid:1 rt:0 ♥:0 via \nsomething\n"
+			}
+			verifyPrint(t, tw, expectedTwwet)
 		})
 	}
 }
@@ -589,9 +595,14 @@ func TestTweetStreem_ProcessCommand_Home(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 			}
-			verifyPrint(t, tw, "\n\x1b[36m\x1b[0m \x1b[32m@\x1b[0m\x1b[32mtest\x1b[0m \x1b[35m\x1b[0m\n"+
-				"id:1 \x1b[36mrt:\x1b[0m\x1b[36m0\x1b[0m \x1b[31m♥:\x1b[0m\x1b[31m0\x1b[0m via \x1b[34m\x1b[0m\n"+
-				"something\n")
+
+			expectedTweet := "\n\x1b[36m\x1b[0m \x1b[32m@\x1b[0m\x1b[32mtest\x1b[0m \x1b[35m\x1b[0m\n" +
+				"id:1 \x1b[36mrt:\x1b[0m\x1b[36m0\x1b[0m \x1b[31m♥:\x1b[0m\x1b[31m0\x1b[0m via \x1b[34m\x1b[0m\n" +
+				"something\n"
+			if runtime.GOOS == "windows" {
+				expectedTweet = "\n @test \nid:1 rt:0 ♥:0 via \nsomething\n"
+			}
+			verifyPrint(t, tw, expectedTweet)
 		})
 	}
 }
@@ -629,7 +640,7 @@ func TestTweetStreem_InitApi(t *testing.T) {
 	ts.testMode = true
 	err := ts.InitApi()
 	assert.NoError(t, err)
-	assert.NotNil(t, ts.api)
+	assert.NotNil(t, ts.rpcListener)
 	assert.True(t, ts.nonInteractive)
 }
 
@@ -646,12 +657,17 @@ func TestTweetStreem_StartSubsystems(t *testing.T) {
 	ts.testMode = true
 
 	buf := &bytes.Buffer{}
-	Stdin = buf
+	stdin = buf
 	buf.Write([]byte("v\n"))
 	err := ts.StartSubsystems()
 	assert.NoError(t, err)
 	time.AfterFunc(time.Millisecond*20, ts.cancel)
-	verifyPrint(t, ts, "\x1b[31m[@] \x1b[0m")
+
+	expectedPrompt := "\x1b[31m[@] \x1b[0m"
+	if runtime.GOOS == "windows" {
+		expectedPrompt = "[@] "
+	}
+	verifyPrint(t, ts, expectedPrompt)
 	<-ts.ctx.Done()
 	verifyPrint(t, ts, appInfo())
 }

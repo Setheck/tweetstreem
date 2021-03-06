@@ -20,9 +20,9 @@ func (tr TestReceiver) Ping(in, out *string) error {
 	return nil
 }
 
-func TestNewApi(t *testing.T) {
+func TestNewHttpRPCListener(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.TODO())
-	api := NewApi(ctx, 5000, true)
+	api := NewHttpRPCListener(ctx, 5000, true)
 	cancel()
 	select {
 	case <-api.ctx.Done():
@@ -31,9 +31,9 @@ func TestNewApi(t *testing.T) {
 	}
 }
 
-func TestApi_Rpc(t *testing.T) {
+func TestHttpRPCListener_Rpc(t *testing.T) {
 	port := 5000
-	api := NewApi(context.TODO(), port, true)
+	api := NewHttpRPCListener(context.TODO(), port, true)
 	msgFormat := "pong %s"
 	if err := api.Start(TestReceiver{msgFormat}); err != nil {
 		t.Fatal(err)
@@ -56,7 +56,7 @@ func TestApi_Rpc(t *testing.T) {
 	}
 }
 
-func TestApi_StartStop(t *testing.T) {
+func TestHttpRPCListener_StartStop(t *testing.T) {
 	mockServer := new(mocks.Server)
 	mockServer.On("ListenAndServe").Return(nil)
 	mockServer.On("Shutdown", mock.Anything).
@@ -67,7 +67,7 @@ func TestApi_StartStop(t *testing.T) {
 	mockRpcServer.On("HandleHTTP", mock.AnythingOfType("string"), mock.AnythingOfType("string"))
 	rpcServer = mockRpcServer
 
-	api := NewApi(context.TODO(), 5000, true)
+	api := NewHttpRPCListener(context.TODO(), 5000, true)
 	api.server = mockServer
 
 	msgFormat := "pong %s"

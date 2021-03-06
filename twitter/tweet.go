@@ -10,7 +10,10 @@ import (
 )
 
 const (
-	CreatedAtTimeLayout           = "Mon Jan 2 15:04:05 -0700 2006"
+	// CreatedAtTimeLayout is the golang time layout for twitter's created time.
+	CreatedAtTimeLayout = "Mon Jan 2 15:04:05 -0700 2006"
+
+	// RelativeTweetTimeOutputLayout is the golang time layout that defaults as the tweet time.
 	RelativeTweetTimeOutputLayout = "01/02/2006 15:04:05"
 )
 

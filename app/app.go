@@ -8,16 +8,21 @@ import (
 )
 
 var (
+	// Version is the version stamped at build time
 	Version = "0.0.1"
-	Commit  = "dev"
-	Built   = "0"
+
+	// Commit is the commit hash stamped at build time
+	Commit = "dev"
+
+	// Built is the build date version stamped at build time
+	Built = "0"
 )
 
 func appInfo() string {
 	return "~~~~~~~~~~~~~~~\n" +
-		"~~ Tweet %%%%%%" + fmt.Sprintln(" version: ", Version) +
-		"~~~~~ Streem %%" + fmt.Sprintln(" commit:  ", Commit) +
-		"~~~~~~~~~~~~~~~" + fmt.Sprintln(" built:   ", Built)
+		"~~ Tweet %%%%%%" + fmt.Sprintln(" version:", Version) +
+		"~~~~~ Streem %%" + fmt.Sprintln(" commit: ", Commit) +
+		"~~~~~~~~~~~~~~~" + fmt.Sprintln(" built:  ", Built)
 }
 
 type RunMode string
@@ -28,6 +33,7 @@ const (
 	normal  RunMode = "normal"
 )
 
+// ParseFlags is the common point for cli options, returns the run mode.
 func ParseFlags() RunMode {
 	verFlg := flag.Bool("v", false, "version")
 	clientFlg := flag.Bool("c", false, "client input")
@@ -40,14 +46,6 @@ func ParseFlags() RunMode {
 		return client
 	}
 	return normal
-}
-
-func failOnErr(args ...interface{}) {
-	for _, arg := range args {
-		if err, ok := arg.(error); ok && err != nil {
-			log.Fatal(err)
-		}
-	}
 }
 
 // Run is the main entry point, returns result code
@@ -63,7 +61,9 @@ func Run() int {
 	case version:
 		return 0
 	case client:
-		failOnErr(ts.RemoteCall())
+		if err := ts.RemoteCall(); err != nil {
+			log.Fatal(err)
+		}
 		return 0
 	}
 
@@ -71,12 +71,16 @@ func Run() int {
 	fmt.Printf("| auto-update | %s |\n",
 		ts.TwitterConfiguration.PollTimeDuration())
 
-	failOnErr(ts.StartSubsystems())
+	if err := ts.StartSubsystems(); err != nil {
+		log.Fatal(err)
+	}
 
 	ts.WaitForDone()
 
 	// Shutdown Sequence
-	failOnErr(ts.SaveConfig())
+	if err := ts.SaveConfig(); err != nil {
+		log.Fatal(err)
+	}
 
 	fmt.Println("\n'till next time o/ ")
 	return 0

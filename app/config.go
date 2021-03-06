@@ -10,12 +10,12 @@ import (
 )
 
 const (
-	ConfigFormat = "json"
+	configFormat = "json"
 )
 
 var (
-	ConfigPath = ""
-	ConfigFile = ".tweetstreem"
+	configPath = ""
+	configFile = ".tweetstreem"
 )
 
 type Viper interface {
@@ -32,14 +32,15 @@ var tsViper Viper = viper.New()
 
 func init() {
 	home := util.MustString(os.UserHomeDir())
-	if ConfigPath == "" {
-		ConfigPath = home
+	if configPath == "" {
+		configPath = home
 	}
-	tsViper.SetConfigName(ConfigFile)
-	tsViper.SetConfigType(ConfigFormat)
-	tsViper.AddConfigPath(ConfigPath)
+	tsViper.SetConfigName(configFile)
+	tsViper.SetConfigType(configFormat)
+	tsViper.AddConfigPath(configPath)
 }
 
+// LoadConfig will attempt to load the tweetstreem configuration file.
 func (t *TweetStreem) LoadConfig() error {
 	if err := tsViper.ReadInConfig(); err != nil {
 		return fmt.Errorf("failed to read config file: %w", err)
@@ -53,6 +54,7 @@ func (t *TweetStreem) LoadConfig() error {
 	return nil
 }
 
+// SaveConfig writes the current tweetstreem configuration to the configuration file.
 func (t *TweetStreem) SaveConfig() error {
 	if t.twitter != nil {
 		cfg := t.twitter.Configuration()
@@ -60,7 +62,7 @@ func (t *TweetStreem) SaveConfig() error {
 	}
 
 	tsViper.Set("config", t)
-	savePath := filepath.Join(ConfigPath, fmt.Sprint(ConfigFile, ".", ConfigFormat))
+	savePath := filepath.Join(configPath, fmt.Sprint(configFile, ".", configFormat))
 	if err := tsViper.WriteConfigAs(savePath); err != nil {
 		return fmt.Errorf("saving config to %q failed: %w", savePath, err)
 	}
