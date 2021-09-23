@@ -13,19 +13,27 @@ import (
 	_ "net/http/pprof"
 )
 
-type Api interface {
-	Start(rcvr interface{}) error
+var rpcServer RpcServer = rpc.DefaultServer
+
+type RPCListener interface {
+	Start(interface{}) error
 	Stop()
+}
+
+type RpcServer interface {
+	Register(interface{}) error
+	HandleHTTP(string, string)
 }
 
 type Server interface {
 	ListenAndServe() error
-	Shutdown(ctx context.Context) error
+	Shutdown(context.Context) error
 }
 
+var _ RPCListener = &HttpRPCListener{}
 var _ Server = &http.Server{}
 
-type DefaultApi struct {
+type HttpRPCListener struct {
 	Port int
 
 	server Server
@@ -37,7 +45,8 @@ type DefaultApi struct {
 	errorCount uint64
 }
 
-func NewApi(ctx context.Context, port int, logging bool) *DefaultApi {
+// NewHttpRPCListener creates a new instance, defaults context to context.Background() if nil is provided.
+func NewHttpRPCListener(ctx context.Context, port int, logging bool) *HttpRPCListener {
 	server := &http.Server{
 		Addr: fmt.Sprintf(":%d", port),
 		// Good practice to set timeouts to avoid Slowloris attacks.
@@ -50,7 +59,7 @@ func NewApi(ctx context.Context, port int, logging bool) *DefaultApi {
 		ctx = context.Background()
 	}
 	ctx, cancel := context.WithCancel(ctx)
-	api := &DefaultApi{
+	listener := &HttpRPCListener{
 		Port: port,
 
 		server:  server,
@@ -58,18 +67,12 @@ func NewApi(ctx context.Context, port int, logging bool) *DefaultApi {
 		cancel:  cancel,
 		logging: logging,
 	}
-	return api
+	return listener
 }
 
-var rpcServer RpcServer = rpc.DefaultServer
-
-type RpcServer interface {
-	Register(interface{}) error
-	HandleHTTP(string, string)
-}
-
-func (a *DefaultApi) Start(rcvr interface{}) error {
-	if err := rpcServer.Register(rcvr); err != nil {
+// Start starts the http rpc listener, registering the given receiver.
+func (a *HttpRPCListener) Start(receiver interface{}) error {
+	if err := rpcServer.Register(receiver); err != nil {
 		return err
 	}
 	rpcServer.HandleHTTP(rpc.DefaultRPCPath, rpc.DefaultDebugPath)
@@ -78,24 +81,25 @@ func (a *DefaultApi) Start(rcvr interface{}) error {
 	return nil
 }
 
-func (a *DefaultApi) Stop() {
+// Stop will cancel the internal context and wait for the listener to shutdown cleanly.
+func (a *HttpRPCListener) Stop() {
 	a.cancel()
 	a.wg.Wait()
 }
 
-func (a *DefaultApi) handleShutdown() {
+func (a *HttpRPCListener) handleShutdown() {
 	a.wg.Add(1)
 	defer a.wg.Done()
 	<-a.ctx.Done()
 	a.log(nil, "server shutting down")
-	ctx, cancel := context.WithTimeout(a.ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := a.server.Shutdown(ctx); err != nil {
 		a.log(err, "server shutdown failed:")
 	}
 }
 
-func (a *DefaultApi) listenAndServe() {
+func (a *HttpRPCListener) listenAndServe() {
 	a.log(nil, fmt.Sprint("server active on port:", a.Port))
 	err := a.server.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
@@ -104,16 +108,14 @@ func (a *DefaultApi) listenAndServe() {
 	}
 }
 
-var Println = log.Println
-
-func (a *DefaultApi) log(err error, msg ...string) {
+func (a *HttpRPCListener) log(err error, msg ...string) {
 	if !a.logging {
 		return
 	}
 	if err == nil {
-		Println(msg)
+		log.Println(msg)
 	} else {
 		atomic.AddUint64(&a.errorCount, 1)
-		Println("[ERROR]", msg, "err:", err)
+		log.Println("[ERROR]", msg, "err:", err)
 	}
 }

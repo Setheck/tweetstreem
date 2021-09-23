@@ -7,6 +7,7 @@ import (
 	"github.com/Setheck/tweetstreem/util"
 )
 
+// RemoteClient is just that, a remote client for sending commands to tweetstreem.
 type RemoteClient struct {
 	addr string
 	*TweetStreem

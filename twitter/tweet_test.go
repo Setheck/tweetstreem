@@ -1,6 +1,7 @@
 package twitter
 
 import (
+	"runtime"
 	"testing"
 	"time"
 
@@ -161,6 +162,9 @@ func TestTweet_TweetText(t *testing.T) {
 	noHighLight := OutputConfig{}
 	expectedTweetText := "this #is some @User tweet text"
 	expectedHighlightedTweetText := "this \x1b[34m#is\x1b[0m some \x1b[34m@User\x1b[0m tweet text"
+	if runtime.GOOS == "windows" {
+		expectedHighlightedTweetText = "this #is some @User tweet text"
+	}
 	hashTag := HashTag{
 		Indices: []int{5, 8},
 		Text:    "is",
@@ -204,6 +208,9 @@ func TestTweet_TweetText(t *testing.T) {
 	testUserScreenName := "testUser"
 	expectedReTweetTweetText := "RT @testUser: this #is some @User tweet text"
 	expectedReTweetHighlightedTweetText := "RT \x1b[34m@testUser\x1b[0m: this \x1b[34m#is\x1b[0m some \x1b[34m@User\x1b[0m tweet text"
+	if runtime.GOOS == "windows" {
+		expectedReTweetHighlightedTweetText = "RT @testUser: this #is some @User tweet text"
+	}
 	retweetTests := []struct {
 		name      string
 		highlight bool
