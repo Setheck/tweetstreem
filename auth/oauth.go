@@ -2,7 +2,7 @@ package auth
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -85,7 +85,7 @@ func (o *DefaultOaFacade) OaRequest(method, u string, conf url.Values) ([]byte, 
 			return nil, fmt.Errorf("failed: %d - %s", resp.StatusCode, resp.Status)
 		}
 		defer resp.Body.Close()
-		return ioutil.ReadAll(resp.Body)
+		return io.ReadAll(resp.Body)
 	}
 	return nil, ErrUnsupportedMethod
 }
