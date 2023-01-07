@@ -2,7 +2,7 @@ package auth
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"testing"
@@ -55,7 +55,7 @@ func TestDefaultOaFacade_OaRequest(t *testing.T) {
 		var nilHttpClient *http.Client
 		t.Run(test.name, func(t *testing.T) {
 			oaconf := url.Values{}
-			body := ioutil.NopCloser(bytes.NewBuffer([]byte(theBody)))
+			body := io.NopCloser(bytes.NewBuffer([]byte(theBody)))
 			resp := &http.Response{StatusCode: test.statusCode, Body: body}
 			var requestError error
 			if test.requestError {

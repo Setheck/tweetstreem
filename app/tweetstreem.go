@@ -213,7 +213,7 @@ func (t *TweetStreem) processCommand(isRpc bool, input string) error {
 	case "b", "browse":
 		return t.commandBrowse(isRpc, args...)
 	case "t", "tweet":
-		t.commandTweet(isRpc, args...)
+		t.commandTweet(args...)
 	case "reply":
 		t.commandReply(args...)
 	case "cbreply":
@@ -417,11 +417,11 @@ func (t *TweetStreem) commandOpen(isRpc bool, args ...string) error {
 		if !ok {
 			idx = 0
 		}
-		if tw, err := t.findTweet(n); err != nil {
+		tw, err := t.findTweet(n)
+		if err != nil {
 			return err
-		} else {
-			return t.open(isRpc, tw, idx)
 		}
+		return t.open(isRpc, tw, idx)
 	}
 	return fmt.Errorf("invalid tweet id")
 }
@@ -450,7 +450,7 @@ func (t *TweetStreem) open(isRpc bool, tw *twitter.Tweet, linkIdx int) error {
 	return nil
 }
 
-func (t *TweetStreem) commandTweet(isRpc bool, args ...string) {
+func (t *TweetStreem) commandTweet(args ...string) {
 	message := strings.Join(args, " ")
 	confirmMsg := fmt.Sprintln("tweet:", message)
 	abortMsg := "tweet aborted\n"
@@ -499,21 +499,21 @@ func (t *TweetStreem) clipBoardReply(args ...string) {
 }
 
 func (t *TweetStreem) reply(id int, msg string) string {
-	tw, err := t.getHistoryTweet(id)
+	tweetAtID, err := t.getHistoryTweet(id)
 	if err != nil {
 		return err.Error()
 	}
-	if !strings.Contains(msg, tw.User.ScreenName) {
-		return fmt.Sprintf("reply must contain the original screen name [%s]\n", tw.User.ScreenName)
+	if !strings.Contains(msg, tweetAtID.User.ScreenName) {
+		return fmt.Sprintf("reply must contain the original screen name [%s]\n", tweetAtID.User.ScreenName)
 	}
 
 	conf := twitter.NewURLValues()
-	conf.Set("in_reply_to_status_id", tw.IDStr)
-	if tw, err := t.twitter.UpdateStatus(msg, conf); err != nil {
+	conf.Set("in_reply_to_status_id", tweetAtID.IDStr)
+	statusTweet, err := t.twitter.UpdateStatus(msg, conf)
+	if err != nil {
 		return fmt.Sprintln("Error:", err)
-	} else {
-		return fmt.Sprintf("tweet success! [%s]\n", tw.IDStr)
 	}
+	return fmt.Sprintf("tweet success! [%s]\n", statusTweet.IDStr)
 }
 
 func (t *TweetStreem) commandRetweet(args ...string) {
@@ -548,9 +548,8 @@ func (t *TweetStreem) unReTweet(id int) string {
 	}
 	if err := t.twitter.UnReTweet(tw, twitter.NewURLValues()); err != nil {
 		return fmt.Sprintln("Error:", err)
-	} else {
-		return fmt.Sprintf("tweet by @%s unretweeted\n", tw.User.ScreenName)
 	}
+	return fmt.Sprintf("tweet by @%s unretweeted\n", tw.User.ScreenName)
 }
 
 func (t *TweetStreem) commandLike(args ...string) {
